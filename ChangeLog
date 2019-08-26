@@ -1,8 +1,24 @@
-0.1  Created basic GUI outline
-0.2  Switched from embedded C++ to XRC
-0.3  Added model of the sram data
-0.4  Added model/view tie-in through controller
-0.5  Added controller->model tie in
-0.80 Added save support (first public beta release -- Mon, Nov 29, 2004)
+0.90 Added hero's name validation (only proper characters can exist now)
+     Changed gold to text control and added validation (range 0-9999)
+     Changed Panel backgrounds to white
+     Replaced herb/virtue/tool spin controls with sliders
+     Replaced stat spin controls with text controls
+     Added validation for stat controls
+     Added validation for equipment and party members (warns if invalid)
+     Changed menu shortcuts
+     Fixed a bug where the game menu didn't go back to One on close
+     Added XRC_PREFIX to configure to change the default XRC path
+     Added argument check to specify XRC file location at runtime
+     (first release candidate -- Fri, Dec 3, 2004)
+0.82 Fixed bug that crashed under Linux (maybe other platforms, too)
+     Added resizable frame and maximize button for better platform compatability
+     (second public beta -- Wed, Dec 1, 2004)
 0.81 Added game switch support (can edit all 3 save slots now)
+     (first public beta release -- Tue, Nov 30, 2004)
+0.80 Added save support (first private beta release -- Mon, Nov 29, 2004)
+0.5  Added controller->model tie in
+0.4  Added model/view tie-in through controller
+0.3  Added model of the sram data
+0.2  Switched from embedded C++ to XRC
+0.1  Created basic GUI outline
 

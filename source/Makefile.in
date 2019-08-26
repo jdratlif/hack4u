@@ -36,7 +36,9 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+host_triplet = @host@
 bin_PROGRAMS = hack4u$(EXEEXT)
+@WINDOWS_TRUE@am__append_1 = windows.rc
 subdir = source
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -49,9 +51,15 @@ CONFIG_CLEAN_FILES =
 am__installdirs = $(DESTDIR)$(bindir)
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
+am__hack4u_SOURCES_DIST = hack4u.cc hack4u.hh view/MainFrame.cc \
+	view/MainFrame.hh view/FileDropTarget.cc \
+	view/FileDropTarget.hh model/SaveSlot.cc model/SaveSlot.hh \
+	windows.rc
 am__dirstamp = $(am__leading_dot)dirstamp
+@WINDOWS_TRUE@am__objects_1 = windows.$(OBJEXT)
 am_hack4u_OBJECTS = hack4u.$(OBJEXT) view/MainFrame.$(OBJEXT) \
-	view/FileDropTarget.$(OBJEXT) model/SaveSlot.$(OBJEXT)
+	view/FileDropTarget.$(OBJEXT) model/SaveSlot.$(OBJEXT) \
+	$(am__objects_1)
 hack4u_OBJECTS = $(am_hack4u_OBJECTS)
 hack4u_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -71,7 +79,7 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(hack4u_SOURCES)
-DIST_SOURCES = $(hack4u_SOURCES)
+DIST_SOURCES = $(am__hack4u_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -115,6 +123,8 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
+WINDOWS_FALSE = @WINDOWS_FALSE@
+WINDOWS_TRUE = @WINDOWS_TRUE@
 WX_CFLAGS = @WX_CFLAGS@
 WX_CFLAGS_ONLY = @WX_CFLAGS_ONLY@
 WX_CONFIG_PATH = @WX_CONFIG_PATH@
@@ -124,6 +134,7 @@ WX_CXXFLAGS_ONLY = @WX_CXXFLAGS_ONLY@
 WX_LIBS = @WX_LIBS@
 WX_LIBS_STATIC = @WX_LIBS_STATIC@
 WX_VERSION = @WX_VERSION@
+XRC_PREFIX = @XRC_PREFIX@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -132,10 +143,18 @@ am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
 bindir = @bindir@
+build = @build@
 build_alias = @build_alias@
+build_cpu = @build_cpu@
+build_os = @build_os@
+build_vendor = @build_vendor@
 datadir = @datadir@
 exec_prefix = @exec_prefix@
+host = @host@
 host_alias = @host_alias@
+host_cpu = @host_cpu@
+host_os = @host_os@
+host_vendor = @host_vendor@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
@@ -152,16 +171,16 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = subdir-objects
-EXTRA_DIST = xrc/hack4u.xrc
+EXTRA_DIST = xrc/hack4u.xrc res/ankh.ico
 hack4u_SOURCES = hack4u.cc hack4u.hh \
 	view/MainFrame.cc view/MainFrame.hh \
 	view/FileDropTarget.cc view/FileDropTarget.hh \
-	model/SaveSlot.cc model/SaveSlot.hh
-
+	model/SaveSlot.cc model/SaveSlot.hh\
+$(am__append_1)
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .cc .o .obj
+.SUFFIXES: .cc .o .obj .rc
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -362,7 +381,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/xrc
+	$(mkdir_p) $(distdir)/res $(distdir)/xrc
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -482,6 +501,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-binPROGRAMS uninstall-info-am
 
+.rc.o:
+	windres -o $@ $<
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

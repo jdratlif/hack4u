@@ -7,38 +7,38 @@
             <object class="wxMenu">
                 <label>_File</label>
                 <object class="wxMenuItem" name="IDM_FILE_LOAD">
-                    <label>_Load\tCtrl-Shift-L</label>
+                    <label>_Open\tCtrl-O</label>
+                </object>
+                <object class="wxMenuItem" name="IDM_FILE_CLOSE">
+                    <label>_Close\tCtrl-W</label>
                 </object>
                 <object class="separator">
                 </object>
                 <object class="wxMenuItem" name="IDM_FILE_SAVE">
-                    <label>_Save\tCtrl-Shift-S</label>
+                    <label>_Save\tCtrl-S</label>
                 </object>
                 <object class="wxMenuItem" name="IDM_FILE_SAVE_AS">
-                    <label>Save _As\tCtrl-Shift-A</label>
-                </object>
-                <object class="wxMenuItem" name="IDM_FILE_CLOSE">
-                    <label>_Close\tCtrl-Shift-C</label>
+                    <label>Save _As</label>
                 </object>
                 <object class="separator">
                 </object>
                 <object class="wxMenuItem" name="IDM_FILE_EXIT">
-                    <label>E_xit\tCtrl-Shift-X</label>
+                    <label>E_xit</label>
                 </object>
             </object>
             <object class="wxMenu">
                 <label>_Game</label>
                 <object class="wxMenuItem" name="IDM_GAME_GAME1">
-                    <label>Game _1</label>
+                    <label>Game _1\tF1</label>
                     <radio>1</radio>
                     <checked>1</checked>
                 </object>
                 <object class="wxMenuItem" name="IDM_GAME_GAME2">
-                    <label>Game _2</label>
+                    <label>Game _2\tF2</label>
                     <radio>1</radio>
                 </object>
                 <object class="wxMenuItem" name="IDM_GAME_GAME3">
-                    <label>Game _3</label>
+                    <label>Game _3\tF3</label>
                     <radio>1</radio>
                 </object>
             </object>
@@ -54,6 +54,7 @@
                 <label>General</label>
                 <object class="wxPanel" name="ID_PANEL_GENERAL">
                     <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <bg>#FFFFFF</bg>
                     <object class="wxBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <object class="sizeritem">
@@ -217,9 +218,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_GENERAL_HONESTY">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>50</value>
+                                                    <object class="wxSlider" name="ID_GENERAL_HONESTY">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>100</max>
                                                     </object>
@@ -234,9 +235,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_GENERAL_COMPASSION">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>50</value>
+                                                    <object class="wxSlider" name="ID_GENERAL_COMPASSION">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>100</max>
                                                     </object>
@@ -251,9 +252,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_GENERAL_VALOR">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>50</value>
+                                                    <object class="wxSlider" name="ID_GENERAL_VALOR">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>100</max>
                                                     </object>
@@ -268,9 +269,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_GENERAL_JUSTICE">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>50</value>
+                                                    <object class="wxSlider" name="ID_GENERAL_JUSTICE">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>100</max>
                                                     </object>
@@ -285,9 +286,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_GENERAL_SACRIFICE">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>50</value>
+                                                    <object class="wxSlider" name="ID_GENERAL_SACRIFICE">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>100</max>
                                                     </object>
@@ -302,9 +303,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_GENERAL_HONOR">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>50</value>
+                                                    <object class="wxSlider" name="ID_GENERAL_HONOR">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>100</max>
                                                     </object>
@@ -319,9 +320,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_GENERAL_SPIRITUALITY">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>50</value>
+                                                    <object class="wxSlider" name="ID_GENERAL_SPIRITUALITY">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>100</max>
                                                     </object>
@@ -336,9 +337,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_GENERAL_HUMILITY">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>50</value>
+                                                    <object class="wxSlider" name="ID_GENERAL_HUMILITY">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>100</max>
                                                     </object>
@@ -640,6 +641,7 @@
                 <label>Inventory</label>
                 <object class="wxPanel" name="ID_PANEL_INVENTORY">
                     <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <bg>#FFFFFF</bg>
                     <object class="wxBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <object class="sizeritem">
@@ -657,11 +659,7 @@
                                         <object class="sizeritem">
                                             <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
                                             <border>5</border>
-                                            <object class="wxSpinCtrl" name="ID_INVENTORY_GOLD">
-                                                <style>wxSP_ARROW_KEYS</style>
-                                                <value>400</value>
-                                                <min>0</min>
-                                                <max>9999</max>
+                                            <object class="wxTextCtrl" name="ID_INVENTORY_GOLD">
                                             </object>
                                         </object>
                                     </object>
@@ -676,12 +674,12 @@
                                             <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
                                             <border>5</border>
                                             <object class="wxFlexGridSizer">
-                                                <cols>8</cols>
-                                                <rows>2</rows>
+                                                <cols>4</cols>
+                                                <rows>4</rows>
                                                 <vgap>0</vgap>
                                                 <hgap>0</hgap>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Ash: </label>
@@ -690,15 +688,15 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_ASH">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>8</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_ASH">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>99</max>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Ginseng: </label>
@@ -707,15 +705,15 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_GINSENG">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>8</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_GINSENG">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>99</max>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Garlic: </label>
@@ -724,15 +722,15 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_GARLIC">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>9</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_GARLIC">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>99</max>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Silkweb: </label>
@@ -741,15 +739,15 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_SILKWEB">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>7</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_SILKWEB">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>99</max>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Moss: </label>
@@ -758,15 +756,15 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_MOSS">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>5</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_MOSS">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>99</max>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Pearl: </label>
@@ -775,15 +773,15 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_PEARL">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>4</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_PEARL">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>99</max>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Fungus: </label>
@@ -792,15 +790,15 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_FUNGUS">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>0</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_FUNGUS">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
-                                                        <max>100</max>
+                                                        <max>99</max>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Manroot: </label>
@@ -809,11 +807,11 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_MANROOT">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>0</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_MANROOT">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
-                                                        <max>100</max>
+                                                        <max>99</max>
                                                     </object>
                                                 </object>
                                             </object>
@@ -1012,9 +1010,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_TORCH">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>0</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_TORCH">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>99</max>
                                                     </object>
@@ -1029,9 +1027,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_GEM">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>0</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_GEM">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>99</max>
                                                     </object>
@@ -1046,9 +1044,9 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_OIL">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>0</value>
+                                                    <object class="wxSlider" name="ID_INVENTORY_OIL">
+                                                        <size>175,-1</size>
+                                                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                                                         <min>0</min>
                                                         <max>99</max>
                                                     </object>
@@ -1180,6 +1178,7 @@
                 <label>Character</label>
                 <object class="wxPanel" name="ID_PANEL_CHARACTER">
                     <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <bg>#FFFFFF</bg>
                     <object class="wxBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <object class="sizeritem">
@@ -1237,11 +1236,7 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_LEVEL">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>2</value>
-                                                        <min>2</min>
-                                                        <max>8</max>
+                                                    <object class="wxTextCtrl" name="ID_CHARACTER_LEVEL">
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -1254,11 +1249,7 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_EXPERIENCE">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>100</value>
-                                                        <min>100</min>
-                                                        <max>9999</max>
+                                                    <object class="wxTextCtrl" name="ID_CHARACTER_EXPERIENCE">
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -1271,11 +1262,7 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_CURRENTHP">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>200</value>
-                                                        <min>0</min>
-                                                        <max>800</max>
+                                                    <object class="wxTextCtrl" name="ID_CHARACTER_CURRENTHP">
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -1288,11 +1275,7 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_CURRENTMP">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>0</value>
-                                                        <min>0</min>
-                                                        <max>99</max>
+                                                    <object class="wxTextCtrl" name="ID_CHARACTER_CURRENTMP">
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -1305,11 +1288,7 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_MAXHP">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>200</value>
-                                                        <min>200</min>
-                                                        <max>800</max>
+                                                    <object class="wxTextCtrl" name="ID_CHARACTER_MAXHP">
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -1322,11 +1301,7 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_MAXMP">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>0</value>
-                                                        <min>0</min>
-                                                        <max>99</max>
+                                                    <object class="wxTextCtrl" name="ID_CHARACTER_MAXMP">
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -1339,11 +1314,7 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_STRENGTH">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>20</value>
-                                                        <min>1</min>
-                                                        <max>99</max>
+                                                    <object class="wxTextCtrl" name="ID_CHARACTER_STRENGTH">
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -1356,11 +1327,7 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_INTELLIGENCE">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>20</value>
-                                                        <min>1</min>
-                                                        <max>99</max>
+                                                    <object class="wxTextCtrl" name="ID_CHARACTER_INTELLIGENCE">
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
@@ -1373,11 +1340,7 @@
                                                 <object class="sizeritem">
                                                     <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                                     <border>5</border>
-                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_DEXTERITY">
-                                                        <style>wxSP_ARROW_KEYS</style>
-                                                        <value>20</value>
-                                                        <min>1</min>
-                                                        <max>99</max>
+                                                    <object class="wxTextCtrl" name="ID_CHARACTER_DEXTERITY">
                                                     </object>
                                                 </object>
                                             </object>

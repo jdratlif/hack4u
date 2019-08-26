@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: hack4u.cc,v 1.5 2004/11/28 21:42:45 technoplaza Exp $
+// $Id: hack4u.cc,v 1.6 2004/12/03 10:34:46 technoplaza Exp $
  
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -28,6 +28,9 @@
 #ifndef WX_PRECOMP
    #include <wx/wx.h>
 #endif
+
+#include <iostream>
+#include <sys/stat.h>
 
 #include "hack4u.hh"
 #include "view/MainFrame.hh"
@@ -46,8 +49,24 @@ IMPLEMENT_APP(Hack4u)
 IMPLEMENT_CLASS(Hack4u, wxApp)
 
 bool Hack4u::OnInit() {
+    wxString *xrcfile;
+    
+    if (argc == 2) {
+        xrcfile = new wxString(argv[1]);
+    } else {
+        xrcfile = new wxString(XRC_FILE);
+    }
+    
+    struct stat xrcstats;
+    
+    if (stat(xrcfile->mb_str(), &xrcstats) != 0) {
+        std::cerr << "error: unable to locate XRC file " << 
+            xrcfile->mb_str() << std::endl;
+        return false;
+    }
+    
     wxXmlResource::Get()->InitAllHandlers();
-    wxXmlResource::Get()->Load(wxT("xrc/hack4u.xrc"));
+    wxXmlResource::Get()->Load(*xrcfile);
     
     MainFrame *frame = new MainFrame;
     frame->SetTitle(*APP_NAME + wxT(' ') + *APP_VERSION);

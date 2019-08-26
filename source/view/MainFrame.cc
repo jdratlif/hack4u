@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: MainFrame.cc,v 1.16 2004/12/01 21:57:39 technoplaza Exp $
- 
+// $Id: MainFrame.cc,v 1.23 2004/12/03 10:34:46 technoplaza Exp $
+
 #ifdef HAVE_CONFIG_H
     #include <config.h>
 #endif
@@ -37,10 +37,40 @@
 
 using namespace hack4u;
 
-const wxString MainFrame::CITY_NAMES[] = { wxT("Moonglow"), wxT("Britain"),
-                                           wxT("Jhelom"), wxT("Yew"), 
-                                           wxT("Minoc"), wxT("Trinsic"),
-                                           wxT("Skara Brae"), wxT("Magincia") };
+const wxString MainFrame::CITY_NAMES[] = {
+    wxT("Moonglow"), wxT("Britain"), wxT("Jhelom"), wxT("Yew"),
+    wxT("Minoc"), wxT("Trinsic"), wxT("Skara Brae"), wxT("Magincia")
+};
+
+const wxString MainFrame::CHARACTER_NAMES[] = {
+    wxT("Mage"), wxT("Bard"), wxT("Fighter"), wxT("Druid"),
+    wxT("Tinker"), wxT("Paladin"), wxT("Ranger"), wxT("Shepherd")
+};
+
+const char *MainFrame::ICON[] = {
+    "16 16 5 1",
+    " 	c None",
+    "!	c #BCBCBC",
+    "#	c #747474",
+    "$	c #FCFCFC",
+    "%	c black",
+    "!!!!!#$$$$$$!!!!",
+    "!!!!#!$$$$$$$!!!",
+    "!!!#!!######$$!!",
+    "!!!%!##%%%%##$!!",
+    "!!!%###!!!%##$!!",
+    "!!!%%##!!!%##%!!",
+    "!!!!%%##!%##%!!!",
+    "#%$$$$%####$$$$$",
+    "!%!$$$$$##$$$$$$",
+    "!%#############$",
+    "!%%%%%%%##%%%%%$",
+    "!!!!!!%%##!!!!!!",
+    "!!%%%%%%##!!!!!!",
+    "%%%%%%%%##!!!!!!",
+    "!%%%%%%%%%!!!!!!",
+    "!!!!!!!!!!!!!!!!"
+};
 
 IMPLEMENT_DYNAMIC_CLASS(MainFrame, wxFrame)
 
@@ -66,14 +96,14 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_CHOICE(XRCID("ID_GENERAL_PARTY3"), MainFrame::memberClassChange)
     EVT_CHOICE(XRCID("ID_GENERAL_PARTY4"), MainFrame::memberClassChange)
     
-    EVT_TEXT(XRCID("ID_GENERAL_HONESTY"), MainFrame::virtueChange)
-    EVT_TEXT(XRCID("ID_GENERAL_COMPASSION"), MainFrame::virtueChange)
-    EVT_TEXT(XRCID("ID_GENERAL_VALOR"), MainFrame::virtueChange)
-    EVT_TEXT(XRCID("ID_GENERAL_JUSTICE"), MainFrame::virtueChange)
-    EVT_TEXT(XRCID("ID_GENERAL_SACRIFICE"), MainFrame::virtueChange)
-    EVT_TEXT(XRCID("ID_GENERAL_HONOR"), MainFrame::virtueChange)
-    EVT_TEXT(XRCID("ID_GENERAL_SPIRITUALITY"), MainFrame::virtueChange)
-    EVT_TEXT(XRCID("ID_GENERAL_HUMILITY"), MainFrame::virtueChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_HONESTY"), MainFrame::virtueChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_COMPASSION"), MainFrame::virtueChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_VALOR"), MainFrame::virtueChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_JUSTICE"), MainFrame::virtueChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_SACRIFICE"), MainFrame::virtueChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_HONOR"), MainFrame::virtueChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_SPIRITUALITY"), MainFrame::virtueChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_HUMILITY"), MainFrame::virtueChange)
     
     EVT_CHECKBOX(XRCID("ID_GENERAL_LIGHT"), MainFrame::magicChange)
     EVT_CHECKBOX(XRCID("ID_GENERAL_MISSILE"), MainFrame::magicChange)
@@ -106,14 +136,14 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     
     EVT_TEXT(XRCID("ID_INVENTORY_GOLD"), MainFrame::goldChange)
     
-    EVT_TEXT(XRCID("ID_INVENTORY_ASH"), MainFrame::herbChange)
-    EVT_TEXT(XRCID("ID_INVENTORY_GINSENG"), MainFrame::herbChange)
-    EVT_TEXT(XRCID("ID_INVENTORY_GARLIC"), MainFrame::herbChange)
-    EVT_TEXT(XRCID("ID_INVENTORY_SILKWEB"), MainFrame::herbChange)
-    EVT_TEXT(XRCID("ID_INVENTORY_MOSS"), MainFrame::herbChange)
-    EVT_TEXT(XRCID("ID_INVENTORY_PEARL"), MainFrame::herbChange)
-    EVT_TEXT(XRCID("ID_INVENTORY_FUNGUS"), MainFrame::herbChange)
-    EVT_TEXT(XRCID("ID_INVENTORY_MANROOT"), MainFrame::herbChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_ASH"), MainFrame::herbChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_GINSENG"), MainFrame::herbChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_GARLIC"), MainFrame::herbChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_SILKWEB"), MainFrame::herbChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_MOSS"), MainFrame::herbChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_PEARL"), MainFrame::herbChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_FUNGUS"), MainFrame::herbChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_MANROOT"), MainFrame::herbChange)
     
     EVT_CHECKBOX(XRCID("ID_INVENTORY_HONESTY"), MainFrame::runeChange)
     EVT_CHECKBOX(XRCID("ID_INVENTORY_COMPASSION"), MainFrame::runeChange)
@@ -133,9 +163,9 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_CHECKBOX(XRCID("ID_INVENTORY_WHITE"), MainFrame::stoneChange)
     EVT_CHECKBOX(XRCID("ID_INVENTORY_BLACK"), MainFrame::stoneChange)
     
-    EVT_TEXT(XRCID("ID_INVENTORY_TORCH"), MainFrame::toolQuantityChange)
-    EVT_TEXT(XRCID("ID_INVENTORY_GEM"), MainFrame::toolQuantityChange)
-    EVT_TEXT(XRCID("ID_INVENTORY_OIL"), MainFrame::toolQuantityChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_TORCH"), MainFrame::toolQuantityChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_GEM"), MainFrame::toolQuantityChange)
+    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_OIL"), MainFrame::toolQuantityChange)
     
     EVT_CHECKBOX(XRCID("ID_INVENTORY_KEY"), MainFrame::toolHaveChange)
     EVT_CHECKBOX(XRCID("ID_INVENTORY_SEXTANT"), MainFrame::toolHaveChange)
@@ -190,6 +220,7 @@ MainFrame::MainFrame() {
 
 void MainFrame::CreateControls() {
     wxXmlResource::Get()->LoadFrame(this, GetParent(), wxT("ID_MAIN_FRAME"));
+    SetIcon(ICON);
     
     notebook = XRCCTRL(*this, "ID_NOTEBOOK", wxNotebook);
     notebook->Show(false);
@@ -210,23 +241,34 @@ void MainFrame::CreateControls() {
     fileCloseItem = menubar.FindItem(XRCID("IDM_FILE_CLOSE"));
     
     setOpen(false);
+
+    wxStringList letters("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+                         "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
+                         "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g",
+                         "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
+                         "s", "t", "u", "v", "w", "x", "y", "z", "!", "-", "_",
+                         NULL);
+    
+    wxTextValidator herosNameValidator(wxFILTER_INCLUDE_CHAR_LIST);
+    herosNameValidator.SetIncludeList(letters);
     
     herosNameText = XRCCTRL(*this, "ID_GENERAL_HEROSNAME", wxTextCtrl);
     herosNameText->SetMaxLength(5);
+    herosNameText->SetValidator(herosNameValidator);
     
-    firstMemberClass = XRCCTRL(*this, "ID_GENERAL_PARTY1", wxChoice);
-    secondMemberClass = XRCCTRL(*this, "ID_GENERAL_PARTY2", wxChoice);
-    thirdMemberClass = XRCCTRL(*this, "ID_GENERAL_PARTY3", wxChoice);
-    fourthMemberClass = XRCCTRL(*this, "ID_GENERAL_PARTY4", wxChoice);
+    memberClass[0] = XRCCTRL(*this, "ID_GENERAL_PARTY1", wxChoice);
+    memberClass[1] = XRCCTRL(*this, "ID_GENERAL_PARTY2", wxChoice);
+    memberClass[2] = XRCCTRL(*this, "ID_GENERAL_PARTY3", wxChoice);
+    memberClass[3] = XRCCTRL(*this, "ID_GENERAL_PARTY4", wxChoice);
     
-    honestySpinner = XRCCTRL(*this, "ID_GENERAL_HONESTY", wxSpinCtrl);
-    compassionSpinner = XRCCTRL(*this, "ID_GENERAL_COMPASSION", wxSpinCtrl);
-    valorSpinner = XRCCTRL(*this, "ID_GENERAL_VALOR", wxSpinCtrl);
-    justiceSpinner = XRCCTRL(*this, "ID_GENERAL_JUSTICE", wxSpinCtrl);
-    sacrificeSpinner = XRCCTRL(*this, "ID_GENERAL_SACRIFICE", wxSpinCtrl);
-    honorSpinner = XRCCTRL(*this, "ID_GENERAL_HONOR", wxSpinCtrl);
-    spiritualitySpinner = XRCCTRL(*this, "ID_GENERAL_SPIRITUALITY", wxSpinCtrl);
-    humilitySpinner = XRCCTRL(*this, "ID_GENERAL_HUMILITY", wxSpinCtrl);
+    honestySlider = XRCCTRL(*this, "ID_GENERAL_HONESTY", wxSlider);
+    compassionSlider = XRCCTRL(*this, "ID_GENERAL_COMPASSION", wxSlider);
+    valorSlider = XRCCTRL(*this, "ID_GENERAL_VALOR", wxSlider);
+    justiceSlider = XRCCTRL(*this, "ID_GENERAL_JUSTICE", wxSlider);
+    sacrificeSlider = XRCCTRL(*this, "ID_GENERAL_SACRIFICE", wxSlider);
+    honorSlider = XRCCTRL(*this, "ID_GENERAL_HONOR", wxSlider);
+    spiritualitySlider = XRCCTRL(*this, "ID_GENERAL_SPIRITUALITY", wxSlider);
+    humilitySlider = XRCCTRL(*this, "ID_GENERAL_HUMILITY", wxSlider);
     
     lightSpellCheck = XRCCTRL(*this, "ID_GENERAL_LIGHT", wxCheckBox);
     missileSpellCheck = XRCCTRL(*this, "ID_GENERAL_MISSILE", wxCheckBox);
@@ -257,16 +299,19 @@ void MainFrame::CreateControls() {
     trammelChoice = XRCCTRL(*this, "ID_GENERAL_TRAMMEL", wxChoice);
     feluccaChoice = XRCCTRL(*this, "ID_GENERAL_FELUCCA", wxChoice);
     
-    goldSpinner = XRCCTRL(*this, "ID_INVENTORY_GOLD", wxSpinCtrl);
+    wxTextValidator numberValidator(wxFILTER_NUMERIC);
+    goldText = XRCCTRL(*this, "ID_INVENTORY_GOLD", wxTextCtrl);
+    goldText->SetValidator(numberValidator);
+    goldText->SetMaxLength(4);
     
-    ashSpinner = XRCCTRL(*this, "ID_INVENTORY_ASH", wxSpinCtrl);
-    ginsengSpinner = XRCCTRL(*this, "ID_INVENTORY_GINSENG", wxSpinCtrl);
-    garlicSpinner = XRCCTRL(*this, "ID_INVENTORY_GARLIC", wxSpinCtrl);
-    silkwebSpinner = XRCCTRL(*this, "ID_INVENTORY_SILKWEB", wxSpinCtrl);
-    mossSpinner = XRCCTRL(*this, "ID_INVENTORY_MOSS", wxSpinCtrl);
-    pearlSpinner = XRCCTRL(*this, "ID_INVENTORY_PEARL", wxSpinCtrl);
-    fungusSpinner = XRCCTRL(*this, "ID_INVENTORY_FUNGUS", wxSpinCtrl);
-    manrootSpinner = XRCCTRL(*this, "ID_INVENTORY_MANROOT", wxSpinCtrl);
+    ashSlider = XRCCTRL(*this, "ID_INVENTORY_ASH", wxSlider);
+    ginsengSlider = XRCCTRL(*this, "ID_INVENTORY_GINSENG", wxSlider);
+    garlicSlider = XRCCTRL(*this, "ID_INVENTORY_GARLIC", wxSlider);
+    silkwebSlider = XRCCTRL(*this, "ID_INVENTORY_SILKWEB", wxSlider);
+    mossSlider = XRCCTRL(*this, "ID_INVENTORY_MOSS", wxSlider);
+    pearlSlider = XRCCTRL(*this, "ID_INVENTORY_PEARL", wxSlider);
+    fungusSlider = XRCCTRL(*this, "ID_INVENTORY_FUNGUS", wxSlider);
+    manrootSlider = XRCCTRL(*this, "ID_INVENTORY_MANROOT", wxSlider);
     
     honestyRuneCheck = XRCCTRL(*this, "ID_INVENTORY_HONESTY", wxCheckBox);
     compassionRuneCheck = XRCCTRL(*this, "ID_INVENTORY_COMPASSION", wxCheckBox);
@@ -286,9 +331,9 @@ void MainFrame::CreateControls() {
     whiteStoneCheck = XRCCTRL(*this, "ID_INVENTORY_WHITE", wxCheckBox);
     blackStoneCheck = XRCCTRL(*this, "ID_INVENTORY_BLACK", wxCheckBox);
     
-    torchSpinner = XRCCTRL(*this, "ID_INVENTORY_TORCH", wxSpinCtrl);
-    gemSpinner = XRCCTRL(*this, "ID_INVENTORY_GEM", wxSpinCtrl);
-    oilSpinner = XRCCTRL(*this, "ID_INVENTORY_OIL", wxSpinCtrl);
+    torchSlider = XRCCTRL(*this, "ID_INVENTORY_TORCH", wxSlider);
+    gemSlider = XRCCTRL(*this, "ID_INVENTORY_GEM", wxSlider);
+    oilSlider = XRCCTRL(*this, "ID_INVENTORY_OIL", wxSlider);
     
     keyCheck = XRCCTRL(*this, "ID_INVENTORY_KEY", wxCheckBox);
     sextantCheck = XRCCTRL(*this, "ID_INVENTORY_SEXTANT", wxCheckBox);
@@ -306,15 +351,45 @@ void MainFrame::CreateControls() {
     
     characterChoice = XRCCTRL(*this, "ID_CHARACTER_CHARACTER", wxChoice);
     
-    levelSpinner = XRCCTRL(*this, "ID_CHARACTER_LEVEL", wxSpinCtrl);
-    experienceSpinner = XRCCTRL(*this, "ID_CHARACTER_EXPERIENCE", wxSpinCtrl);
-    currentHPSpinner = XRCCTRL(*this, "ID_CHARACTER_CURRENTHP", wxSpinCtrl);
-    currentMPSpinner = XRCCTRL(*this, "ID_CHARACTER_CURRENTMP", wxSpinCtrl);
-    maxHPSpinner = XRCCTRL(*this, "ID_CHARACTER_MAXHP", wxSpinCtrl);
-    maxMPSpinner = XRCCTRL(*this, "ID_CHARACTER_MAXMP", wxSpinCtrl);
-    strengthSpinner = XRCCTRL(*this, "ID_CHARACTER_STRENGTH", wxSpinCtrl);
-    intelligenceSpinner = XRCCTRL(*this, "ID_CHARACTER_INTELLIGENCE", wxSpinCtrl);
-    dexteritySpinner = XRCCTRL(*this, "ID_CHARACTER_DEXTERITY", wxSpinCtrl);
+    wxStringList numbers("2", "3", "4", "5", "6", "7", "8", NULL);
+    wxTextValidator levelValidator(wxFILTER_INCLUDE_CHAR_LIST);
+    levelValidator.SetIncludeList(numbers);
+    
+    levelText = XRCCTRL(*this, "ID_CHARACTER_LEVEL", wxTextCtrl);
+    levelText->SetValidator(levelValidator);
+    levelText->SetMaxLength(1);
+    
+    experienceText = XRCCTRL(*this, "ID_CHARACTER_EXPERIENCE", wxTextCtrl);
+    experienceText->SetValidator(numberValidator);
+    experienceText->SetMaxLength(4);
+    
+    currentHPText = XRCCTRL(*this, "ID_CHARACTER_CURRENTHP", wxTextCtrl);
+    currentHPText->SetValidator(numberValidator);
+    currentHPText->SetMaxLength(3);
+    
+    currentMPText = XRCCTRL(*this, "ID_CHARACTER_CURRENTMP", wxTextCtrl);
+    currentMPText->SetValidator(numberValidator);
+    currentMPText->SetMaxLength(2);
+    
+    maxHPText = XRCCTRL(*this, "ID_CHARACTER_MAXHP", wxTextCtrl);
+    maxHPText->SetValidator(numberValidator);
+    maxHPText->SetMaxLength(3);
+    
+    maxMPText = XRCCTRL(*this, "ID_CHARACTER_MAXMP", wxTextCtrl);
+    maxMPText->SetValidator(numberValidator);
+    maxMPText->SetMaxLength(2);
+    
+    strengthText = XRCCTRL(*this, "ID_CHARACTER_STRENGTH", wxTextCtrl);
+    strengthText->SetValidator(numberValidator);
+    strengthText->SetMaxLength(2);
+    
+    intelligenceText = XRCCTRL(*this, "ID_CHARACTER_INTELLIGENCE", wxTextCtrl);
+    intelligenceText->SetValidator(numberValidator);
+    intelligenceText->SetMaxLength(2);
+    
+    dexterityText = XRCCTRL(*this, "ID_CHARACTER_DEXTERITY", wxTextCtrl);
+    dexterityText->SetValidator(numberValidator);
+    dexterityText->SetMaxLength(2);
     
     itemChoice[0] = XRCCTRL(*this, "ID_CHARACTER_FIRST", wxChoice);
     itemEquippedCheck[0] = XRCCTRL(*this, "ID_CHARACTER_FIRSTEQUIPPED", wxCheckBox);
@@ -380,18 +455,37 @@ void MainFrame::setFeluccaOptions(int trammel) {
 }
 
 void MainFrame::loadStats(SaveSlot &slot, int character) {
+    wxString str;
+    
     int temp = currentSlot;
     currentSlot = -1;
     
-    levelSpinner->SetValue(slot.getLevel(character));
-    experienceSpinner->SetValue(slot.getExperience(character));
-    currentHPSpinner->SetValue(slot.getCurrentHP(character));
-    currentMPSpinner->SetValue(slot.getCurrentMP(character));
-    maxHPSpinner->SetValue(slot.getMaxHP(character));
-    maxMPSpinner->SetValue(slot.getMaxMP(character));
-    strengthSpinner->SetValue(slot.getStrength(character));
-    intelligenceSpinner->SetValue(slot.getIntelligence(character));
-    dexteritySpinner->SetValue(slot.getDexterity(character));
+    str.Printf("%d", slot.getLevel(character));
+    levelText->SetValue(str);
+    
+    str.Printf("%d", slot.getExperience(character));
+    experienceText->SetValue(str);
+    
+    str.Printf("%d", slot.getCurrentHP(character));
+    currentHPText->SetValue(str);
+    
+    str.Printf("%d", slot.getCurrentMP(character));
+    currentMPText->SetValue(str);
+    
+    str.Printf("%d", slot.getMaxHP(character));
+    maxHPText->SetValue(str);
+    
+    str.Printf("%d", slot.getMaxMP(character));
+    maxMPText->SetValue(str);
+    
+    str.Printf("%d", slot.getStrength(character));
+    strengthText->SetValue(str);
+    
+    str.Printf("%d", slot.getIntelligence(character));
+    intelligenceText->SetValue(str);
+    
+    str.Printf("%d", slot.getDexterity(character));
+    dexterityText->SetValue(str);
     
     for (int index = 0; index < 6; index++) {
         int item = slot.getEquipment(character, index);
@@ -409,19 +503,19 @@ void MainFrame::loadGame(int game) {
     slot.modified = false;
     herosNameText->SetValue(slot.getHerosName());
     
-    firstMemberClass->SetSelection(slot.getMember(0) - 1);
-    secondMemberClass->SetSelection(slot.getMember(1));
-    thirdMemberClass->SetSelection(slot.getMember(2));
-    fourthMemberClass->SetSelection(slot.getMember(3));
+    memberClass[0]->SetSelection(slot.getMember(0) - 1);
+    memberClass[1]->SetSelection(slot.getMember(1));
+    memberClass[2]->SetSelection(slot.getMember(2));
+    memberClass[3]->SetSelection(slot.getMember(3));
     
-    honestySpinner->SetValue(slot.getVirtue(HONESTY));
-    compassionSpinner->SetValue(slot.getVirtue(COMPASSION));
-    valorSpinner->SetValue(slot.getVirtue(VALOR));
-    justiceSpinner->SetValue(slot.getVirtue(JUSTICE));
-    sacrificeSpinner->SetValue(slot.getVirtue(SACRIFICE));
-    honorSpinner->SetValue(slot.getVirtue(HONOR));
-    spiritualitySpinner->SetValue(slot.getVirtue(SPIRITUALITY));
-    humilitySpinner->SetValue(slot.getVirtue(HUMILITY));
+    honestySlider->SetValue(slot.getVirtue(HONESTY));
+    compassionSlider->SetValue(slot.getVirtue(COMPASSION));
+    valorSlider->SetValue(slot.getVirtue(VALOR));
+    justiceSlider->SetValue(slot.getVirtue(JUSTICE));
+    sacrificeSlider->SetValue(slot.getVirtue(SACRIFICE));
+    honorSlider->SetValue(slot.getVirtue(HONOR));
+    spiritualitySlider->SetValue(slot.getVirtue(SPIRITUALITY));
+    humilitySlider->SetValue(slot.getVirtue(HUMILITY));
     
     lightSpellCheck->SetValue(slot.hasMagic(LIGHT));
     missileSpellCheck->SetValue(slot.hasMagic(MISSILE));
@@ -453,16 +547,18 @@ void MainFrame::loadGame(int game) {
     setFeluccaOptions(slot.getPhase(TRAMMEL));
     feluccaChoice->SetSelection(slot.getPhase(FELUCCA));
     
-    goldSpinner->SetValue(slot.getGold());
+    wxString gold;
+    gold.Printf("%d", slot.getGold());
+    goldText->SetValue(gold);
     
-    ashSpinner->SetValue(slot.getHerb(ASH));
-    ginsengSpinner->SetValue(slot.getHerb(GINSENG));
-    garlicSpinner->SetValue(slot.getHerb(GARLIC));
-    silkwebSpinner->SetValue(slot.getHerb(SILKWEB));
-    mossSpinner->SetValue(slot.getHerb(MOSS));
-    pearlSpinner->SetValue(slot.getHerb(PEARL));
-    fungusSpinner->SetValue(slot.getHerb(FUNGUS));
-    manrootSpinner->SetValue(slot.getHerb(MANROOT));
+    ashSlider->SetValue(slot.getHerb(ASH));
+    ginsengSlider->SetValue(slot.getHerb(GINSENG));
+    garlicSlider->SetValue(slot.getHerb(GARLIC));
+    silkwebSlider->SetValue(slot.getHerb(SILKWEB));
+    mossSlider->SetValue(slot.getHerb(MOSS));
+    pearlSlider->SetValue(slot.getHerb(PEARL));
+    fungusSlider->SetValue(slot.getHerb(FUNGUS));
+    manrootSlider->SetValue(slot.getHerb(MANROOT));
     
     honestyRuneCheck->SetValue(slot.hasRune(HONESTY));
     compassionRuneCheck->SetValue(slot.hasRune(COMPASSION));
@@ -482,9 +578,9 @@ void MainFrame::loadGame(int game) {
     whiteStoneCheck->SetValue(slot.hasStone(SPIRITUALITY));
     blackStoneCheck->SetValue(slot.hasStone(HUMILITY));
     
-    torchSpinner->SetValue(slot.getTool(TORCH));
-    gemSpinner->SetValue(slot.getTool(GEM));
-    oilSpinner->SetValue(slot.getTool(OIL));
+    torchSlider->SetValue(slot.getTool(TORCH));
+    gemSlider->SetValue(slot.getTool(GEM));
+    oilSlider->SetValue(slot.getTool(OIL));
     
     keyCheck->SetValue(slot.getTool(KEY));
     sextantCheck->SetValue(slot.getTool(SEXTANT));
@@ -503,6 +599,7 @@ void MainFrame::loadGame(int game) {
     loadStats(slot, characterChoice->GetSelection());
     
     currentSlot = game;
+    notebook->SetSelection(0);
     notebook->Show(true);
 }
 
@@ -564,7 +661,99 @@ void MainFrame::fileLoad(wxCommandEvent &event) {
     }
 }
 
-void MainFrame::save(wxString &filename) {
+bool MainFrame::isValidParty() {
+    char members = 0;
+    bool end = false;
+    
+    for (int i = 0; i < 4; i++) {
+        int member = memberClass[i]->GetSelection();
+        
+        if (i > 0) {
+            member--;
+        }
+
+        if (member == -1) {
+            end = true;
+        } else {
+            if (members & (1 << member)) {
+                return false;
+            }
+        
+            if (end) {
+                return false;
+            }
+
+            members |= (1 << member);
+        }
+    }
+    
+    return true;
+}
+
+bool MainFrame::hasValidEquipment(int character) {
+    bool bow = false;
+    bool weapon = false;
+    bool armor = false;
+    
+    SaveSlot &slot = *(saveslot[currentSlot]);
+    
+    for (int i = 0; i < 6; i++) {
+        int item = slot.getEquipment(character, i);
+        
+        if (item & 0x80) {
+            item &= 0x7F;
+            
+            if ((item > 0x1) && (item <= 0x4)) {
+                if (bow) {
+                    return false;
+                }
+                
+                bow = true;
+            } else if ((item > 0x4) && (item <= 0xF)) {
+                if (weapon) {
+                    return false;
+                }
+                
+                weapon = true;
+            } else if ((item > 0xF) && (item <= 0x19)) {
+                if (armor) {
+                    return false;
+                }
+                
+                armor = true;
+            }
+        }
+    }
+    
+    return true;
+}
+
+bool MainFrame::save(wxString &filename) {
+    if (!isValidParty()) {
+        int choice = wxMessageBox(wxT("Duplicate or missing party members selected.\nContinue Saving?"),
+                                  wxT("Warning: Invalid Party"),
+                                  wxYES_NO | wxICON_QUESTION,
+                                  this);
+                                 
+        if (choice != wxYES) {
+            return false;
+        }
+    }
+    
+    for (int character = MAGE; character < SHEPHERD; character++) {
+        if (!hasValidEquipment(character)) {
+            int choice = wxMessageBox(CHARACTER_NAMES[character] + 
+                                      wxT(" has more than one equipped item of the same type.\nContinue Saving?"),
+                                      wxT("Warning: Invalid Equipment"),
+                                      wxYES_NO | wxICON_QUESTION,
+                                      this);
+                                      
+            if (choice != wxYES) {
+                return false;
+            }
+        }
+    }
+    
     char *checksum;
     
     for (int offset = 0; offset < 3; offset++) {
@@ -597,6 +786,8 @@ void MainFrame::save(wxString &filename) {
     saveslot[0]->modified = false;
     saveslot[1]->modified = false;
     saveslot[2]->modified = false;
+    
+    return true;
 }
 
 void MainFrame::fileSave(wxCommandEvent &event) {
@@ -643,7 +834,9 @@ bool MainFrame::close() {
                                   this);
         
         if (choice == wxYES) {
-            save(sramFile);
+            if (!save(sramFile)) {
+                return false;
+            }
         } else if (choice == wxCANCEL) {
             return false;
         }
@@ -651,6 +844,7 @@ bool MainFrame::close() {
     
     notebook->Show(false);
     
+    games[0]->Check(true);
     games[0]->Enable(false);
     games[1]->Enable(false);
     games[2]->Enable(false);
@@ -733,39 +927,39 @@ void MainFrame::memberClassChange(wxCommandEvent &event) {
     int character = ctrl->GetSelection();   
     int member = 3;
     
-    if (ctrl == firstMemberClass) {
+    if (ctrl == memberClass[0]) {
         member = 0;
-    } else if (ctrl == secondMemberClass) {
+    } else if (ctrl == memberClass[1]) {
         member = 1;
-    } else if (ctrl == thirdMemberClass) {
+    } else if (ctrl == memberClass[2]) {
         member = 2;
     }
-     
+    
     saveslot[currentSlot]->setMember(member, ((member == 0) ? 
                                               (character + 1) : character));
 }
 
-void MainFrame::virtueChange(wxCommandEvent &event) {
+void MainFrame::virtueChange(wxScrollEvent &event) {
     if (currentSlot == -1) {
         return;
     }
     
-    wxSpinCtrl *ctrl = (wxSpinCtrl *)event.GetEventObject();
+    wxSlider *ctrl = (wxSlider *)event.GetEventObject();
     int virtue = HUMILITY;
     
-    if (ctrl == honestySpinner) {
+    if (ctrl == honestySlider) {
         virtue = HONESTY;
-    } else if (ctrl == compassionSpinner) {
+    } else if (ctrl == compassionSlider) {
         virtue = COMPASSION;
-    } else if (ctrl == valorSpinner) {
+    } else if (ctrl == valorSlider) {
         virtue = VALOR;
-    } else if (ctrl == justiceSpinner) {
+    } else if (ctrl == justiceSlider) {
         virtue = JUSTICE;
-    } else if (ctrl == sacrificeSpinner) {
+    } else if (ctrl == sacrificeSlider) {
         virtue = SACRIFICE;
-    } else if (ctrl == honorSpinner) {
+    } else if (ctrl == honorSlider) {
         virtue = HONOR;
-    } else if (ctrl == spiritualitySpinner) {
+    } else if (ctrl == spiritualitySlider) {
         virtue = SPIRITUALITY;
     }
     
@@ -858,30 +1052,30 @@ void MainFrame::goldChange(wxCommandEvent &event) {
         return;
     }
     
-    saveslot[currentSlot]->setGold(goldSpinner->GetValue());
+    saveslot[currentSlot]->setGold(atoi(goldText->GetValue()));
 }
 
-void MainFrame::herbChange(wxCommandEvent &event) {
+void MainFrame::herbChange(wxScrollEvent &event) {
     if (currentSlot == -1) {
         return;
     }
     
-    wxSpinCtrl *ctrl = (wxSpinCtrl *)event.GetEventObject();
+    wxSlider *ctrl = (wxSlider *)event.GetEventObject();
     int herb = MANROOT;
     
-    if (ctrl == ashSpinner) {
+    if (ctrl == ashSlider) {
         herb = ASH;
-    } else if (ctrl == ginsengSpinner) {
+    } else if (ctrl == ginsengSlider) {
         herb = GINSENG;
-    } else if (ctrl == garlicSpinner) {
+    } else if (ctrl == garlicSlider) {
         herb = GARLIC;
-    } else if (ctrl == silkwebSpinner) {
+    } else if (ctrl == silkwebSlider) {
         herb = SILKWEB;
-    } else if (ctrl == mossSpinner) {
+    } else if (ctrl == mossSlider) {
         herb = MOSS;
-    } else if (ctrl == pearlSpinner) {
+    } else if (ctrl == pearlSlider) {
         herb = PEARL;
-    } else if (ctrl == fungusSpinner) {
+    } else if (ctrl == fungusSlider) {
         herb = FUNGUS;
     }
     
@@ -942,17 +1136,17 @@ void MainFrame::stoneChange(wxCommandEvent &event) {
     saveslot[currentSlot]->setStone(stone, ctrl->IsChecked());
 }
 
-void MainFrame::toolQuantityChange(wxCommandEvent &event) {
+void MainFrame::toolQuantityChange(wxScrollEvent &event) {
     if (currentSlot == -1) {
         return;
     }
     
-    wxSpinCtrl *ctrl = (wxSpinCtrl *)event.GetEventObject();
+    wxSlider *ctrl = (wxSlider *)event.GetEventObject();
     int tool = OIL;
     
-    if (ctrl == torchSpinner) {
+    if (ctrl == torchSlider) {
         tool = TORCH;
-    } else if (ctrl == gemSpinner) {
+    } else if (ctrl == gemSlider) {
         tool = GEM;
     }
     
@@ -1009,27 +1203,27 @@ void MainFrame::statChange(wxCommandEvent &event) {
         return;
     }
     
-    wxSpinCtrl *ctrl = (wxSpinCtrl *)event.GetEventObject();
+    wxTextCtrl *ctrl = (wxTextCtrl *)event.GetEventObject();
     int character = characterChoice->GetSelection();
     
-    if (ctrl == levelSpinner) {
-        saveslot[currentSlot]->setLevel(character, ctrl->GetValue());
-    } else if (ctrl == experienceSpinner) {
-        saveslot[currentSlot]->setExperience(character, ctrl->GetValue());
-    } else if (ctrl == currentHPSpinner) {
-        saveslot[currentSlot]->setCurrentHP(character, ctrl->GetValue());
-    } else if (ctrl == currentMPSpinner) {
-        saveslot[currentSlot]->setCurrentMP(character, ctrl->GetValue());
-    } else if (ctrl == maxHPSpinner) {
-        saveslot[currentSlot]->setMaxHP(character, ctrl->GetValue());
-    } else if (ctrl == maxMPSpinner) {
-        saveslot[currentSlot]->setMaxMP(character, ctrl->GetValue());
-    } else if (ctrl == strengthSpinner) {
-        saveslot[currentSlot]->setStrength(character, ctrl->GetValue());
-    } else if (ctrl == intelligenceSpinner) {
-        saveslot[currentSlot]->setIntelligence(character, ctrl->GetValue());
-    } else if (ctrl == dexteritySpinner) {
-        saveslot[currentSlot]->setDexterity(character, ctrl->GetValue());
+    if (ctrl == levelText) {
+        saveslot[currentSlot]->setLevel(character, atoi(ctrl->GetValue()));
+    } else if (ctrl == experienceText) {
+        saveslot[currentSlot]->setExperience(character, atoi(ctrl->GetValue()));
+    } else if (ctrl == currentHPText) {
+        saveslot[currentSlot]->setCurrentHP(character, atoi(ctrl->GetValue()));
+    } else if (ctrl == currentMPText) {
+        saveslot[currentSlot]->setCurrentMP(character, atoi(ctrl->GetValue()));
+    } else if (ctrl == maxHPText) {
+        saveslot[currentSlot]->setMaxHP(character, atoi(ctrl->GetValue()));
+    } else if (ctrl == maxMPText) {
+        saveslot[currentSlot]->setMaxMP(character, atoi(ctrl->GetValue()));
+    } else if (ctrl == strengthText) {
+        saveslot[currentSlot]->setStrength(character, atoi(ctrl->GetValue()));
+    } else if (ctrl == intelligenceText) {
+        saveslot[currentSlot]->setIntelligence(character, atoi(ctrl->GetValue()));
+    } else if (ctrl == dexterityText) {
+        saveslot[currentSlot]->setDexterity(character, atoi(ctrl->GetValue()));
     }
 }
 

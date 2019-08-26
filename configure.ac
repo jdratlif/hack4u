@@ -1,11 +1,33 @@
 dnl Initialize autoconf
-AC_INIT([hack4u], [0.82], [emuWorks@technoplaza.net])
+AC_INIT([hack4u], [0.90], [emuWorks@technoplaza.net])
+
+dnl require autoconf >= 2.57
+AC_PREREQ([2.57])
 
 dnl use the config.h header
 AC_CONFIG_HEADERS([config.h])
 
 dnl initialize automake and allow bzipped distributions
-AM_INIT_AUTOMAKE([dist-bzip2])
+AM_INIT_AUTOMAKE([1.8 dist-bzip2])
+
+dnl enable xrcprefix variable
+AC_ARG_VAR([XRC_PREFIX], [path to the XRC files])
+
+if test x$XRC_PREFIX = x; then
+    AC_DEFINE_UNQUOTED(XRC_FILE, "xrc/hack4u.xrc", [XRC path])
+else
+    AC_DEFINE_UNQUOTED(XRC_FILE, "$XRC_PREFIX/hack4u.xrc", [XRC path])
+fi
+
+dnl host system check
+AC_CANONICAL_HOST
+
+dnl AM_CONDITIONAL([WINDOWS], test x$host_os = xmingw32)
+AM_CONDITIONAL([WINDOWS],
+               [case $host_os in
+               mingw32 | cygwin ) test x = x ;;
+               * ) test 0 = 1 ;;
+               esac])
 
 dnl check for c++ compiler and BSD install
 AC_PROG_CXX

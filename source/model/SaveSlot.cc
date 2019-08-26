@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: SaveSlot.cc,v 1.5 2004/11/30 14:05:57 technoplaza Exp $
+// $Id: SaveSlot.cc,v 1.6 2004/12/02 08:48:37 technoplaza Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -102,9 +102,10 @@ wxString SaveSlot::getHerosName() {
 
 void SaveSlot::setHerosName(wxString &name) {
     int pos;
+    int length = name.size();
     
     for (pos = 0; pos < 5; pos++) {
-        if (name.size() < pos) {
+        if ((length - 1) < pos) {
             nvram[NAME_OFFSET + pos] = 0;
         } else {
             nvram[NAME_OFFSET + pos] = toNES(name.at(pos));
@@ -368,7 +369,7 @@ unsigned char SaveSlot::toNES(char letter) {
         return (unsigned char)0x90;
     }
     
-    // return ' ' space for all else
+    // return _ underscore for all else
     return (unsigned char)0xBC;
 }
 
@@ -383,7 +384,7 @@ char SaveSlot::fromNES(unsigned char letter) {
         return '!';
     }
     
-    // return ' ' space for all else
-    return ' ';
+    // return  _ underscore for all else
+    return '_';
 }
 

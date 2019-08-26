@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: MainFrame.hh,v 1.14 2004/11/30 14:29:34 technoplaza Exp $
+// $Id: MainFrame.hh,v 1.18 2004/12/03 03:05:48 technoplaza Exp $
 
 #ifndef _MAIN_FRAME_HH_
 #define _MAIN_FRAME_HH_
@@ -59,7 +59,10 @@ namespace hack4u {
         void load(wxString &);
         void fileLoad(wxCommandEvent &);
         
-        void save(wxString &);
+        bool isValidParty();
+        bool hasValidEquipment(int);
+        
+        bool save(wxString &);
         void fileSave(wxCommandEvent &);
         void fileSaveAs(wxCommandEvent &);
         
@@ -77,15 +80,15 @@ namespace hack4u {
         
         void herosNameChange(wxCommandEvent &);
         void memberClassChange(wxCommandEvent &);
-        void virtueChange(wxCommandEvent &);
+        void virtueChange(wxScrollEvent &);
         void magicChange(wxCommandEvent &);
         void phaseChange(wxCommandEvent &);
         
         void goldChange(wxCommandEvent &);
-        void herbChange(wxCommandEvent &);
+        void herbChange(wxScrollEvent &);
         void runeChange(wxCommandEvent &);
         void stoneChange(wxCommandEvent &);
-        void toolQuantityChange(wxCommandEvent &);
+        void toolQuantityChange(wxScrollEvent &);
         void toolHaveChange(wxCommandEvent &);
         
         void characterChange(wxCommandEvent &);
@@ -110,20 +113,16 @@ namespace hack4u {
         wxMenuItem *fileCloseItem;
 
         wxTextCtrl *herosNameText;
+        wxChoice *memberClass[4];
 
-        wxChoice *firstMemberClass;
-        wxChoice *secondMemberClass;
-        wxChoice *thirdMemberClass;
-        wxChoice *fourthMemberClass;
-
-        wxSpinCtrl *honestySpinner;
-        wxSpinCtrl *compassionSpinner;
-        wxSpinCtrl *valorSpinner;
-        wxSpinCtrl *justiceSpinner;
-        wxSpinCtrl *sacrificeSpinner;
-        wxSpinCtrl *honorSpinner;
-        wxSpinCtrl *spiritualitySpinner;
-        wxSpinCtrl *humilitySpinner;
+        wxSlider *honestySlider;
+        wxSlider *compassionSlider;
+        wxSlider *valorSlider;
+        wxSlider *justiceSlider;
+        wxSlider *sacrificeSlider;
+        wxSlider *honorSlider;
+        wxSlider *spiritualitySlider;
+        wxSlider *humilitySlider;
 
         wxCheckBox *lightSpellCheck;
         wxCheckBox *missileSpellCheck;
@@ -154,16 +153,16 @@ namespace hack4u {
         wxChoice *trammelChoice;
         wxChoice *feluccaChoice;
 
-        wxSpinCtrl *goldSpinner;
+        wxTextCtrl *goldText;
 
-        wxSpinCtrl *ashSpinner;
-        wxSpinCtrl *ginsengSpinner;
-        wxSpinCtrl *garlicSpinner;
-        wxSpinCtrl *silkwebSpinner;
-        wxSpinCtrl *mossSpinner;
-        wxSpinCtrl *pearlSpinner;
-        wxSpinCtrl *fungusSpinner;
-        wxSpinCtrl *manrootSpinner;
+        wxSlider *ashSlider;
+        wxSlider *ginsengSlider;
+        wxSlider *garlicSlider;
+        wxSlider *silkwebSlider;
+        wxSlider *mossSlider;
+        wxSlider *pearlSlider;
+        wxSlider *fungusSlider;
+        wxSlider *manrootSlider;
 
         wxCheckBox *honestyRuneCheck;
         wxCheckBox *compassionRuneCheck;
@@ -183,9 +182,9 @@ namespace hack4u {
         wxCheckBox *whiteStoneCheck;
         wxCheckBox *blackStoneCheck;
 
-        wxSpinCtrl *torchSpinner;
-        wxSpinCtrl *gemSpinner;
-        wxSpinCtrl *oilSpinner;
+        wxSlider *torchSlider;
+        wxSlider *gemSlider;
+        wxSlider *oilSlider;
 
         wxCheckBox *keyCheck;
         wxCheckBox *sextantCheck;
@@ -203,20 +202,22 @@ namespace hack4u {
 
         wxChoice *characterChoice;
 
-        wxSpinCtrl *levelSpinner;
-        wxSpinCtrl *experienceSpinner;
-        wxSpinCtrl *currentHPSpinner;
-        wxSpinCtrl *currentMPSpinner;
-        wxSpinCtrl *maxHPSpinner;
-        wxSpinCtrl *maxMPSpinner;
-        wxSpinCtrl *strengthSpinner;
-        wxSpinCtrl *intelligenceSpinner;
-        wxSpinCtrl *dexteritySpinner;
+        wxTextCtrl *levelText;
+        wxTextCtrl *experienceText;
+        wxTextCtrl *currentHPText;
+        wxTextCtrl *currentMPText;
+        wxTextCtrl *maxHPText;
+        wxTextCtrl *maxMPText;
+        wxTextCtrl *strengthText;
+        wxTextCtrl *intelligenceText;
+        wxTextCtrl *dexterityText;
 
         wxChoice *itemChoice[6];
         wxCheckBox *itemEquippedCheck[6];
         
         static const wxString CITY_NAMES[];
+        static const wxString CHARACTER_NAMES[];
+        static const char *ICON[];
     };
 }
 
