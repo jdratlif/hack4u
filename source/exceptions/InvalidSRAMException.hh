@@ -55,6 +55,7 @@ namespace hack4u {
     inline InvalidSRAMException::
         InvalidSRAMException(enum InvalidSRAMError error) :
         std::runtime_error("InvalidSRAMException"), error(error) {}
+        
     inline enum InvalidSRAMError InvalidSRAMException::getError() const
         { return error; }
 }

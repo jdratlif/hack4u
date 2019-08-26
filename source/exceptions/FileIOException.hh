@@ -53,6 +53,7 @@ namespace hack4u {
     
     inline FileIOException::FileIOException(enum FileIOError error) :
         std::runtime_error("FileIOException"), error(error) {}
+        
     inline enum FileIOError FileIOException::getError() const
         { return error; }
 }

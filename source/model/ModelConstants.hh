@@ -187,19 +187,19 @@ namespace hack4u {
     /// Found offset for the Book of Truth
     extern const std::pair<int, int> FOUND_BOOK_OFFSET;
     
-    /// Found offse for the Candle of Love
+    /// Found offset for the Candle of Love
     extern const std::pair<int, int> FOUND_CANDLE_OFFSET;
     
-    /// Found offse for the Flute
+    /// Found offset for the Flute
     extern const std::pair<int, int> FOUND_FLUTE_OFFSET;
     
-    /// Found offse for the Silver Horn
+    /// Found offset for the Silver Horn
     extern const std::pair<int, int> FOUND_HORN_OFFSET;
     
-    /// Found offse for the Scale
+    /// Found offset for the Scale
     extern const std::pair<int, int> FOUND_SCALE_OFFSET;
     
-    /// Found offse for Mondain's Skull
+    /// Found offset for Mondain's Skull
     extern const std::pair<int, int> FOUND_SKULL_OFFSET;
 }
 

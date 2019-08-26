@@ -68,7 +68,7 @@ SRAMFile::SRAMFile(const wxString &filename) throw(InvalidSRAMException) {
     }
     
     // create backup file
-    wxString bakfile = filename + ".bak";
+    wxString bakfile = filename + wxT(".bak");
     std::ofstream out(bakfile.mb_str(),
         std::ios_base::out | std::ios_base::binary);
         

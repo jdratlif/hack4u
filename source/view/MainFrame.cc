@@ -766,7 +766,7 @@ void MainFrame::onBalloonChange(wxCommandEvent &event) {
     }
     
     wxTextCtrl *ctrl = dynamic_cast<wxTextCtrl *>(event.GetEventObject());
-    int value = std::atoi(ctrl->GetValue());
+    int value = std::atoi(ctrl->GetValue().mb_str());
     std::pair<int, int> location = saveslot->getBalloonLocation();
     
     if (event.GetId() == XRCID("IDT_TRANSPORTATION_BALLOONLATITUDE")) {
@@ -862,7 +862,7 @@ void MainFrame::onFileExit(wxCommandEvent &) {
 
 void MainFrame::onFileOpen(wxCommandEvent &) {
     static wxFileDialog *dlg = new wxFileDialog(this, 
-        wxT("Choose a .SAV File"), "", "", 
+        wxT("Choose a .SAV File"), wxT(""), wxT(""), 
         wxT("NES SRAM File (*.sav)|*.sav"), (wxOPEN | wxCHANGE_DIR));
         
     int value = dlg->ShowModal();
@@ -875,7 +875,7 @@ void MainFrame::onFileOpen(wxCommandEvent &) {
 
 void MainFrame::onFileSaveAs(wxCommandEvent &) {
     static wxFileDialog *dlg = new wxFileDialog(this, 
-        wxT("Choose a .SAV File"), "", "", 
+        wxT("Choose a .SAV File"), wxT(""), wxT(""), 
         wxT("NES SRAM File (*.sav)|*.sav"), (wxSAVE | wxCHANGE_DIR));
     
     int value = dlg->ShowModal();
@@ -920,7 +920,7 @@ void MainFrame::onGoldChange(wxCommandEvent &) {
     
     saveslot->setGold(std::atoi(XRCCTRL(*this, 
                                         "IDT_PARTY_GOLD",
-                                        wxTextCtrl)->GetValue()));
+                                        wxTextCtrl)->GetValue().mb_str()));
 }
 
 void MainFrame::onHelpAbout(wxCommandEvent &) {
@@ -1260,7 +1260,7 @@ void MainFrame::onShipLocationChange(wxCommandEvent &event) {
     }
     
     wxTextCtrl *ctrl = dynamic_cast<wxTextCtrl *>(event.GetEventObject());
-    int value = std::atoi(ctrl->GetValue());
+    int value = std::atoi(ctrl->GetValue().mb_str());
     enum PirateShip ship;
     std::pair<int, int> location;
     
@@ -1350,7 +1350,7 @@ void MainFrame::onStatChange(wxCommandEvent &event) {
     wxTextCtrl *ctrl = dynamic_cast<wxTextCtrl *>(event.GetEventObject());
     enum Character character = static_cast<enum Character>
         (XRCCTRL(*this, "IDRB_CHARACTER_SELECT", wxRadioBox)->GetSelection());
-    int value = std::atoi(ctrl->GetValue());
+    int value = std::atoi(ctrl->GetValue().mb_str());
 
     if (event.GetId() == XRCID("IDT_CHARACTER_LEVEL")) {
         saveslot->setLevel(character, value);
@@ -1468,7 +1468,7 @@ void MainFrame::onWhirlpoolChange(wxCommandEvent &event) {
     
     wxTextCtrl *ctrl = dynamic_cast<wxTextCtrl *>(event.GetEventObject());
     std::pair<int, int> location = saveslot->getWhirlpoolLocation();
-    int value = std::atoi(ctrl->GetValue());
+    int value = std::atoi(ctrl->GetValue().mb_str());
     
     if (event.GetId() == XRCID("IDT_TRANSPORTATION_WHIRLPOOLLATITUDE")) {
         location.first = value;

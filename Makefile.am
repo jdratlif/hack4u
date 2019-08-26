@@ -1,4 +1,5 @@
-EXTRA_DIST = apidocs docs/*.txt Doxyfile Info.plist
+EXTRA_DIST = apidocs docs/*.txt Doxyfile Info.plist vc.net/hack4u/hack4u.sln \
+	vc.net/hack4u/hack4u.vcproj
 SUBDIRS = source
 
 .PHONY: allclean apidocs touch

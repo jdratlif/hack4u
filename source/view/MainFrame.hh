@@ -427,11 +427,18 @@ namespace hack4u {
         MainFrame();
     };
     
-    inline bool MainFrame::isOpen() { return open; }
+    inline bool MainFrame::isOpen()
+        { return open; }
+    
     inline void MainFrame::onCharacterChange(wxCommandEvent &event)
         { loadStats(static_cast<enum Character>(event.GetSelection())); }
-    inline void MainFrame::onFileClose(wxCommandEvent &) { close(); }
-    inline void MainFrame::onFileSave(wxCommandEvent &) { save(sramFile); }
+        
+    inline void MainFrame::onFileClose(wxCommandEvent &)
+        { close(); }
+    
+    inline void MainFrame::onFileSave(wxCommandEvent &)
+        { save(sramFile); }
+        
     inline void MainFrame::onSaveCloseUpdate(wxUpdateUIEvent &event)
         { event.Enable(isOpen()); }
 }

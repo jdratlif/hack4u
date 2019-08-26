@@ -540,7 +540,8 @@ namespace hack4u {
         unsigned char checksum() const;
     };
     
-    inline bool SaveSlot::isModified() const { return modified; }
+    inline bool SaveSlot::isModified() const
+        { return modified; }
 }
 
 #endif

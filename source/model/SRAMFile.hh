@@ -95,8 +95,11 @@ namespace hack4u {
         void save(const wxString &filename) throw(FileIOException);
     };
     
-    inline SaveSlot *SRAMFile::getSaveSlot(int game) { return saveslot[game]; }
-    inline bool SRAMFile::isValid(int slot) const { return valid[slot]; }
+    inline SaveSlot *SRAMFile::getSaveSlot(int game)
+        { return saveslot[game]; }
+        
+    inline bool SRAMFile::isValid(int slot) const
+        { return valid[slot]; }
 }
 
 #endif

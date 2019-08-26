@@ -9,10 +9,9 @@ hack4u_SOURCES = hack4u.cc hack4u.hh \
 	model/ModelConstants.hh \
 	model/SaveSlot.cc model/SaveSlot.hh \
 	model/SRAMFile.cc model/SRAMFile.hh \
+	res/hack4u.cc \
 	view/FileDropTarget.cc view/FileDropTarget.hh \
 	view/MainFrame.cc view/MainFrame.hh
-
-nodist_hack4u_SOURCES = res/hack4u.cc
 
 if WINDOWS
 hack4u_SOURCES += res/windows.rc

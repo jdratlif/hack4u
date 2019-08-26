@@ -160,7 +160,9 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-EXTRA_DIST = apidocs docs/*.txt Doxyfile Info.plist
+EXTRA_DIST = apidocs docs/*.txt Doxyfile Info.plist vc.net/hack4u/hack4u.sln \
+	vc.net/hack4u/hack4u.vcproj
+
 SUBDIRS = source
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
@@ -353,7 +355,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/docs
+	$(mkdir_p) $(distdir)/docs $(distdir)/vc.net/hack4u
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

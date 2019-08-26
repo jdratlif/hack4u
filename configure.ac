@@ -1,5 +1,5 @@
 dnl Initialize autoconf
-AC_INIT([hack4u], [1.1], [emuWorks@technoplaza.net])
+AC_INIT([hack4u], [1.2], [emuWorks@technoplaza.net])
 
 dnl require autoconf >= 2.59
 AC_PREREQ([2.59])
@@ -26,16 +26,16 @@ AC_PROG_INSTALL
 
 dnl tests for wxWidgets
 AM_OPTIONS_WXCONFIG
-AM_PATH_WXCONFIG([2.6.2], HAVE_WXWIDGETS=1, HAVE_WXWIDGETS=0)
+AM_PATH_WXCONFIG([2.6.0], HAVE_WXWIDGETS=1, HAVE_WXWIDGETS=0)
 
 if test $HAVE_WXWIDGETS -eq 1; then
     CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
     CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS_ONLY"
     LIBS="$LIBS $WX_LIBS"
 else
-    AC_MSG_ERROR([wxWidgets >= 2.6.2 is required.
+    AC_MSG_ERROR([wxWidgets >= 2.6 is required.
                   
-                  Please install wxWidgets 2.6.2 from http://www.wxwidgets.org.
+                  Please install wxWidgets 2.6 from http://www.wxwidgets.org.
                   
                   This error could also be the result of a non-standard install
                   path or a missing wx-config program.])

@@ -55,7 +55,7 @@ am__hack4u_SOURCES_DIST = hack4u.cc hack4u.hh \
 	exceptions/InvalidSRAMException.cc \
 	exceptions/InvalidSRAMException.hh model/ModelConstants.hh \
 	model/SaveSlot.cc model/SaveSlot.hh model/SRAMFile.cc \
-	model/SRAMFile.hh view/FileDropTarget.cc \
+	model/SRAMFile.hh res/hack4u.cc view/FileDropTarget.cc \
 	view/FileDropTarget.hh view/MainFrame.cc view/MainFrame.hh \
 	res/windows.rc
 am__dirstamp = $(am__leading_dot)dirstamp
@@ -64,10 +64,9 @@ am_hack4u_OBJECTS = hack4u.$(OBJEXT) \
 	exceptions/FileIOException.$(OBJEXT) \
 	exceptions/InvalidSRAMException.$(OBJEXT) \
 	model/SaveSlot.$(OBJEXT) model/SRAMFile.$(OBJEXT) \
-	view/FileDropTarget.$(OBJEXT) view/MainFrame.$(OBJEXT) \
-	$(am__objects_1)
-nodist_hack4u_OBJECTS = res/hack4u.$(OBJEXT)
-hack4u_OBJECTS = $(am_hack4u_OBJECTS) $(nodist_hack4u_OBJECTS)
+	res/hack4u.$(OBJEXT) view/FileDropTarget.$(OBJEXT) \
+	view/MainFrame.$(OBJEXT) $(am__objects_1)
+hack4u_OBJECTS = $(am_hack4u_OBJECTS)
 hack4u_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -81,7 +80,7 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(hack4u_SOURCES) $(nodist_hack4u_SOURCES)
+SOURCES = $(hack4u_SOURCES)
 DIST_SOURCES = $(am__hack4u_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
@@ -182,10 +181,9 @@ hack4u_SOURCES = hack4u.cc hack4u.hh exceptions/FileIOException.cc \
 	exceptions/InvalidSRAMException.cc \
 	exceptions/InvalidSRAMException.hh model/ModelConstants.hh \
 	model/SaveSlot.cc model/SaveSlot.hh model/SRAMFile.cc \
-	model/SRAMFile.hh view/FileDropTarget.cc \
+	model/SRAMFile.hh res/hack4u.cc view/FileDropTarget.cc \
 	view/FileDropTarget.hh view/MainFrame.cc view/MainFrame.hh \
 	$(am__append_1)
-nodist_hack4u_SOURCES = res/hack4u.cc
 all: all-am
 
 .SUFFIXES:
@@ -262,6 +260,14 @@ model/SaveSlot.$(OBJEXT): model/$(am__dirstamp) \
 	model/$(DEPDIR)/$(am__dirstamp)
 model/SRAMFile.$(OBJEXT): model/$(am__dirstamp) \
 	model/$(DEPDIR)/$(am__dirstamp)
+res/$(am__dirstamp):
+	@$(mkdir_p) res
+	@: > res/$(am__dirstamp)
+res/$(DEPDIR)/$(am__dirstamp):
+	@$(mkdir_p) res/$(DEPDIR)
+	@: > res/$(DEPDIR)/$(am__dirstamp)
+res/hack4u.$(OBJEXT): res/$(am__dirstamp) \
+	res/$(DEPDIR)/$(am__dirstamp)
 view/$(am__dirstamp):
 	@$(mkdir_p) view
 	@: > view/$(am__dirstamp)
@@ -272,15 +278,7 @@ view/FileDropTarget.$(OBJEXT): view/$(am__dirstamp) \
 	view/$(DEPDIR)/$(am__dirstamp)
 view/MainFrame.$(OBJEXT): view/$(am__dirstamp) \
 	view/$(DEPDIR)/$(am__dirstamp)
-res/$(am__dirstamp):
-	@$(mkdir_p) res
-	@: > res/$(am__dirstamp)
-res/$(DEPDIR)/$(am__dirstamp):
-	@$(mkdir_p) res/$(DEPDIR)
-	@: > res/$(DEPDIR)/$(am__dirstamp)
 res/windows.$(OBJEXT): res/$(am__dirstamp) \
-	res/$(DEPDIR)/$(am__dirstamp)
-res/hack4u.$(OBJEXT): res/$(am__dirstamp) \
 	res/$(DEPDIR)/$(am__dirstamp)
 hack4u$(EXEEXT): $(hack4u_OBJECTS) $(hack4u_DEPENDENCIES) 
 	@rm -f hack4u$(EXEEXT)

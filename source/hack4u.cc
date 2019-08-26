@@ -44,13 +44,13 @@ using namespace hack4u;
 
 // static variable initialization
 const wxString *Hack4u::APP_NAME =
-    new wxString(wxT(PACKAGE_NAME));
+    new wxString(wxT("hack4u"));
 
 const wxString *Hack4u::APP_VERSION =
-    new wxString(wxT(PACKAGE_VERSION));
+    new wxString(wxT("1.2"));
 
 const wxString *Hack4u::APP_COPYRIGHT =
-    new wxString(wxT("Copyright (C) 2004-2005 emuWorks"));
+    new wxString(wxT("Copyright (C) 2004-2006 emuWorks"));
 
 const wxString *Hack4u::APP_URL =
     new wxString(wxT("http://games.technoplaza.net/"));
