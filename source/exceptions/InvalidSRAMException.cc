@@ -20,31 +20,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: FileDropTarget.cc,v 1.6 2006/03/15 14:11:45 technoplaza Exp $
+// $Id: InvalidSRAMException.cc,v 1.1 2006/03/14 22:54:22 technoplaza Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
 #endif
 
-#include <wx/wxprec.h>
-
-#ifndef WX_PRECOMP
-    #include <wx/wx.h>
-#endif
-
-#include "view/FileDropTarget.hh"
-#include "view/MainFrame.hh"
+#include "exceptions/InvalidSRAMException.hh"
 
 using namespace hack4u;
-
-bool FileDropTarget::OnDropFiles(wxCoord, wxCoord, const wxArrayString &files) {
-    int size = files.GetCount();
-
-    if (size > 0) {
-        wxString filename = files[0];
-        owner->load(filename);
-    }
-
-    return true;
-}
 

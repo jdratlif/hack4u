@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2005 emuWorks
+ * Copyright (C) 2004-2006 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,7 +20,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: windows.rc,v 1.2 2005/08/03 11:11:39 technoplaza Exp $
+// $Id: FileIOException.cc,v 1.1 2006/03/14 22:54:22 technoplaza Exp $
 
-IDR_ICON ICON DISCARDABLE "res\\ankh.ico"
+#ifdef HAVE_CONFIG_H
+    #include <config.h>
+#endif
+
+#include "exceptions/FileIOException.hh"
+
+using namespace hack4u;
 

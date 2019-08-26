@@ -20,43 +20,41 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: FileDropTarget.hh,v 1.7 2006/03/15 13:39:37 technoplaza Exp $
+// $Id: FileIOException.hh,v 1.1 2006/03/14 22:54:22 technoplaza Exp $
 
-#ifndef _FILEDROPTARGET_HH
-#define _FILEDROPTARGET_HH
+#ifndef _FILEIOEXCEPTION_HH_
+#define _FILEIOEXCEPTION_HH_
 
-#include <wx/dnd.h>
+#include <stdexcept>
 
 namespace hack4u {
-    class MainFrame;
+    /// error codes that cause FileIOExceptions to be thrown
+    enum FileIOError {
+        FIE_CANNOTOPEN, FIE_IOERROR
+    };
     
-    /**
-     * Class implementing a wxFileDropTarget for the MainFrame class.
-     */
-    class FileDropTarget : public wxFileDropTarget {
+    class FileIOException : public std::runtime_error {
     private:
-        MainFrame *owner;
+        enum FileIOError error;
         
     public:
         /**
-         * Constructor for the FileDropTarget.
-         * 
-         * @param owner The MainFrame associated with this FileDropTarget.
+         * Creates a new FileIOException.
+         *
+         * @param error The reason for this FileIOException.
          */
-        FileDropTarget(MainFrame *owner);
+        FileIOException(enum FileIOError error);
         
         /**
-         * Virtual method called when files are dropped on this target.
-         *
-         * @param x The x-coordinate of the drop.
-         * @param y The y-coordinate of the drop.
-         * @param files The files dropped on this target.
+         * Gets the error code of this FileIOException.
          */
-        virtual bool OnDropFiles(wxCoord x, wxCoord y, 
-                                 const wxArrayString &files);
+        enum FileIOError getError() const;
     };
     
-    inline FileDropTarget::FileDropTarget(MainFrame *owner) : owner(owner) {}
+    inline FileIOException::FileIOException(enum FileIOError error) :
+        std::runtime_error("FileIOException"), error(error) {}
+    inline enum FileIOError FileIOException::getError() const
+        { return error; }
 }
 
 #endif

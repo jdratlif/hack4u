@@ -24,15 +24,20 @@
   3.0 Credits & Thanks
   4.0 Copyright
   5.0 SRAM Offsets
-    5.1 Phases of the Moon
-    5.2 The Hero's Name
-    5.3 Virtues
-    5.4 Current Party Members
-    5.5 Stones & Runes
-    5.6 Magic
-    5.7 Herbs, Gold, & Tools
-    5.8 Inventory
-    5.9 Character Stats
+    5.1  Phases of the Moon
+    5.2  The Hero's Name
+    5.3  Virtues
+    5.4  Party Members
+    5.5  Stones & Runes
+    5.6  Magic
+    5.7  Herbs, Gold, & Tools
+    5.8  Inventory
+    5.9  Character Stats
+    5.10 Starting Location
+    5.11 Pirate Ships & The Balloon
+    5.12 The Whirlpool
+    5.13 Treasure Offsets
+    5.14 Miscellaneous Offsets
   6.0 The Sanity Algorithm
   7.0 Contact Information
   
@@ -68,12 +73,12 @@
   Modifying the information directly (by hand with a hex editor for instance) is
   difficult because of a complicated sanity algorithm Ultima uses to check the
   integrity of the SRAM. Because the original battery in the cartridge can only
-  last so long, they felt it necessary to develop an algorithm they were sure
-  was likely to confirm the data in the SRAM was legit. Unfortunately, it is not
-  a simple algorithm to compute by hand. Fortunately, I've written a nice
-  program that will do it for you. You may be reading this guide as part of that
-  program, but if not, you can find it at http://games.technoplaza.net/hack4u/.
-  It is available for Windows, Linux, and Mac OS-X.
+  last so long, it was necessary to develop an algorithm they were sure would
+  confirm the data in the SRAM was legit. Unfortunately, it is not a simple
+  algorithm to compute by hand. Fortunately, I've written a nice program that
+  will do it for you. You may be reading this guide as part of that program, but
+  if not, you can find it at http://games.technoplaza.net/hack4u/. It is
+  available for Windows, Linux, Mac OS X, and FreeBSD.
   
   The sanity algorithm is described in section 6.0.
   
@@ -81,6 +86,15 @@
 | 2.0 Revision History
 --------------------------------------------------------------------------------
 
+  Version 1.2 - March 21, 2006
+    - minor typo corrections
+    - updated the Ultima alphabet table
+    - added information on joined party members
+    - added information on starting location
+    - added information on the balloon location
+    - added information on the pirate ship locations
+    - added information on the whirlpool location
+    - added information on treasure offsets
   Version 1.1 - August 3, 2005
     - minor corrections (typos mostly)
   Version 1.0 - December 4, 2004
@@ -113,6 +127,10 @@
       the wxWidgets nuances and I wouldn't have gotten very far without their
       guidance.
       
+  - sp, bbitmaster, DahrkDaiz, and Vystrix Nexoth
+      Creators of FCEUXD SP. The PPU viewer was very helpful in learning the
+      remainder of the Ultima character alphabet.
+      
 --------------------------------------------------------------------------------
 | 4.0 Copyrights
 --------------------------------------------------------------------------------
@@ -125,7 +143,7 @@
   Since I can't do anything about their copyrights, I'll just have to lead by
   example.
   
-  This document is Copyright (C) 2004-2005 emuWorks 
+  This document is Copyright (C) 2004-2006 emuWorks 
     Permission is granted to copy, distribute and/or modify this document
     under the terms of the GNU Free Documentation License, Version 1.2
     or any later version published by the Free Software Foundation;
@@ -184,6 +202,7 @@
   $00       Sanity Byte
   $01       Moon Phases
   $02-$06   Hero's Name
+  $0B       Characters Who've Agreed to Join the Party
   $0C-$13   Virtues
   $14       Avatarhood
   $15-$18   Party Members
@@ -225,26 +244,18 @@
   $A9-$B0   Intelligence
   $B1-$B8   Dexterity
   $B9-$C8   Experience
+  $D2-DD    Found Treasure
+  $ED       Capture Pirate Ships
+  $EE       Next Pirate Ship to Overwrite
+  $F0-$F1   Balloon Location
+  $F2-$F3   Whirlpool Location
+  $F4-$FB   Pirate Ship Location(s)
+  $107      Starting Location
   
   These are all the ones I know about, or cared enough to make a note of anyway.
   
-  Some missing ones include found treasure. For example, I found the Rune of
-  Compassion in the game and took it away with my save state editor. But when I
-  went to search for it, it wasn't there. This implies there is another offset
-  that saves the location of found treasure.
-  
-  Spells you can learn in Spells Unlimited. I thought it was enough just to know
-  the spells.
-  
-  Characters who have joined your party, but are not currently in your party.
-  The game keeps track of who is in your party, and another place for all the
-  characters that have joined your party. If there is a difference between the
-  two values, those characters that have joined will show up in the Hostel in
-  Britannia.
-  
-  Location of the Pirate Ships you have claimed, and the Baloon. I haven't
-  thought about this till just now, but this might be useful. The Wind direction
-  is probably contained in some offset, too.
+  I haven't noted the spells you can learn in Spells Unlimited. I thought it was
+  enough just to have the spells.
   
 --------------------------------------------------------------------------------
 | 5.1 Phases of the Moon
@@ -317,11 +328,15 @@
   last character in the name and the status info in battle. The mage Mariah has
   this problem, too, so it doesn't seem to hurt the game any.
   
-  Ultima's alphabet for names is simply. I only know the characters that you are
-  legitimately allowed to give the Hero. However, I would expect you can use any
-  of the character symbols, so feel free to experiment with values other than
-  the ones I've listed if you're interested. My save state editor program hack4u
-  limits you to the game provided character alphabet.
+  Ultima's alphabet for names is simple. I will list all the symbols I know, but
+  some may not be valid for names. The legitimate alphabet for character names
+  includes the letters A-Z and the lowercase a-z, the numbers 0-9, the dash -,
+  the exclamation point !, a space (represented by an underscore _), and the
+  NUL character which signifies termination of a name with less than 5
+  characters. My save state editor program hack4u limits you to the game
+  provided character alphabet.
+  
+  Legitimate character alphabet:
   
   A-Z = $91-$AA
   a-z = $D1-$EA
@@ -329,6 +344,47 @@
   !   = $90
   _   = $BC     (SPC in the game becomes an underscore)
   NUL = $00     (this signifies a name with less than 5 (or 6) characters).
+  
+  Other possible symbols:
+  
+  Circle (small)                 = $BF
+  /                              = $C0
+  .                              = $C1
+  ,                              = $C2
+  Dot                            = $C3
+  "                              = $C4
+  Degree mark (circle)           = $C5
+  ,                              = $C6
+  Key symbol                     = $C7
+  Star                           = $C8
+  + (Plus Symbol)                = $C9
+  Ankh Symbol                    = $CA
+  x (not the same as alphabet x) = $CB
+  :                              = $CC
+  ;                              = $CD
+  
+  Status Screen Alphabet:
+  
+  These are the capital letters used on the status screen to indicate class,
+  MP, HP, and status ailments. These letters are distinct from the name
+  slphabet.
+  
+  N                     = $63
+  E                     = $64
+  S (Shepherd)          = $65
+  W                     = $66
+  G                     = $67
+  P (Paladin or Poison) = $68
+  D (Druid)             = $69
+  M (Mage or MP)        = $6A
+  B (Bard)              = $6B
+  F (Fighter)           = $6C
+  H (HP)                = $6D
+  T (Tinker)            = $6E
+  R (Ranger)            = $6F
+  
+  I'm not sure what N, E, W, and G are used for. The other letters may have
+  additional uses I'm unaware of.
   
   I always name my hero either Dominic or Liam, depending upon how many
   characters I'm allowed. Since we are restricted to 5, Liam it is.
@@ -363,8 +419,8 @@
   $12 Spirituality
   $13 Humility
   
-  I'm not 100% what the exact values represent, but here is what I know. The
-  higher the number, the better your character is.
+  I'm not 100% what the exact values represent, but the higher the number, the
+  better (more moral) your character is.
   
   I believe the values range between $00-$64 (0-100). $64 means you have partial
   avatarhood, $63 is the best you can be without having partial avatarhood,
@@ -402,14 +458,14 @@
   use my program. That's even easier.
   
 --------------------------------------------------------------------------------
-| 5.4 Current Party Members
+| 5.4 Party Members
 --------------------------------------------------------------------------------
 
   Ultima IV can support four characters in your party as one time. The
   characters are one of the following: Mage, Bard, Fighter, Druid, Tinker,
-  Paladin, Ranger, or Shepherd. You can also have no one in your party at a
-  certain location, but to avoid confusing the game, you should make sure the
-  empty slots are at the end.
+  Paladin, Ranger, and Shepherd. You can also have no one in your party at a
+  certain location, but to avoid confusing the game, it's best if the empty
+  slots are at the end.
   
   If you read the section on Virtues, you know that the characters, like the
   virtues are always numbered 0-7 (Mage - Shepherd). But as a special case where
@@ -422,15 +478,6 @@
   their hero abilities such as being able to equip Exotic Armor or Sword of 
   Paradise if they are the Avatar.
   
-  Since members in your party are not tracked by the same value as people who
-  have agreed to join you, if you put characters who have not joined your party
-  in your formation, you may be able to meet them again in their hometowns. The
-  result of this is untested and unknown.
-  
-  In addition, if you part with people at the hostel who didn't join you, they
-  may or may not show up in the hostel later. Again, this is untested and
-  unknown.
-  
   You can also have more than one of the same character in your party. However,
   they are all tracked with the same stats. This means if one character dies,
   they all die. But on the plus side, if one gains experience, they all gain
@@ -439,12 +486,32 @@
   to be expected when the game is forced to use invalid data it never expected
   was possible.
   
-  Just set the values to 0-8 (0 = no one, 1-7 = Mage - Shepherd)
+  Since members in your party are not tracked by the same value as people who
+  have agreed to join you, if you put characters who have not joined your party
+  in your formation, you will see them in their hometowns. You can even ask them
+  to join you as if they were not already in your party. If your party is not
+  full and they agree to join you, you will have a duplicate in your party. If
+  your party is full, they will go to the hostel in Castle Britannia. But since
+  that member is already in your party, they won't really be there.
+  
+  In addition, if you part with people at the hostel who didn't join you, they
+  will not show up in the hostel until you've asked them to join you in their
+  hometown. However, if you split with them, they will appear in the hostel
+  until you leave the room and can rejoin your party immediately.
+  
+  Just set the values to 0-8 (0 = no one, 1-8 = Mage - Shepherd)
   
   $15 First Member (Hero)
   $16 Second Member
   $17 Third Member
   $18 Fourth Member
+  
+  As for members who have agreed to join your party, this is tracked by another
+  flagset variable, $0B. Since no one is not an option here, we go back to the
+  standard values 0-7 Mage - Shepherd. This affects which characters will appear
+  in their hometown or in the hostel if they are not in your party. Assuming you
+  had picked the Mage as your hero, and asked Iolo (Bard), Dupre (Paladin), and
+  Jaana (Druid) to join you, $0B would have a value of $2B.
 
 --------------------------------------------------------------------------------
 | 5.5 Stones & Runes
@@ -617,9 +684,8 @@
 | 5.9 Character Stats
 --------------------------------------------------------------------------------
 
-  The last thing to note is the individual character stats. This includes
-  current level, current/max HP, current/max MP, strength, intelligence,
-  dexterity and experience.
+  Character stats include current level, current/max HP, current/max MP,
+  strength, intelligence, dexterity and experience.
   
   Of those values, current/max HP and experience are word values. See section
   5.7 on Gold for more information on the implications of word values as opposed
@@ -633,6 +699,146 @@
   while valid experience values are between 0 and 9999. All the rest of the
   values range between 0 and 99. Going outside these ranges may yield
   unexpected results.
+  
+--------------------------------------------------------------------------------
+| 5.10 Starting Location
+--------------------------------------------------------------------------------
+
+  The starting location value determines in which town the player starts out.
+  There are eight inns in the game, one for each city of virtue except Magincia,
+  and the village of Vesper.
+  
+  Offset $107
+    Moonglow   = $05
+    Britain    = $06
+    Jhelom     = $07
+    Yew        = $08
+    Minoc      = $09
+    Trinsic    = $0A
+    Skara Brae = $0B
+    Vesper     = $0E
+    
+  Any other value puts you in Britain's inn.
+  
+--------------------------------------------------------------------------------
+| 5.11 Pirate Ships & The Balloon
+--------------------------------------------------------------------------------
+
+  In Ultima, you can find a balloon to fly in, and steal ships from pirates. The
+  game has one balloon, and keeps track of up to 4 stolen pirate ships you've
+  comandeered. For each ship after 4 you take, one will vanish. You may lose all
+  your ships if you travel by moongate or use the Gate spell. I'm not sure
+  exactly when the game erases your ships during gate travel.
+  
+  The locations of the balloon and the pirate ships are stored in two bytes
+  using the game's internal latitude and longitude coordinates.
+  
+  Balloon Longitude = $F0
+  Balloon Latitude  = $F1
+  
+  The Balloon will go back to its starting location anytime you exit the dungeon
+  Hyloth from the Britannia entrance. The starting location is at (243,233).
+  
+  The four pirate ship locations are stored as follows:
+  
+  Ship 1 = ($F4,$F5) (Longitude,Latitude)
+  Ship 2 = ($F6,$F7)
+  Ship 3 = ($F8,$F9)
+  Ship 4 = ($FA,$FB)
+  
+  Because there are four potential comandeered pirate ships, there are some
+  extra offsets for pirate ships. To have one of the ships, the offset $ED must
+  have one of it's lower 4 bits set. For ship 1 to exist, bit 0 must be on, ship
+  2 is bit 1, and so on for the four possible ships.
+  
+  The offset $EE keeps track of the next ship. In other words, if you already
+  have ship 1, then the next ship you steal should be ship 2. This number varies
+  between 0 and 3 for the 4 possible pirate ships.
+  
+--------------------------------------------------------------------------------
+| 5.12 The Whirlpool
+--------------------------------------------------------------------------------
+
+  There are three ways to get to the village Cove in the game. One is the
+  balloon. Another is by ship without a whirlpool (yes, there are places you can
+  catch a pirate ship and sail to Cove sans whirlpool). Finally, there is taking
+  your ship into the Whirlpool.
+  
+  Before today, I had never seen the whirlpool, though I've heard of it. I've
+  always used one of the other two methods for getting to Cove.
+  
+  I'm not entirely sure how the whirlpool works. It moves, but it has a starting
+  location that may or may not change. Since I've never seen it before, I don't
+  know if it changes or not. I assume that it does because it seems stupid to
+  save a value in SRAM that never changes.
+  
+  The starting location of the whirlpool is at ($F2,$F3) (Longitude, Latitude).
+  It moves around this spot, but doesn't seem to stray very far. I'm not sure
+  how useful it is to change the location or if there are any side effects. I
+  didn't notice any when I tested it. But I only tried it out for a short time.
+  
+--------------------------------------------------------------------------------
+| 5.13 Treasure Offsets
+--------------------------------------------------------------------------------
+
+  Treasure offsets determine whether or not a found item will be there when you
+  go to look for it. For example, if you've already found the rune of honor,
+  then it won't be there if you research the field in Trinsic. Nearly every
+  treasure has a single bit that tracks whether it will be there or not. The
+  only exceptions I have found are the three keys.
+  
+  Rune of Honesty      = $D4 bit 4
+  Rune of Compassion   = $D4 bit 5
+  Rune of Valor        = $D4 bit 6
+  Rune of Justice      = $D4 bit 7
+  Rune of Sacrifice    = $D5 bit 0
+  Rune of Honor        = $D5 bit 1
+  Rune of Spirituality = $D5 bit 2
+  Rune of Humility     = $D5 bit 3
+  
+  Blue Stone           = $D6 bit 7
+  Yellow Stone         = $D7 bit 0
+  Red Stone            = $D7 bit 1
+  Green Stone          = $D7 bit 2
+  Orange Stone         = $D7 bit 3
+  Purple Stone         = $D7 bit 4
+  White Stone          = $D7 bit 5
+  Black Stone          = $D7 bit 6
+  
+  Horn                 = $D6 bit 3
+  Flute                = $D5 bit 5
+  Scale                = $D5 bit 4
+  Candle of Love       = $D5 bit 7
+  Book of Truth        = $D6 bit 0
+  Bell of Courage      = $D6 bit 1
+  Mondain's Skull      = $D6 bit 4
+  Sword of Paradise    = $DD bit 7
+  Exotic Armor         = $DE bit 0
+  Robe                 = $D5 bit 6
+  
+  Gave Scale to Zircon = $D2 bit 3
+  Axe of Legend        = $D2 bit 5
+  
+--------------------------------------------------------------------------------
+| 5.14 Miscellaneous Offsets
+--------------------------------------------------------------------------------
+
+  These offsets don't seem to fit in anywhere else. I'm not sure how useful they
+  are, but here they are anyway.
+  
+  Dungeon Keeper's Wall Smashed:
+  
+  For each of the 6 dungeons that have stones (all except Hyloth), there is a
+  guardian who keeps the stone behind a wall. If you answer the question
+  correctly, the wall crumbles. These offsets track whether the wall is still
+  present or not.
+  
+  Deceit (Honesty)     = $DD bit 1
+  Despise (Compassion) = $DD bit 2
+  Destard (Valor)      = $DD bit 3
+  Wrong (Justice)      = $DD bit 4
+  Covetous (Sacrifice) = $DD bit 5
+  Shame (Honor)        = $DD bit 6
 
 --------------------------------------------------------------------------------
 | 6.0 The Sanity Algorithm

@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2005 emuWorks
+ * Copyright (C) 2004-2006 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: hack4u.cc,v 1.8 2005/08/03 11:11:39 technoplaza Exp $
+// $Id: hack4u.cc,v 1.13 2006/03/20 01:00:18 technoplaza Exp $
  
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -32,11 +32,13 @@
    #include <wx/wx.h>
 #endif
 
-#include <iostream>
-#include <sys/stat.h>
+#include <wx/xrc/xmlres.h>
 
 #include "hack4u.hh"
 #include "view/MainFrame.hh"
+
+// prototype for InitXmlResource function
+void InitXmlResource();
 
 using namespace hack4u;
 
@@ -53,34 +55,16 @@ const wxString *Hack4u::APP_COPYRIGHT =
 const wxString *Hack4u::APP_URL =
     new wxString(wxT("http://games.technoplaza.net/"));
 
-IMPLEMENT_APP(Hack4u)
-IMPLEMENT_CLASS(Hack4u, wxApp)
-
 bool Hack4u::OnInit() {
-    wxString *xrcfile;
-    
-    if (argc == 2) {
-        xrcfile = new wxString(argv[1]);
-    } else {
-        xrcfile = new wxString(XRC_FILE);
-    }
-    
-    struct stat xrcstats;
-    
-    if (stat(xrcfile->mb_str(), &xrcstats) != 0) {
-        std::cerr << "error: unable to locate XRC file " << 
-            xrcfile->mb_str() << std::endl;
-        return false;
-    }
-    
+    // initialize the XRC resources
     wxXmlResource::Get()->InitAllHandlers();
-    wxXmlResource::Get()->Load(*xrcfile);
+    InitXmlResource();
     
-    MainFrame *frame = new MainFrame;
-    frame->SetTitle(*APP_NAME + wxT(' ') + *APP_VERSION);
-    frame->Show(true);
-    SetTopWindow(frame);
+    (new MainFrame)->Show();
     
     return true;
 }
+
+IMPLEMENT_CLASS(Hack4u, wxApp)
+IMPLEMENT_APP(Hack4u)
 

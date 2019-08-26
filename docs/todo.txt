@@ -2,25 +2,5 @@
 | hack4u TODO List
 --------------------------------------------------------------------------------
 
-There are some things I've thought about implementing that may or
-may not have been on my original list that I decided weren't that important for
-one reason or another. I may or may not implement these or other things in the
-program, but here is a list of things I'd like to see happen.
-
 - add internal help
-
-  The list is in order of decreasing importantance (to me at least). As you can
-  see, documentation is at the top of my list, though I think the program is
-  fairly intuitive in and of itself.
-
-- edit the characters waiting in the hostel
-
-  I originally meant for the program to allow you to edit the characters who had
-  joined your party (as opposed to the ones just in your party), but I forgot to
-  search for the address where this is stored. Since I'd already designed the
-  GUI framework by the time I remembered this, it seemed a waste of time.
-
-- edit pirate ships & baloon locations
-
-  This might be a good idea if I get around to it.
 

@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2005 emuWorks
+ * Copyright (C) 2004-2006 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,121 +20,63 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: SaveSlot.hh,v 1.6 2005/08/03 11:11:39 technoplaza Exp $
+// $Id: SaveSlot.hh,v 1.17 2006/03/21 12:00:18 technoplaza Exp $
 
-#ifndef _SAVE_SLOT_HH
-#define _SAVE_SLOT_HH
+#ifndef _SAVESLOT_HH
+#define _SAVESLOT_HH
 
-#include "../view/MainFrame.hh"
+#include <utility>
 
-/// SRAM offset for the primary checksum
-#define CHECKSUM_OFFSET 0x00
+#include <wx/string.h>
 
-/// SRAM offset for the moon phases
-#define MOON_OFFSET 0x01
-
-/// SRAM offset for the hero's name
-#define NAME_OFFSET 0x02
-
-/// Starting SRAM offset for virtues 
-#define VIRTUE_OFFSET 0x0C
-
-/// SRAM offset for partial avatarhoods
-#define AVATAR_OFFSET 0x14
-
-/// Starting SRAM offset for the party members
-#define MEMBER_OFFSET 0x15
-
-/// SRAM offset for Stones
-#define STONES_OFFSET 0x19
-
-/// SRAM offset for Runes
-#define RUNES_OFFSET 0x1A
-
-/// Starting SRAM offset for magic
-#define MAGIC_OFFSET 0x1B
-
-/// Starting SRAM offset for herbs
-#define HERB_OFFSET 0x1F
-
-/// SRAM offset for gold
-#define GOLD_OFFSET 0x27
-
-/// Starting SRAM offset for tools
-#define TOOL_OFFSET 0x29
-
-/// Starting SRAM offset for equipment
-#define EQUIPMENT_OFFSET 0x39
-
-/// Starting SRAM offset for chracater levels
-#define LEVEL_OFFSET 0x69
-
-/// Starting SRAM offset for chracater current HP
-#define CURRENT_HP_OFFSET 0x71
-
-/// Starting SRAM offset for chracater max HP
-#define MAX_HP_OFFSET 0x81
-
-/// Starting SRAM offset for chracater current MP
-#define CURRENT_MP_OFFSET 0x91
-
-/// Starting SRAM offset for chracater max MP
-#define MAX_MP_OFFSET 0x99
-
-/// Starting SRAM offset for chracater strength
-#define STRENGTH_OFFSET 0xA1
-
-/// Starting SRAM offset for chracater intelligence
-#define INTELLIGENCE_OFFSET 0xA9
-
-/// Starting SRAM offset for chracater dexterity
-#define DEXTERITY_OFFSET 0xB1
-
-/// Starting SRAM offset for chracater experience
-#define EXPERIENCE_OFFSET 0xB9
+#include "model/SRAMFile.hh"
 
 namespace hack4u {
-    /// The two moons of Ultima
-    enum Moons {TRAMMEL, FELUCCA};
-    
-    /// The eight cities of virtue
-    enum City {MOONGLOW, BRITAIN, JHELOM, YEW, 
-               MINOC, TRINSIC, SKARABRAE, MAGINCIA};
-               
-    /// The eight virtues
-    enum Virtues {HONESTY, COMPASSION, VALOR, JUSTICE,
-                  SACRIFICE, HONOR, SPIRITUALITY, HUMILITY};
-    
-    /// The eight characters
-    enum Characters {MAGE, BARD, FIGHTER, DRUID, 
-                     TINKER, PALADIN, RANGER, SHEPHERD};
-                     
-    /// The possible magic in the game
-    enum Magic {LIGHT, MISSILE, AWAKEN, CURE, WIND, HEAL, FIRE, EXIT, DISPEL,
-                VIEW, PROTECT, ICE, BLINK, ENERGY, QUICK, INVALID1, SLEEP,
-                REFLECT, NEGATE, INVALID2, DESTROY, JINX, SQUISH, GATE,
-                TREMOR, LIFE, INVALID3, DEFEAT};
-                
-    /// The eight herbs (reagents)
-    enum Herbs {ASH, GINSENG, GARLIC, SILKWEB, MOSS, PEARL, FUNGUS, MANROOT};
-    
-    /// The tools
-    enum Tools {TORCH, GEM, KEY, OIL, SEXTANT, SCALE, FLUTE, CANDLE, BOOK,
-                BELL, WHEEL, HORN, SKULL, TRUTHKEY, COURAGEKEY, LOVEKEY};
-    
-    class MainFrame;
-    
     /**
      * A class representing a single game save slot.
      */
     class SaveSlot {
+        friend void SRAMFile::save(const wxString &);
+        
+    private:
+        unsigned char *nvram;
+        bool modified;
+        
+        /// Array of checksum xors used by the sanity algorithm.
+        static const int CHECKSUM_XORS[];
+        
+        /**
+         * Sets whether this slot is modified or not.
+         *
+         * @param modified true if modified; false otherwise.
+         */
+        void setModified(bool modified = true);
+        
+        /**
+         * Translates an Ultima alphabet character to ASCII.
+         *
+         * @param letter The letter to translate.
+         *
+         * @return The translated character.
+         */
+        static char fromNES(unsigned char letter);
+        
+        /**
+         * Translates an ASCII character to the Ultima alphabet.
+         *
+         * @param letter The letter to translate.
+         *
+         * @return The translated character.
+         */
+        static unsigned char toNES(char letter);
+
     public:
         /**
          * Constructor for a SaveSlot.
          *
          * @param data The SRAM data
          */
-        SaveSlot(const unsigned char *data);
+        SaveSlot(const char *data);
         
         /**
          * Destructor for a SaveSlot.
@@ -142,50 +84,137 @@ namespace hack4u {
         ~SaveSlot();
         
         /**
-         * Generates the checksum for the current data.
+         * Gets the location of the Balloon.
          *
-         * @return The checksum.
+         * @return The Balloon's location (latitude, longitude).
          */
-        unsigned char checksum() const;
+        std::pair<int, int> getBalloonLocation() const;
         
         /**
-         * Queries if this save slot is valid. Initially determined by
-         * generating a checksum on the provided data and checking it against
-         * the contained checksum, just like the real game.
+         * Sets the baloon's location.
          *
-         * @return true if valid; false otherwise.
+         * @param location The new location (latitude, longitude).
          */
-        bool isValid() const { return valid; }
+        void setBalloonLocation(std::pair<int, int> location); 
         
         /**
-         * Queries if this SaveSlot has been modified.
+         * Gets the current HP of a character.
          *
-         * @return true if modified; false otherwise.
+         * @param character The character.
+         *
+         * @return The current HP.
          */
-        bool isModified() const { return modified; }
+        wxInt16 getCurrentHP(enum Character character) const;
         
         /**
-         * Gets the current phase of one of the moons. Valid values are either
-         * TRAMMEL or FELUCCA.
+         * Sets the current HP of a character.
          *
-         * @param moon The moon whose phase to return.
-         *
-         * @return The phase of the moon. Note that felucca's phase depends upon
-         *         trammel's phase and can be only 0, 1, or 2 representing one
-         *         of the three destination cities. Trammel's phase will always
-         *         be one of the eight cities of virtue.
+         * @param character The character.
+         * @param value The new current HP.
          */
-        int getPhase(int moon) const;
+        void setCurrentHP(enum Character character, wxInt16 value);
         
         /**
-         * Sets the phases of the moons.
+         * Gets the current MP of a character.
          *
-         * @param trammel The phase for trammel. Must be one of the eight cities
-         *                of virtue.
-         * @param felucca The phase for felucca. Must be 0, 1, or 2 representing
-         *                one of the three destination cities from Trammel.
+         * @param character The character.
+         *
+         * @return The current MP.
          */
-        void setPhase(int trammel, int felucca);
+        int getCurrentMP(enum Character character) const;
+        
+        /**
+         * Sets the current MP of a character.
+         *
+         * @param character The character.
+         * @param value The new current MP.
+         */
+        void setCurrentMP(enum Character character, unsigned char value);
+        
+        /**
+         * Gets the dexterity of a character.
+         *
+         * @param character The character.
+         *
+         * @return The dexterity.
+         */
+        int getDexterity(enum Character character) const;
+        
+        /**
+         * Sets the dexterity of a character.
+         *
+         * @param character The character.
+         * @param value The new dexterity.
+         */
+        void setDexterity(enum Character character, unsigned char value);
+        
+        /**
+         * Gets the item held by a particular player in a particular slot.
+         *
+         * @param character The character whose equipment to get.
+         * @param slot The inventory slot (0-5).
+         *
+         * @return The equipment item.
+         */
+        int getEquipment(enum Character character, int slot) const;
+        
+        /**
+         * Sets the item held by a particular player in a particular slot.
+         *
+         * @param character The character whose equipment to set.
+         * @param slot The inventory slot (0-5).
+         * @param value The new item value.
+         */
+        void setEquipment(enum Character character,
+                          int slot, unsigned char value);
+        
+        /**
+         * Gets the experience of a character.
+         *
+         * @param character The character.
+         *
+         * @return The experience.
+         */
+        wxInt16 getExperience(enum Character character) const;
+        
+        /**
+         * Sets the experience of a character.
+         *
+         * @param character The character.
+         * @param value The new experience.
+         */
+        void setExperience(enum Character character, wxInt16 value);
+        
+        /**
+         * Gets the amount of gold held by the party.
+         *
+         * @return The amount of gold.
+         */
+        wxInt16 getGold() const;
+        
+        /**
+         * Sets the amount of gold held by the party.
+         *
+         * @param gold The new amount of gold.
+         */
+        void setGold(wxInt16 gold);
+        
+        /**
+         * Gets the current amount of a particular herb the party has.
+         *
+         * @param herb The herb whose value to get.
+         *
+         * @return The amount of the particular herb the party has.
+         */
+        int getHerb(enum Herb herb) const;
+        
+        /**
+         * Sets the amount of a particular herb the party has.
+         *
+         * @param herb The herb whose value to set.
+         * @param value The new value.
+         */
+        void setHerb(enum Herb herb, unsigned char value);
         
         /**
          * Gets the Hero's Name.
@@ -201,26 +230,108 @@ namespace hack4u {
          * @param name The new name of the hero. Valid values must not exceed 5
          *             characters. Excess lengths will be ignored.
          */
-        void setHerosName(wxString &name);
+        void setHerosName(const wxString &name);
         
         /**
-         * Gets the value for one of the eight virtues.
+         * Gets the intelligence of a character.
          *
-         * @param virtue The virtue whose value to retrieve. Must be one of the
-         *               eight virtues in the Virtues enumeration.
+         * @param character The character.
          *
-         * @return The value for the particular virtue.
+         * @return The intelligence.
          */
-        int getVirtue(int virtue) const;
+        int getIntelligence(enum Character character) const;
         
         /**
-         * Sets the value for one of the eight virtues.
+         * Sets the intelligence of a character.
          *
-         * @param virtue The virtue to set. Must be one of the eight virtues in
-         *               the Virtues enumeration.
-         * @param value The new value for the virtue.
+         * @param character The character.
+         * @param value The new intelligence.
          */
-        void setVirtue(int virtue, unsigned char value);
+        void setIntelligence(enum Character character, unsigned char value);
+        
+        /**
+         * Checks if a character has joined the party or not.
+         *
+         * @param character The character.
+         *
+         * @return true if the character has joined; false otherwise.
+         */
+        bool hasJoined(enum Character character) const;
+        
+        /**
+         * Sets whether a character has joined the party or not.
+         *
+         * @param character The character.
+         * @param value true if joined; false otherwise.
+         */
+        void setJoined(enum Character character, bool value);
+        
+        /**
+         * Gets the level of a character.
+         *
+         * @param character The character.
+         *
+         * @return The character's level.
+         */
+        int getLevel(enum Character character) const;
+        
+        /**
+         * Sets the level of a character.
+         *
+         * @param character The character.
+         * @param value The new level.
+         */
+        void setLevel(enum Character character, unsigned char value);
+        
+        /**
+         * Queries whether the party has a particular magic or not.
+         *
+         * @param magic The magic to check for.
+         */
+        bool hasMagic(enum Magic magic) const;
+        
+        /**
+         * Sets whether the party has a particular magic of not.
+         * 
+         * @param magic The magic. Valid values are any of the members in the
+         *              Magic enumeration other than INVALIDx.
+         * @param give true to give the magic; false to take it away.
+         */
+        void setMagic(enum Magic magic, bool give = true);
+        
+        /**
+         * Gets the max HP of a character.
+         * 
+         * @param character The character.
+         *
+         * @return The Max HP.
+         */
+        wxInt16 getMaxHP(enum Character character) const;
+        
+        /**
+         * Sets the max HP of a character.
+         *
+         * @param character The character.
+         * @param value The new max HP.
+         */
+        void setMaxHP(enum Character character, wxInt16 value);
+        
+        /**
+         * Gets the max MP of a character.
+         *
+         * @param character The character.
+         *
+         * @return The max MP.
+         */
+        int getMaxMP(enum Character character) const;
+        
+        /**
+         * Sets the max MP of a charcter.
+         *
+         * @param character The character.
+         * @param value The new max MP.
+         */
+        void setMaxMP(enum Character character, unsigned char value);
         
         /**
          * Gets the party member at a given position.
@@ -244,89 +355,134 @@ namespace hack4u {
         void setMember(int position, int character);
         
         /**
-         * Queries if the party has a particular stone in their inventory.
+         * Queries if this SaveSlot has been modified.
          *
-         * @param stone The stone to check for. Valid values are one of the
-         *              eight virtues in the Virtues enumeration.
-         *
-         * @return true if they have the stone; false otherwise.
+         * @return true if modified; false otherwise.
          */
-        bool hasStone(int stone) const;
+        bool isModified() const;
         
         /**
-         * Sets whether the party has a particular stone or not.
+         * Gets the current phase of one of the moons. Valid values are either
+         * TRAMMEL or FELUCCA.
          *
-         * @param stone The stone. Valid values are one of the eight virtues in
-         *              the Virtues enumeration.
-         * @param give true to give the stone; false to take it away.
+         * @param moon The moon whose phase to return.
+         *
+         * @return The phase of the moon. Note that felucca's phase depends upon
+         *         trammel's phase and can be only 0, 1, or 2 representing one
+         *         of the three destination cities. Trammel's phase will always
+         *         be one of the eight cities of virtue.
          */
-        void setStone(int stone, bool give = true);
+        int getPhase(enum Moon moon) const;
+        
+        /**
+         * Sets the phases of the moons.
+         *
+         * @param trammel The phase for trammel. Must be one of the eight cities
+         *                of virtue.
+         * @param felucca The phase for felucca. Must be 0, 1, or 2 representing
+         *                one of the three destination cities from Trammel.
+         */
+        void setPhase(enum City trammel, int felucca);
+        
+        /**
+         * Checks if the party has captured a particular ship.
+         *
+         * @param ship The ship to check for.
+         *
+         * @return true if the ship has been taken; false otherwise.
+         */
+        bool hasPirateShip(enum PirateShip ship) const;
+        
+        /**
+         * Sets whether the party has a particular pirate ship or not.
+         *
+         * @param ship The pirate ship.
+         * @param give true to give the ship; false otherwise.
+         */
+        void setPirateShip(enum PirateShip ship, bool give);
+        
+        /**
+         * Gets the location of one of the captured pirate ships.
+         *
+         * @param ship The ship.
+         *
+         * @return The location of the ship (latitude, longitude).
+         */
+        std::pair<int, int> getPirateShipLocation(enum PirateShip ship) const;
+        
+        /**
+         * Sets the location of a captured pirate ship.
+         *
+         * @param ship The pirate ship.
+         * @param location The location (latitude, longitude).
+         */
+        void setPirateShipLocation(enum PirateShip ship,
+                                   std::pair<int, int> location);
         
         /**
          * Queries whether the party has a particular rune or not.
          *
-         * @param rune The rune. Valid values are one of the eight virtues in
-         *             the Virtues enumeration.
+         * @param rune The rune.
          *
          * @return true if they have the rune; false otherwise.
          */
-        bool hasRune(int rune) const;
+        bool hasRune(enum Virtue rune) const;
         
         /**
          * Sets whether the party has a particular rune of not.
          *
-         * @param rune The rune. Valid values are one of the eight virtues in
-         *             the Virtues enumeration.
+         * @param rune The rune.
          * @param give true to give the rune; false to take it away.
          */
-        void setRune(int rune, bool give = true);
+        void setRune(enum Virtue rune, bool give = true);
         
         /**
-         * Queries whether the party has a particular magic or not.
-         */
-        bool hasMagic(int magic) const;
-        
-        /**
-         * Sets whether the party has a particular magic of not.
-         * 
-         * @param magic The magic. Valid values are any of the members in the
-         *              Magic enumeration other than INVALID.
-         * @param give true to give the magic; false to take it away.
-         */
-        void setMagic(int magic, bool give = true);
-        
-        /**
-         * Gets the current amount of a particular herb the party has.
+         * Gets the start location.
          *
-         * @param herb The herb whose value to get. Valid values are any of the
-         *             members of the Herbs enumeration.
-         *
-         * @return The amount of the particular herb the party has.
+         * @return The start location.
          */
-        int getHerb(int herb) const;
+        enum StartLocation getStartLocation() const;
         
         /**
-         * Sets the amount of a particular herb the party has.
+         * Sets the start location.
          *
-         * @param herb The herb whose value to set. Valid values are any of the
-         *             members of the Herbs enumeration.
-         * @param value The new value.
+         * @param location The start location.
          */
-        void setHerb(int herb, unsigned char value);
+        void setStartLocation(enum StartLocation location);
         
         /**
-         * Gets the amount of gold held by the party.
+         * Queries if the party has a particular stone in their inventory.
          *
-         * @return The amount of gold.
+         * @param stone The stone to check for.
+         *
+         * @return true if they have the stone; false otherwise.
          */
-        wxInt16 getGold() const;
+        bool hasStone(enum Virtue stone) const;
         
         /**
-         * Sets the amount of gold held by the party.
+         * Sets whether the party has a particular stone or not.
          *
-         * @param gold The new amount of gold.
+         * @param stone The stone.
+         * @param give true to give the stone; false to take it away.
          */
-        void setGold(wxInt16 gold);
+        void setStone(enum Virtue stone, bool give = true);
+        
+        /**
+         * Gets the strength of a character.
+         *
+         * @param character The character.
+         *
+         * @return The strength.
+         */        
+        int getStrength(enum Character character) const;
+        
+        /**
+         * Sets the strength of a charater.
+         *
+         * @param character The character.
+         * @param value The new strength.
+         */
+        void setStrength(enum Character character, unsigned char value);
         
         /**
          * Gets the amount of a tool the party has.
@@ -335,7 +491,7 @@ namespace hack4u {
          *
          * @return The amount of the particular tool.
          */
-        int getTool(int tool) const;
+        int getTool(enum Tool tool) const;
         
         /**
          * Sets the amount of a tool the party has.
@@ -343,234 +499,48 @@ namespace hack4u {
          * @param tool The tool to set the amount of.
          * @param value The new amount.
          */
-        void setTool(int tool, unsigned char value = 1);
+        void setTool(enum Tool tool, unsigned char value = 1);
         
         /**
-         * Gets the item held by a particular player in a particular slot.
+         * Gets the value for one of the eight virtues.
          *
-         * @param character The character whose equipment to get. Valid values
-         *                  are in the Character enumeration.
-         * @param slot The inventory slot (0-5).
+         * @param virtue The virtue whose value to retrieve.
          *
-         * @return The equipment item.
+         * @return The value for the particular virtue.
          */
-        int getEquipment(int character, int slot) const;
+        int getVirtue(enum Virtue virtue) const;
         
         /**
-         * Sets the item held by a particular player in a particular slot.
+         * Sets the value for one of the eight virtues.
          *
-         * @param character The character whose equipment to set. Valid values
-         *                  are in the Character enumeration.
-         * @param slot The inventory slot (0-5).
-         * @param value The new item value.
+         * @param virtue The virtue to set.
+         * @param value The new value for the virtue.
          */
-        void setEquipment(int character, int slot, unsigned char value);
+        void setVirtue(enum Virtue virtue, unsigned char value);
         
         /**
-         * Gets the level of a character.
+         * Gets the location of the whirlpool.
          *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         *
-         * @return The character's level.
+         * @return The location.
          */
-        int getLevel(int character) const;
+        std::pair<int, int> getWhirlpoolLocation() const;
         
         /**
-         * Sets the level of a character.
+         * Sets the location of the whirlpool.
          *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         * @param value The new level.
+         * @param location The location.
          */
-        void setLevel(int character, unsigned char value);
+        void setWhirlpoolLocation(std::pair<int, int> location);
         
         /**
-         * Gets the current HP of a character.
+         * Generates the checksum for the current data.
          *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         *
-         * @return The current HP.
+         * @return The checksum.
          */
-        wxInt16 getCurrentHP(int character) const;
-        
-        /**
-         * Sets the current HP of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         * @param value The new current HP.
-         */
-        void setCurrentHP(int character, wxInt16 value);
-        
-        /**
-         * Gets the max HP of a character.
-         * 
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         *
-         * @return The Max HP.
-         */
-        wxInt16 getMaxHP(int character) const;
-        
-        /**
-         * Sets the max HP of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         * @param value The new max HP.
-         */
-        void setMaxHP(int character, wxInt16 value);
-        
-        /**
-         * Gets the current MP of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         *
-         * @return The current MP.
-         */
-        int getCurrentMP(int character) const;
-        
-        /**
-         * Sets the current MP of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         * @param value The new current MP.
-         */
-        void setCurrentMP(int character, unsigned char value);
-        
-        /**
-         * Gets the max MP of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         *
-         * @return The max MP.
-         */
-        int getMaxMP(int character) const;
-        
-        /**
-         * Sets the max MP of a charcter.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         * @param value The new max MP.
-         */
-        void setMaxMP(int character, unsigned char value);
-
-        /**
-         * Gets the strength of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         *
-         * @return The strength.
-         */        
-        int getStrength(int character) const;
-        
-        /**
-         * Sets the strength of a charater.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         * @param value The new strength.
-         */
-        void setStrength(int character, unsigned char value);
-        
-        /**
-         * Gets the intelligence of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         *
-         * @return The intelligence.
-         */
-        int getIntelligence(int character) const;
-        
-        /**
-         * Sets the intelligence of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         * @param value The new intelligence.
-         */
-        void setIntelligence(int character, unsigned char value);
-        
-        /**
-         * Gets the dexterity of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         *
-         * @return The dexterity.
-         */
-        int getDexterity(int character) const;
-        
-        /**
-         * Sets the dexterity of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         * @param value The new dexterity.
-         */
-        void setDexterity(int character, unsigned char value);
-        
-        /**
-         * Gets the experience of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         *
-         * @return The experience.
-         */
-        wxInt16 getExperience(int character) const;
-        
-        /**
-         * Sets the experience of a character.
-         *
-         * @param character The character. Valid values are in the Character
-         *                  enumeration.
-         * @param value The new experience.
-         */
-        void setExperience(int character, wxInt16 value);
-        
-        friend class MainFrame;
-    private:
-        /**
-         * Sets whether this slot is modified or not.
-         *
-         * @param modified true if modified; false otherwise.
-         */
-        void setModified(bool modified = true);
-        
-        /**
-         * Translates an ASCII character to the Ultima alphabet.
-         *
-         * @param letter The letter to translate.
-         *
-         * @return The translated character.
-         */
-        static unsigned char toNES(char letter);
-        
-        /**
-         * Translates an Ultima alphabet character to ASCII.
-         *
-         * @param letter The letter to translate.
-         *
-         * @return The translated character.
-         */
-        static char fromNES(unsigned char letter);
-
-        unsigned char *nvram;
-        bool valid;
-        bool modified;
-        
-        /// Array of checksum xors used by the sanity algorithm.
-        static const int CHECKSUM_XORS[];
+        unsigned char checksum() const;
     };
+    
+    inline bool SaveSlot::isModified() const { return modified; }
 }
 
 #endif

@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2005 emuWorks
+ * Copyright (C) 2004-2006 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,12 +20,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: hack4u.hh,v 1.7 2005/08/03 11:11:39 technoplaza Exp $
+// $Id: hack4u.hh,v 1.10 2006/03/14 22:54:22 technoplaza Exp $
  
 #ifndef _HACK4U_HH
 #define _HACK4U_HH
-
-#include <wx/xrc/xmlres.h>
 
 /**
  * Private hack4u namespace is used for all classs and members of this project.
@@ -35,14 +33,9 @@ namespace hack4u {
      * The main class. Initializes the application and creates the view.
      */
     class Hack4u : public wxApp {
-    public:
-        /**
-         * Called by wxWidgets to start initialization of the application.
-         *
-         * @return true if initialization should proceed; false otherwise.
-         */
-        virtual bool OnInit();
+        DECLARE_CLASS(Hack4u)
         
+    public:
         /// The name of the application.
         static const wxString *APP_NAME;
         
@@ -54,8 +47,13 @@ namespace hack4u {
         
         /// The website URL for this application.
         static const wxString *APP_URL;
-    private:
-        DECLARE_CLASS(Hack4u)
+    
+        /**
+         * Called by wxWidgets to start initialization of the application.
+         *
+         * @return true if initialization should proceed; false otherwise.
+         */
+        virtual bool OnInit();
     };
     
     DECLARE_APP(Hack4u)

@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2005 emuWorks
+ * Copyright (C) 2004-2006 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: MainFrame.cc,v 1.26 2005/08/03 11:11:39 technoplaza Exp $
+// $Id: MainFrame.cc,v 1.50 2006/03/21 11:53:54 technoplaza Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -32,383 +32,187 @@
     #include <wx/wx.h>
 #endif
 
-#include <fstream>
-#include <cstring>
+#include <wx/xrc/xmlres.h>
 
-#include "MainFrame.hh"
-#include "../hack4u.hh"
+#include <cstring>
+#include <fstream>
+
+#include "hack4u.hh"
+#include "exceptions/FileIOException.hh"
+#include "exceptions/InvalidSRAMException.hh"
+#include "res/icon16x16.xpm"
+#include "model/SaveSlot.hh"
+#include "view/FileDropTarget.hh"
+#include "view/MainFrame.hh"
 
 using namespace hack4u;
-
-const wxString MainFrame::CITY_NAMES[] = {
-    wxT("Moonglow"), wxT("Britain"), wxT("Jhelom"), wxT("Yew"),
-    wxT("Minoc"), wxT("Trinsic"), wxT("Skara Brae"), wxT("Magincia")
-};
 
 const wxString MainFrame::CHARACTER_NAMES[] = {
     wxT("Mage"), wxT("Bard"), wxT("Fighter"), wxT("Druid"),
     wxT("Tinker"), wxT("Paladin"), wxT("Ranger"), wxT("Shepherd")
 };
 
-const char *MainFrame::ICON[] = {
-    "16 16 5 1",
-    " 	c None",
-    "!	c #BCBCBC",
-    "#	c #747474",
-    "$	c #FCFCFC",
-    "%	c black",
-    "!!!!!#$$$$$$!!!!",
-    "!!!!#!$$$$$$$!!!",
-    "!!!#!!######$$!!",
-    "!!!%!##%%%%##$!!",
-    "!!!%###!!!%##$!!",
-    "!!!%%##!!!%##%!!",
-    "!!!!%%##!%##%!!!",
-    "#%$$$$%####$$$$$",
-    "!%!$$$$$##$$$$$$",
-    "!%#############$",
-    "!%%%%%%%##%%%%%$",
-    "!!!!!!%%##!!!!!!",
-    "!!%%%%%%##!!!!!!",
-    "%%%%%%%%##!!!!!!",
-    "!%%%%%%%%%!!!!!!",
-    "!!!!!!!!!!!!!!!!"
+const wxString MainFrame::CITY_NAMES[] = {
+    wxT("Moonglow"), wxT("Britain"), wxT("Jhelom"), wxT("Yew"),
+    wxT("Minoc"), wxT("Trinsic"), wxT("Skara Brae"), wxT("Magincia")
 };
 
-IMPLEMENT_DYNAMIC_CLASS(MainFrame, wxFrame)
+const std::pair<int, int> MainFrame::BALLOON_LOCATIONS[] = {
+    std::pair<int, int>(131, 224), std::pair<int, int>(108, 84),
+    std::pair<int, int>(218, 38), std::pair<int, int>(45, 57),
+    std::pair<int, int>(22, 159), std::pair<int, int>(186, 104),
+    std::pair<int, int>(130, 22), std::pair<int, int>(171, 188),
+    
+    std::pair<int, int>(106, 216), std::pair<int, int>(50, 26),
+    std::pair<int, int>(244, 147),
+    
+    std::pair<int, int>(148, 96), std::pair<int, int>(59, 199),
+    std::pair<int, int>(159, 136), std::pair<int, int>(92, 137)
+};
 
-BEGIN_EVENT_TABLE(MainFrame, wxFrame)
-    EVT_CLOSE(MainFrame::windowClosing)
+const std::pair<int, int> MainFrame::PIRATESHIP_LOCATIONS[] = {
+    std::pair<int, int>(134, 230), std::pair<int, int>(109, 84),
+    std::pair<int, int>(222, 40), std::pair<int, int>(18, 57),
+    std::pair<int, int>(19, 168), std::pair<int, int>(184, 108),
+    std::pair<int, int>(127, 19), std::pair<int, int>(169, 190),
+    
+    std::pair<int, int>(108, 216), std::pair<int, int>(47, 26),
+    std::pair<int, int>(242, 148),
+    
+    std::pair<int, int>(145, 96), std::pair<int, int>(59, 196),
+    std::pair<int, int>(158, 134), std::pair<int, int>(92, 135)
+};
 
-    EVT_MENU(XRCID("IDM_FILE_OPEN"), MainFrame::fileOpen)
-    EVT_MENU(XRCID("IDM_FILE_SAVE"), MainFrame::fileSave)
-    EVT_MENU(XRCID("IDM_FILE_SAVE_AS"), MainFrame::fileSaveAs)
-    EVT_MENU(XRCID("IDM_FILE_CLOSE"), MainFrame::fileClose)
-    EVT_MENU(XRCID("IDM_FILE_EXIT"), MainFrame::fileExit)
-    
-    EVT_MENU(XRCID("IDM_GAME_GAME1"), MainFrame::gameChange)
-    EVT_MENU(XRCID("IDM_GAME_GAME2"), MainFrame::gameChange)
-    EVT_MENU(XRCID("IDM_GAME_GAME3"), MainFrame::gameChange)
-    
-    EVT_MENU(XRCID("IDM_HELP_ABOUT"), MainFrame::helpAbout)
-    
-    EVT_TEXT(XRCID("ID_GENERAL_HEROSNAME"), MainFrame::herosNameChange)
-    
-    EVT_CHOICE(XRCID("ID_GENERAL_PARTY1"), MainFrame::memberClassChange)
-    EVT_CHOICE(XRCID("ID_GENERAL_PARTY2"), MainFrame::memberClassChange)
-    EVT_CHOICE(XRCID("ID_GENERAL_PARTY3"), MainFrame::memberClassChange)
-    EVT_CHOICE(XRCID("ID_GENERAL_PARTY4"), MainFrame::memberClassChange)
-    
-    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_HONESTY"), MainFrame::virtueChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_COMPASSION"), MainFrame::virtueChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_VALOR"), MainFrame::virtueChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_JUSTICE"), MainFrame::virtueChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_SACRIFICE"), MainFrame::virtueChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_HONOR"), MainFrame::virtueChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_SPIRITUALITY"), MainFrame::virtueChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_GENERAL_HUMILITY"), MainFrame::virtueChange)
-    
-    EVT_CHECKBOX(XRCID("ID_GENERAL_LIGHT"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_MISSILE"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_AWAKEN"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_CURE"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_WIND"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_HEAL"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_FIRE"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_EXIT"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_DISPEL"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_VIEW"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_PROTECT"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_ICE"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_BLINK"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_ENERGY"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_QUICK"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_SLEEP"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_REFLECT"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_NEGATE"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_DESTROY"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_JINX"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_SQUISH"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_GATE"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_TREMOR"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_LIFE"), MainFrame::magicChange)
-    EVT_CHECKBOX(XRCID("ID_GENERAL_DEFEAT"), MainFrame::magicChange)
-    
-    EVT_CHOICE(XRCID("ID_GENERAL_TRAMMEL"), MainFrame::phaseChange)
-    EVT_CHOICE(XRCID("ID_GENERAL_FELUCCA"), MainFrame::phaseChange)
-    
-    EVT_TEXT(XRCID("ID_INVENTORY_GOLD"), MainFrame::goldChange)
-    
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_ASH"), MainFrame::herbChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_GINSENG"), MainFrame::herbChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_GARLIC"), MainFrame::herbChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_SILKWEB"), MainFrame::herbChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_MOSS"), MainFrame::herbChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_PEARL"), MainFrame::herbChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_FUNGUS"), MainFrame::herbChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_MANROOT"), MainFrame::herbChange)
-    
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_HONESTY"), MainFrame::runeChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_COMPASSION"), MainFrame::runeChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_VALOR"), MainFrame::runeChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_JUSTICE"), MainFrame::runeChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_SACRIFICE"), MainFrame::runeChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_HONOR"), MainFrame::runeChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_SPIRITUALITY"), MainFrame::runeChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_HUMILITY"), MainFrame::runeChange)
-    
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_BLUE"), MainFrame::stoneChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_YELLOW"), MainFrame::stoneChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_RED"), MainFrame::stoneChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_GREEN"), MainFrame::stoneChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_ORANGE"), MainFrame::stoneChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_PURPLE"), MainFrame::stoneChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_WHITE"), MainFrame::stoneChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_BLACK"), MainFrame::stoneChange)
-    
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_TORCH"), MainFrame::toolQuantityChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_GEM"), MainFrame::toolQuantityChange)
-    EVT_COMMAND_SCROLL(XRCID("ID_INVENTORY_OIL"), MainFrame::toolQuantityChange)
-    
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_KEY"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_SEXTANT"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_SCALE"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_FLUTE"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_CANDLE"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_BOOK"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_BELL"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_HORN"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_SKULL"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_TRUTHKEY"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_COURAGEKEY"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_LOVEKEY"), MainFrame::toolHaveChange)
-    EVT_CHECKBOX(XRCID("ID_INVENTORY_WHEEL"), MainFrame::toolHaveChange)
-    
-    EVT_CHOICE(XRCID("ID_CHARACTER_CHARACTER"), MainFrame::characterChange)
-    
-    EVT_TEXT(XRCID("ID_CHARACTER_LEVEL"), MainFrame::statChange)
-    EVT_TEXT(XRCID("ID_CHARACTER_EXPERIENCE"), MainFrame::statChange)
-    EVT_TEXT(XRCID("ID_CHARACTER_CURRENTHP"), MainFrame::statChange)
-    EVT_TEXT(XRCID("ID_CHARACTER_CURRENTMP"), MainFrame::statChange)
-    EVT_TEXT(XRCID("ID_CHARACTER_MAXHP"), MainFrame::statChange)
-    EVT_TEXT(XRCID("ID_CHARACTER_MAXMP"), MainFrame::statChange)
-    EVT_TEXT(XRCID("ID_CHARACTER_STRENGTH"), MainFrame::statChange)
-    EVT_TEXT(XRCID("ID_CHARACTER_INTELLIGENCE"), MainFrame::statChange)
-    EVT_TEXT(XRCID("ID_CHARACTER_DEXTERITY"), MainFrame::statChange)
-    
-    EVT_CHOICE(XRCID("ID_CHARACTER_FIRST"), MainFrame::equipmentChange)
-    EVT_CHOICE(XRCID("ID_CHARACTER_SECOND"), MainFrame::equipmentChange)
-    EVT_CHOICE(XRCID("ID_CHARACTER_THIRD"), MainFrame::equipmentChange)
-    EVT_CHOICE(XRCID("ID_CHARACTER_FOURTH"), MainFrame::equipmentChange)
-    EVT_CHOICE(XRCID("ID_CHARACTER_FIFTH"), MainFrame::equipmentChange)
-    EVT_CHOICE(XRCID("ID_CHARACTER_SIXTH"), MainFrame::equipmentChange)
-    
-    EVT_CHECKBOX(XRCID("ID_CHARACTER_FIRSTEQUIPPED"), MainFrame::equippedChange)
-    EVT_CHECKBOX(XRCID("ID_CHARACTER_SECONDEQUIPPED"), MainFrame::equippedChange)
-    EVT_CHECKBOX(XRCID("ID_CHARACTER_THIRDEQUIPPED"), MainFrame::equippedChange)
-    EVT_CHECKBOX(XRCID("ID_CHARACTER_FOURTHEQUIPPED"), MainFrame::equippedChange)
-    EVT_CHECKBOX(XRCID("ID_CHARACTER_FIFTHEQUIPPED"), MainFrame::equippedChange)
-    EVT_CHECKBOX(XRCID("ID_CHARACTER_SIXTHEQUIPPED"), MainFrame::equippedChange)
-END_EVENT_TABLE()
+const int MainFrame::INN_INDEX[] = {
+    1, 1, 1, 1, 1, 0, 1, 2, 3, 4, 5, 6, 1, 1, 7
+};
 
-MainFrame::MainFrame() {
-    currentSlot = -1;
-    
+MainFrame::MainFrame() : saveslot(0), sram(0), location(LMOONGLOW),
+                         ignoreEvents(false), open(false) {
     SetParent(NULL);
     CreateControls();
+    GetSizer()->SetSizeHints(this);
     Centre();
+    
+    XRCCTRL(*this, "IDN_HACK4U", wxNotebook)->Show(false);
     
     SetDropTarget(new FileDropTarget(this));
 }
 
 void MainFrame::CreateControls() {
-    wxXmlResource::Get()->LoadFrame(this, GetParent(), wxT("ID_MAIN_FRAME"));
-    SetIcon(ICON);
+    wxXmlResource::Get()->LoadFrame(this, GetParent(), wxT("IDF_HACK4U"));
+    SetIcon(wxIcon(icon16x16_xpm));
     
-    notebook = XRCCTRL(*this, "ID_NOTEBOOK", wxNotebook);
-    notebook->Show(false);
+    wxMenuBar *mb = GetMenuBar();
+    gameMenu = mb->FindMenu(wxT("Game"));
+    locationMenu = mb->FindMenu(wxT("Location"));
     
-    wxMenuBar &menubar = *GetMenuBar();
+    mb->EnableTop(gameMenu, false);
+    mb->EnableTop(locationMenu, false);
     
-    games[0] = menubar.FindItem(XRCID("IDM_GAME_GAME1"));
-    games[0]->Enable(false);
-    
-    games[1] = menubar.FindItem(XRCID("IDM_GAME_GAME2"));
-    games[1]->Enable(false);
-    
-    games[2] = menubar.FindItem(XRCID("IDM_GAME_GAME3"));
-    games[2]->Enable(false);
-    
-    fileSaveItem = menubar.FindItem(XRCID("IDM_FILE_SAVE"));
-    fileSaveAsItem = menubar.FindItem(XRCID("IDM_FILE_SAVE_AS"));
-    fileCloseItem = menubar.FindItem(XRCID("IDM_FILE_CLOSE"));
-    
-    setOpen(false);
-
-    wxStringList letters("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
-                         "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-                         "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g",
-                         "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
-                         "s", "t", "u", "v", "w", "x", "y", "z", "!", "-", "_",
-                         NULL);
+    wxArrayString letters;
+    letters.Add(wxT("A")); letters.Add(wxT("B")); letters.Add(wxT("C"));
+    letters.Add(wxT("D")); letters.Add(wxT("E")); letters.Add(wxT("F"));
+    letters.Add(wxT("G")); letters.Add(wxT("H")); letters.Add(wxT("I"));
+    letters.Add(wxT("J")); letters.Add(wxT("K")); letters.Add(wxT("L"));
+    letters.Add(wxT("M")); letters.Add(wxT("N")); letters.Add(wxT("O"));
+    letters.Add(wxT("P")); letters.Add(wxT("Q")); letters.Add(wxT("R"));
+    letters.Add(wxT("S")); letters.Add(wxT("T")); letters.Add(wxT("U"));
+    letters.Add(wxT("V")); letters.Add(wxT("W")); letters.Add(wxT("X"));
+    letters.Add(wxT("Y")); letters.Add(wxT("Z")); letters.Add(wxT("a"));
+    letters.Add(wxT("b")); letters.Add(wxT("c")); letters.Add(wxT("d"));
+    letters.Add(wxT("e")); letters.Add(wxT("f")); letters.Add(wxT("g"));
+    letters.Add(wxT("h")); letters.Add(wxT("i")); letters.Add(wxT("j"));
+    letters.Add(wxT("k")); letters.Add(wxT("l")); letters.Add(wxT("m"));
+    letters.Add(wxT("n")); letters.Add(wxT("o")); letters.Add(wxT("p"));
+    letters.Add(wxT("q")); letters.Add(wxT("r")); letters.Add(wxT("s"));
+    letters.Add(wxT("t")); letters.Add(wxT("u")); letters.Add(wxT("v"));
+    letters.Add(wxT("w")); letters.Add(wxT("x")); letters.Add(wxT("y"));
+    letters.Add(wxT("z")); letters.Add(wxT("!")); letters.Add(wxT("-"));
+    letters.Add(wxT("_"));
     
     wxTextValidator herosNameValidator(wxFILTER_INCLUDE_CHAR_LIST);
-    herosNameValidator.SetIncludeList(letters);
+    herosNameValidator.SetIncludes(letters);
     
-    herosNameText = XRCCTRL(*this, "ID_GENERAL_HEROSNAME", wxTextCtrl);
-    herosNameText->SetMaxLength(5);
-    herosNameText->SetValidator(herosNameValidator);
-    
-    memberClass[0] = XRCCTRL(*this, "ID_GENERAL_PARTY1", wxChoice);
-    memberClass[1] = XRCCTRL(*this, "ID_GENERAL_PARTY2", wxChoice);
-    memberClass[2] = XRCCTRL(*this, "ID_GENERAL_PARTY3", wxChoice);
-    memberClass[3] = XRCCTRL(*this, "ID_GENERAL_PARTY4", wxChoice);
-    
-    honestySlider = XRCCTRL(*this, "ID_GENERAL_HONESTY", wxSlider);
-    compassionSlider = XRCCTRL(*this, "ID_GENERAL_COMPASSION", wxSlider);
-    valorSlider = XRCCTRL(*this, "ID_GENERAL_VALOR", wxSlider);
-    justiceSlider = XRCCTRL(*this, "ID_GENERAL_JUSTICE", wxSlider);
-    sacrificeSlider = XRCCTRL(*this, "ID_GENERAL_SACRIFICE", wxSlider);
-    honorSlider = XRCCTRL(*this, "ID_GENERAL_HONOR", wxSlider);
-    spiritualitySlider = XRCCTRL(*this, "ID_GENERAL_SPIRITUALITY", wxSlider);
-    humilitySlider = XRCCTRL(*this, "ID_GENERAL_HUMILITY", wxSlider);
-    
-    lightSpellCheck = XRCCTRL(*this, "ID_GENERAL_LIGHT", wxCheckBox);
-    missileSpellCheck = XRCCTRL(*this, "ID_GENERAL_MISSILE", wxCheckBox);
-    awakenSpellCheck = XRCCTRL(*this, "ID_GENERAL_AWAKEN", wxCheckBox);
-    cureSpellCheck = XRCCTRL(*this, "ID_GENERAL_CURE", wxCheckBox);
-    windSpellCheck = XRCCTRL(*this, "ID_GENERAL_WIND", wxCheckBox);
-    healSpellCheck = XRCCTRL(*this, "ID_GENERAL_HEAL", wxCheckBox);
-    fireSpellCheck = XRCCTRL(*this, "ID_GENERAL_FIRE", wxCheckBox);
-    exitSpellCheck = XRCCTRL(*this, "ID_GENERAL_EXIT", wxCheckBox);
-    dispelSpellCheck = XRCCTRL(*this, "ID_GENERAL_DISPEL", wxCheckBox);
-    viewSpellCheck = XRCCTRL(*this, "ID_GENERAL_VIEW", wxCheckBox);
-    protectSpellCheck = XRCCTRL(*this, "ID_GENERAL_PROTECT", wxCheckBox);
-    iceSpellCheck = XRCCTRL(*this, "ID_GENERAL_ICE", wxCheckBox);
-    blinkSpellCheck = XRCCTRL(*this, "ID_GENERAL_BLINK", wxCheckBox);
-    energySpellCheck = XRCCTRL(*this, "ID_GENERAL_ENERGY", wxCheckBox);
-    quickSpellCheck = XRCCTRL(*this, "ID_GENERAL_QUICK", wxCheckBox);
-    sleepSpellCheck = XRCCTRL(*this, "ID_GENERAL_SLEEP", wxCheckBox);
-    reflectSpellCheck = XRCCTRL(*this, "ID_GENERAL_REFLECT", wxCheckBox);
-    negateSpellCheck = XRCCTRL(*this, "ID_GENERAL_NEGATE", wxCheckBox);
-    destroySpellCheck = XRCCTRL(*this, "ID_GENERAL_DESTROY", wxCheckBox);
-    jinxSpellCheck = XRCCTRL(*this, "ID_GENERAL_JINX", wxCheckBox);
-    squishSpellCheck = XRCCTRL(*this, "ID_GENERAL_SQUISH", wxCheckBox);
-    gateSpellCheck = XRCCTRL(*this, "ID_GENERAL_GATE", wxCheckBox);
-    tremorSpellCheck = XRCCTRL(*this, "ID_GENERAL_TREMOR", wxCheckBox);
-    lifeSpellCheck = XRCCTRL(*this, "ID_GENERAL_LIFE", wxCheckBox);
-    defeatSpellCheck = XRCCTRL(*this, "ID_GENERAL_DEFEAT", wxCheckBox);
-    
-    trammelChoice = XRCCTRL(*this, "ID_GENERAL_TRAMMEL", wxChoice);
-    feluccaChoice = XRCCTRL(*this, "ID_GENERAL_FELUCCA", wxChoice);
+    XRCCTRL(*this, "IDT_HERO_NAME", wxTextCtrl)->
+        SetValidator(herosNameValidator);
     
     wxTextValidator numberValidator(wxFILTER_NUMERIC);
-    goldText = XRCCTRL(*this, "ID_INVENTORY_GOLD", wxTextCtrl);
-    goldText->SetValidator(numberValidator);
-    goldText->SetMaxLength(4);
     
-    ashSlider = XRCCTRL(*this, "ID_INVENTORY_ASH", wxSlider);
-    ginsengSlider = XRCCTRL(*this, "ID_INVENTORY_GINSENG", wxSlider);
-    garlicSlider = XRCCTRL(*this, "ID_INVENTORY_GARLIC", wxSlider);
-    silkwebSlider = XRCCTRL(*this, "ID_INVENTORY_SILKWEB", wxSlider);
-    mossSlider = XRCCTRL(*this, "ID_INVENTORY_MOSS", wxSlider);
-    pearlSlider = XRCCTRL(*this, "ID_INVENTORY_PEARL", wxSlider);
-    fungusSlider = XRCCTRL(*this, "ID_INVENTORY_FUNGUS", wxSlider);
-    manrootSlider = XRCCTRL(*this, "ID_INVENTORY_MANROOT", wxSlider);
+    XRCCTRL(*this, "IDT_PARTY_GOLD", wxTextCtrl)->SetValidator(numberValidator);
+    XRCCTRL(*this, "IDT_CHARACTER_HP", wxTextCtrl)->
+        SetValidator(numberValidator);
+    XRCCTRL(*this, "IDT_CHARACTER_MP", wxTextCtrl)->
+        SetValidator(numberValidator);
+    XRCCTRL(*this, "IDT_CHARACTER_EXPERIENCE", wxTextCtrl)->
+        SetValidator(numberValidator);
+    XRCCTRL(*this, "IDT_CHARACTER_MAXHP", wxTextCtrl)->
+        SetValidator(numberValidator);
+    XRCCTRL(*this, "IDT_CHARACTER_MAXMP", wxTextCtrl)->
+        SetValidator(numberValidator);
+    XRCCTRL(*this, "IDT_CHARACTER_STRENGTH", wxTextCtrl)->
+        SetValidator(numberValidator);
+    XRCCTRL(*this, "IDT_CHARACTER_INTELLIGENCE", wxTextCtrl)->
+        SetValidator(numberValidator);
+    XRCCTRL(*this, "IDT_CHARACTER_DEXTERITY", wxTextCtrl)->
+        SetValidator(numberValidator);
     
-    honestyRuneCheck = XRCCTRL(*this, "ID_INVENTORY_HONESTY", wxCheckBox);
-    compassionRuneCheck = XRCCTRL(*this, "ID_INVENTORY_COMPASSION", wxCheckBox);
-    valorRuneCheck = XRCCTRL(*this, "ID_INVENTORY_VALOR", wxCheckBox);
-    justiceRuneCheck = XRCCTRL(*this, "ID_INVENTORY_JUSTICE", wxCheckBox);
-    sacrificeRuneCheck = XRCCTRL(*this, "ID_INVENTORY_SACRIFICE", wxCheckBox);
-    honorRuneCheck = XRCCTRL(*this, "ID_INVENTORY_HONOR", wxCheckBox);
-    spiritualityRuneCheck = XRCCTRL(*this, "ID_INVENTORY_SPIRITUALITY", wxCheckBox);
-    humilityRuneCheck = XRCCTRL(*this, "ID_INVENTORY_HUMILITY", wxCheckBox);
+    wxArrayString numbers;
+    numbers.Add(wxT("2")); numbers.Add(wxT("3")); numbers.Add(wxT("4"));
+    numbers.Add(wxT("5")); numbers.Add(wxT("6")); numbers.Add(wxT("7"));
+    numbers.Add(wxT("8"));
     
-    blueStoneCheck = XRCCTRL(*this, "ID_INVENTORY_BLUE", wxCheckBox);
-    yellowStoneCheck = XRCCTRL(*this, "ID_INVENTORY_YELLOW", wxCheckBox);
-    redStoneCheck = XRCCTRL(*this, "ID_INVENTORY_RED", wxCheckBox);
-    greenStoneCheck = XRCCTRL(*this, "ID_INVENTORY_GREEN", wxCheckBox);
-    orangeStoneCheck = XRCCTRL(*this, "ID_INVENTORY_ORANGE", wxCheckBox);
-    purpleStoneCheck = XRCCTRL(*this, "ID_INVENTORY_PURPLE", wxCheckBox);
-    whiteStoneCheck = XRCCTRL(*this, "ID_INVENTORY_WHITE", wxCheckBox);
-    blackStoneCheck = XRCCTRL(*this, "ID_INVENTORY_BLACK", wxCheckBox);
-    
-    torchSlider = XRCCTRL(*this, "ID_INVENTORY_TORCH", wxSlider);
-    gemSlider = XRCCTRL(*this, "ID_INVENTORY_GEM", wxSlider);
-    oilSlider = XRCCTRL(*this, "ID_INVENTORY_OIL", wxSlider);
-    
-    keyCheck = XRCCTRL(*this, "ID_INVENTORY_KEY", wxCheckBox);
-    sextantCheck = XRCCTRL(*this, "ID_INVENTORY_SEXTANT", wxCheckBox);
-    scaleCheck = XRCCTRL(*this, "ID_INVENTORY_SCALE", wxCheckBox);
-    fluteCheck = XRCCTRL(*this, "ID_INVENTORY_FLUTE", wxCheckBox);
-    candleCheck = XRCCTRL(*this, "ID_INVENTORY_CANDLE", wxCheckBox);
-    bookCheck = XRCCTRL(*this, "ID_INVENTORY_BOOK", wxCheckBox);
-    bellCheck = XRCCTRL(*this, "ID_INVENTORY_BELL", wxCheckBox);
-    hornCheck = XRCCTRL(*this, "ID_INVENTORY_HORN", wxCheckBox);
-    skullCheck = XRCCTRL(*this, "ID_INVENTORY_SKULL", wxCheckBox);
-    truthKeyCheck = XRCCTRL(*this, "ID_INVENTORY_TRUTHKEY", wxCheckBox);
-    courageKeyCheck = XRCCTRL(*this, "ID_INVENTORY_COURAGEKEY", wxCheckBox);
-    loveKeyCheck = XRCCTRL(*this, "ID_INVENTORY_LOVEKEY", wxCheckBox);
-    wheelCheck = XRCCTRL(*this, "ID_INVENTORY_WHEEL", wxCheckBox);
-    
-    characterChoice = XRCCTRL(*this, "ID_CHARACTER_CHARACTER", wxChoice);
-    
-    wxStringList numbers("2", "3", "4", "5", "6", "7", "8", NULL);
     wxTextValidator levelValidator(wxFILTER_INCLUDE_CHAR_LIST);
-    levelValidator.SetIncludeList(numbers);
+    levelValidator.SetIncludes(numbers);
     
-    levelText = XRCCTRL(*this, "ID_CHARACTER_LEVEL", wxTextCtrl);
-    levelText->SetValidator(levelValidator);
-    levelText->SetMaxLength(1);
+    XRCCTRL(*this, "IDT_CHARACTER_LEVEL", wxTextCtrl)->
+        SetValidator(levelValidator);
+        
+    memberChoice[0] = XRCCTRL(*this, "IDC_PARTY_MEMBER1", wxChoice);
+    memberChoice[1] = XRCCTRL(*this, "IDC_PARTY_MEMBER2", wxChoice);
+    memberChoice[2] = XRCCTRL(*this, "IDC_PARTY_MEMBER3", wxChoice);
+    memberChoice[3] = XRCCTRL(*this, "IDC_PARTY_MEMBER4", wxChoice);
     
-    experienceText = XRCCTRL(*this, "ID_CHARACTER_EXPERIENCE", wxTextCtrl);
-    experienceText->SetValidator(numberValidator);
-    experienceText->SetMaxLength(4);
+    itemChoice[0] = XRCCTRL(*this, "IDC_CHARACTER_EQUIPMENT1", wxChoice);
+    itemEquippedCheck[0] =
+        XRCCTRL(*this, "IDC_CHARACTER_EQUIPPED1", wxCheckBox);
     
-    currentHPText = XRCCTRL(*this, "ID_CHARACTER_CURRENTHP", wxTextCtrl);
-    currentHPText->SetValidator(numberValidator);
-    currentHPText->SetMaxLength(3);
+    itemChoice[1] = XRCCTRL(*this, "IDC_CHARACTER_EQUIPMENT2", wxChoice);
+    itemEquippedCheck[1] =
+        XRCCTRL(*this, "IDC_CHARACTER_EQUIPPED2", wxCheckBox);
     
-    currentMPText = XRCCTRL(*this, "ID_CHARACTER_CURRENTMP", wxTextCtrl);
-    currentMPText->SetValidator(numberValidator);
-    currentMPText->SetMaxLength(2);
+    itemChoice[2] = XRCCTRL(*this, "IDC_CHARACTER_EQUIPMENT3", wxChoice);
+    itemEquippedCheck[2] =
+        XRCCTRL(*this, "IDC_CHARACTER_EQUIPPED3", wxCheckBox);
     
-    maxHPText = XRCCTRL(*this, "ID_CHARACTER_MAXHP", wxTextCtrl);
-    maxHPText->SetValidator(numberValidator);
-    maxHPText->SetMaxLength(3);
+    itemChoice[3] = XRCCTRL(*this, "IDC_CHARACTER_EQUIPMENT4", wxChoice);
+    itemEquippedCheck[3] =
+        XRCCTRL(*this, "IDC_CHARACTER_EQUIPPED4", wxCheckBox);
     
-    maxMPText = XRCCTRL(*this, "ID_CHARACTER_MAXMP", wxTextCtrl);
-    maxMPText->SetValidator(numberValidator);
-    maxMPText->SetMaxLength(2);
+    itemChoice[4] = XRCCTRL(*this, "IDC_CHARACTER_EQUIPMENT5", wxChoice);
+    itemEquippedCheck[4] =
+        XRCCTRL(*this, "IDC_CHARACTER_EQUIPPED5", wxCheckBox);
     
-    strengthText = XRCCTRL(*this, "ID_CHARACTER_STRENGTH", wxTextCtrl);
-    strengthText->SetValidator(numberValidator);
-    strengthText->SetMaxLength(2);
-    
-    intelligenceText = XRCCTRL(*this, "ID_CHARACTER_INTELLIGENCE", wxTextCtrl);
-    intelligenceText->SetValidator(numberValidator);
-    intelligenceText->SetMaxLength(2);
-    
-    dexterityText = XRCCTRL(*this, "ID_CHARACTER_DEXTERITY", wxTextCtrl);
-    dexterityText->SetValidator(numberValidator);
-    dexterityText->SetMaxLength(2);
-    
-    itemChoice[0] = XRCCTRL(*this, "ID_CHARACTER_FIRST", wxChoice);
-    itemEquippedCheck[0] = XRCCTRL(*this, "ID_CHARACTER_FIRSTEQUIPPED", wxCheckBox);
-    itemChoice[1] = XRCCTRL(*this, "ID_CHARACTER_SECOND", wxChoice);
-    itemEquippedCheck[1] = XRCCTRL(*this, "ID_CHARACTER_SECONDEQUIPPED", wxCheckBox);
-    itemChoice[2] = XRCCTRL(*this, "ID_CHARACTER_THIRD", wxChoice);
-    itemEquippedCheck[2] = XRCCTRL(*this, "ID_CHARACTER_THIRDEQUIPPED", wxCheckBox);
-    itemChoice[3] = XRCCTRL(*this, "ID_CHARACTER_FOURTH", wxChoice);
-    itemEquippedCheck[3] = XRCCTRL(*this, "ID_CHARACTER_FOURTHEQUIPPED", wxCheckBox);
-    itemChoice[4] = XRCCTRL(*this, "ID_CHARACTER_FIFTH", wxChoice);
-    itemEquippedCheck[4] = XRCCTRL(*this, "ID_CHARACTER_FIFTHEQUIPPED", wxCheckBox);
-    itemChoice[5] = XRCCTRL(*this, "ID_CHARACTER_SIXTH", wxChoice);
-    itemEquippedCheck[5] = XRCCTRL(*this, "ID_CHARACTER_SIXTHEQUIPPED", wxCheckBox);
+    itemChoice[5] = XRCCTRL(*this, "IDC_CHARACTER_EQUIPMENT6", wxChoice);
+    itemEquippedCheck[5] =
+        XRCCTRL(*this, "IDC_CHARACTER_EQUIPPED6", wxCheckBox);
 }
 
-void MainFrame::setFeluccaOptions(int trammel) {
+void MainFrame::setEquipment(int slot) {
+    enum Character character = static_cast<enum Character>
+        (XRCCTRL(*this, "IDRB_CHARACTER_SELECT", wxRadioBox)->GetSelection());
+    int item = itemChoice[slot]->GetSelection();
+    
+    if (itemEquippedCheck[slot]->IsChecked() && (item > 0)) {
+        item |= 0x80;
+    }
+    
+    saveslot->setEquipment(character, slot, item);
+}
+
+void MainFrame::setFeluccaOptions(enum City trammel) {
+    wxChoice *feluccaChoice =
+        XRCCTRL(*this, "IDC_TRANSPORTATION_FELUCCA", wxChoice);
     feluccaChoice->Clear();
     
     switch (trammel) {
@@ -457,277 +261,13 @@ void MainFrame::setFeluccaOptions(int trammel) {
     feluccaChoice->SetSelection(0);
 }
 
-void MainFrame::loadStats(SaveSlot &slot, int character) {
-    wxString str;
-    
-    int temp = currentSlot;
-    currentSlot = -1;
-    
-    str.Printf("%d", slot.getLevel(character));
-    levelText->SetValue(str);
-    
-    str.Printf("%d", slot.getExperience(character));
-    experienceText->SetValue(str);
-    
-    str.Printf("%d", slot.getCurrentHP(character));
-    currentHPText->SetValue(str);
-    
-    str.Printf("%d", slot.getCurrentMP(character));
-    currentMPText->SetValue(str);
-    
-    str.Printf("%d", slot.getMaxHP(character));
-    maxHPText->SetValue(str);
-    
-    str.Printf("%d", slot.getMaxMP(character));
-    maxMPText->SetValue(str);
-    
-    str.Printf("%d", slot.getStrength(character));
-    strengthText->SetValue(str);
-    
-    str.Printf("%d", slot.getIntelligence(character));
-    intelligenceText->SetValue(str);
-    
-    str.Printf("%d", slot.getDexterity(character));
-    dexterityText->SetValue(str);
-    
-    for (int index = 0; index < 6; index++) {
-        int item = slot.getEquipment(character, index);
-        
-        itemChoice[index]->SetSelection(item & 0x7F);
-        itemEquippedCheck[index]->SetValue(item & 0x80);
-    }
-    
-    currentSlot = temp;
-}
-
-void MainFrame::loadGame(int game) {
-    SaveSlot &slot = *saveslot[game];
-    
-    slot.modified = false;
-    herosNameText->SetValue(slot.getHerosName());
-    
-    memberClass[0]->SetSelection(slot.getMember(0) - 1);
-    memberClass[1]->SetSelection(slot.getMember(1));
-    memberClass[2]->SetSelection(slot.getMember(2));
-    memberClass[3]->SetSelection(slot.getMember(3));
-    
-    honestySlider->SetValue(slot.getVirtue(HONESTY));
-    compassionSlider->SetValue(slot.getVirtue(COMPASSION));
-    valorSlider->SetValue(slot.getVirtue(VALOR));
-    justiceSlider->SetValue(slot.getVirtue(JUSTICE));
-    sacrificeSlider->SetValue(slot.getVirtue(SACRIFICE));
-    honorSlider->SetValue(slot.getVirtue(HONOR));
-    spiritualitySlider->SetValue(slot.getVirtue(SPIRITUALITY));
-    humilitySlider->SetValue(slot.getVirtue(HUMILITY));
-    
-    lightSpellCheck->SetValue(slot.hasMagic(LIGHT));
-    missileSpellCheck->SetValue(slot.hasMagic(MISSILE));
-    awakenSpellCheck->SetValue(slot.hasMagic(AWAKEN));
-    cureSpellCheck->SetValue(slot.hasMagic(CURE));
-    windSpellCheck->SetValue(slot.hasMagic(WIND));
-    healSpellCheck->SetValue(slot.hasMagic(HEAL));
-    fireSpellCheck->SetValue(slot.hasMagic(FIRE));
-    exitSpellCheck->SetValue(slot.hasMagic(EXIT));
-    dispelSpellCheck->SetValue(slot.hasMagic(DISPEL));
-    viewSpellCheck->SetValue(slot.hasMagic(VIEW));
-    protectSpellCheck->SetValue(slot.hasMagic(PROTECT));
-    iceSpellCheck->SetValue(slot.hasMagic(ICE));
-    blinkSpellCheck->SetValue(slot.hasMagic(BLINK));
-    energySpellCheck->SetValue(slot.hasMagic(ENERGY));
-    quickSpellCheck->SetValue(slot.hasMagic(QUICK));
-    sleepSpellCheck->SetValue(slot.hasMagic(SLEEP));
-    reflectSpellCheck->SetValue(slot.hasMagic(REFLECT));
-    negateSpellCheck->SetValue(slot.hasMagic(NEGATE));
-    destroySpellCheck->SetValue(slot.hasMagic(DESTROY));
-    jinxSpellCheck->SetValue(slot.hasMagic(JINX));
-    squishSpellCheck->SetValue(slot.hasMagic(SQUISH));
-    gateSpellCheck->SetValue(slot.hasMagic(GATE));
-    tremorSpellCheck->SetValue(slot.hasMagic(TREMOR));
-    lifeSpellCheck->SetValue(slot.hasMagic(LIFE));
-    defeatSpellCheck->SetValue(slot.hasMagic(DEFEAT));
-    
-    trammelChoice->SetSelection(slot.getPhase(TRAMMEL));
-    setFeluccaOptions(slot.getPhase(TRAMMEL));
-    feluccaChoice->SetSelection(slot.getPhase(FELUCCA));
-    
-    wxString gold;
-    gold.Printf("%d", slot.getGold());
-    goldText->SetValue(gold);
-    
-    ashSlider->SetValue(slot.getHerb(ASH));
-    ginsengSlider->SetValue(slot.getHerb(GINSENG));
-    garlicSlider->SetValue(slot.getHerb(GARLIC));
-    silkwebSlider->SetValue(slot.getHerb(SILKWEB));
-    mossSlider->SetValue(slot.getHerb(MOSS));
-    pearlSlider->SetValue(slot.getHerb(PEARL));
-    fungusSlider->SetValue(slot.getHerb(FUNGUS));
-    manrootSlider->SetValue(slot.getHerb(MANROOT));
-    
-    honestyRuneCheck->SetValue(slot.hasRune(HONESTY));
-    compassionRuneCheck->SetValue(slot.hasRune(COMPASSION));
-    valorRuneCheck->SetValue(slot.hasRune(VALOR));
-    justiceRuneCheck->SetValue(slot.hasRune(JUSTICE));
-    sacrificeRuneCheck->SetValue(slot.hasRune(SACRIFICE));
-    honorRuneCheck->SetValue(slot.hasRune(HONOR));
-    spiritualityRuneCheck->SetValue(slot.hasRune(SPIRITUALITY));
-    humilityRuneCheck->SetValue(slot.hasRune(HUMILITY));
-    
-    blueStoneCheck->SetValue(slot.hasStone(HONESTY));
-    yellowStoneCheck->SetValue(slot.hasStone(COMPASSION));
-    redStoneCheck->SetValue(slot.hasStone(VALOR));
-    greenStoneCheck->SetValue(slot.hasStone(JUSTICE));
-    orangeStoneCheck->SetValue(slot.hasStone(SACRIFICE));
-    purpleStoneCheck->SetValue(slot.hasStone(HONOR));
-    whiteStoneCheck->SetValue(slot.hasStone(SPIRITUALITY));
-    blackStoneCheck->SetValue(slot.hasStone(HUMILITY));
-    
-    torchSlider->SetValue(slot.getTool(TORCH));
-    gemSlider->SetValue(slot.getTool(GEM));
-    oilSlider->SetValue(slot.getTool(OIL));
-    
-    keyCheck->SetValue(slot.getTool(KEY));
-    sextantCheck->SetValue(slot.getTool(SEXTANT));
-    scaleCheck->SetValue(slot.getTool(SCALE));
-    fluteCheck->SetValue(slot.getTool(FLUTE));
-    candleCheck->SetValue(slot.getTool(CANDLE));
-    bookCheck->SetValue(slot.getTool(BOOK));
-    bellCheck->SetValue(slot.getTool(BELL));
-    hornCheck->SetValue(slot.getTool(HORN));
-    skullCheck->SetValue(slot.getTool(SKULL));
-    truthKeyCheck->SetValue(slot.getTool(TRUTHKEY));
-    courageKeyCheck->SetValue(slot.getTool(COURAGEKEY));
-    loveKeyCheck->SetValue(slot.getTool(LOVEKEY));
-    wheelCheck->SetValue(slot.getTool(WHEEL));
-    
-    loadStats(slot, characterChoice->GetSelection());
-    
-    currentSlot = game;
-    notebook->SetSelection(0);
-    notebook->Show(true);
-}
-
-void MainFrame::load(wxString &filename) {
-    if (isOpen()) {
-        if (!close()) {
-            return;
-        }
-    }
-    
-    char nvram[SAVE_SIZE];
-    
-    sram = new char[SRAM_SIZE];
-    std::ifstream in(filename.mb_str(), std::ios::in | std::ios::binary);
-    
-    if (!in) {
-        // unable to open file
-        wxMessageBox(wxT("Unable to open the SRAM file."),
-                     wxT("File Open Error"), wxOK | wxICON_ERROR);
-        
-        delete sram;
-        return;
-    }
-    
-    in.read(sram, SRAM_SIZE);
-    
-    if (in.rdstate() & std::ios::failbit) {
-        wxMessageBox(wxT("Unable to read the SRAM file."),
-                     wxT("File I/O Error"), wxOK | wxICON_ERROR);
-        
-        in.close();
-        return;
-    }
-    
-    in.close();
-    
-    for (int slot = 0; slot < 3; slot++) {
-        memcpy(nvram, (sram + SRAM_OFFSET + (slot * SAVE_SIZE)), SAVE_SIZE);
-        saveslot[slot] = new SaveSlot((const unsigned char *)nvram);
-        games[slot]->Enable(saveslot[slot]->isValid());
-        
-        if (saveslot[slot]->isValid()) {
-            games[slot]->Enable(true);
-        } else {
-            games[0]->Enable(false);
-        }
-    }
-    
-    setOpen(true);
-    
-    if (saveslot[0]->isValid()) {
-        loadGame(0);
-    } else if (saveslot[1]->isValid()) {
-        loadGame(1);
-    } else if (saveslot[2]->isValid()) {
-        loadGame(2);
-    } else {
-        setOpen(false);
-        
-        wxMessageBox(wxT("No Ultima: Quest of the Avatar games exist in the SRAM file you loaded."),
-                     wxT("Error: No Games Found"), wxOK | wxICON_ERROR);
-    }
-    
-    if (isOpen()) {
-        wxString bakfile = filename + ".bak";
-        std::ofstream out(bakfile.mb_str(), std::ios::out | std::ios::binary);
-        
-        if (out) {
-            out.write(sram, SRAM_SIZE);
-            out.close();
-        }
-    }
-}
-
-void MainFrame::fileOpen(wxCommandEvent &) {
-    static wxFileDialog *dlg = new wxFileDialog(this, 
-        wxT("Choose a .SAV File"), "", "", 
-        wxT("NES SRAM File (*.sav)|*.sav"), (wxOPEN | wxCHANGE_DIR));
-        
-    int value = dlg->ShowModal();
-    
-    if (value == wxID_OK) {
-        sramFile = dlg->GetPath();
-        load(sramFile);
-    }
-}
-
-bool MainFrame::isValidParty() const {
-    char members = 0;
-    bool end = false;
-    
-    for (int i = 0; i < 4; i++) {
-        int member = memberClass[i]->GetSelection();
-        
-        if (i > 0) {
-            member--;
-        }
-
-        if (member == -1) {
-            end = true;
-        } else {
-            if (members & (1 << member)) {
-                return false;
-            }
-        
-            if (end) {
-                return false;
-            }
-
-            members |= (1 << member);
-        }
-    }
-    
-    return true;
-}
-
-bool MainFrame::hasValidEquipment(int character) const {
+bool MainFrame::hasValidEquipment(enum Character character) const {
     bool bow = false;
     bool weapon = false;
     bool armor = false;
     
-    SaveSlot &slot = *(saveslot[currentSlot]);
-    
-    for (int i = 0; i < 6; i++) {
-        int item = slot.getEquipment(character, i);
+    for (int i = 0; i < 6; ++i) {
+        int item = saveslot->getEquipment(character, i);
         
         if (item & 0x80) {
             item &= 0x7F;
@@ -757,121 +297,40 @@ bool MainFrame::hasValidEquipment(int character) const {
     return true;
 }
 
-bool MainFrame::save(wxString &filename) {
-    if (!isValidParty()) {
-        int choice = wxMessageBox(wxT("Duplicate or missing party members selected.\nContinue Saving?"),
-                                  wxT("Warning: Invalid Party"),
-                                  wxYES_NO | wxICON_QUESTION,
-                                  this);
-                                 
-        if (choice != wxYES) {
-            return false;
-        }
-    }
+bool MainFrame::isValidParty() const {
+    char members = 0;
+    bool end = false;
     
-    for (int character = MAGE; character < SHEPHERD; character++) {
-        if (!hasValidEquipment(character)) {
-            int choice = wxMessageBox(CHARACTER_NAMES[character] + 
-                                      wxT(" has more than one equipped item of the same type.\nContinue Saving?"),
-                                      wxT("Warning: Invalid Equipment"),
-                                      wxYES_NO | wxICON_QUESTION,
-                                      this);
-                                      
-            if (choice != wxYES) {
+    for (int i = 0; i < 4; ++i) {
+        int member = memberChoice[i]->GetSelection();
+        
+        if (i > 0) {
+            member--;
+        }
+
+        if (member == -1) {
+            end = true;
+        } else {
+            if (members & (1 << member)) {
                 return false;
             }
-        }
-    }
-    
-    for (int offset = 0; offset < 3; offset++) {
-        char *nvram = (char *)saveslot[offset]->nvram;
-        char *save = (sram + SRAM_OFFSET + (offset * SAVE_SIZE));
         
-        memcpy(save, nvram, SAVE_SIZE);
-        
-        for (int byte = 0; byte < 3; byte++) {
-            char *checksum = (sram + SANITY_OFFSET + offset + (byte * 3));
-            
-            switch (byte) {
-                case 0:
-                    *checksum = nvram[0];
-                    break;
-                case 1:
-                    *checksum = (nvram[0] ^ SANITY_XOR1);
-                    break;
-                case 2:
-                    *checksum = (nvram[0] ^ SANITY_XOR2);
-                    break;
+            if (end) {
+                return false;
             }
+
+            members |= (1 << member);
         }
     }
-    
-    std::ofstream out(filename.mb_str(), std::ios::binary | std::ios::out);
-    
-    if (!out) {
-        wxMessageBox(wxT("Unable to open the SRAM file."),
-                     wxT("File Open Error"), wxOK | wxICON_ERROR);
-                     
-        return false;
-    }
-    
-    out.write(sram, SRAM_SIZE);
-    
-    if (out.rdstate() & std::ios::failbit) {
-        wxMessageBox(wxT("Unable to write to the SRAM file."),
-                     wxT("File I/O error"), wxOK | wxICON_ERROR);
-                     
-        out.close();
-        return false;
-    }
-    
-    out.close();
-    
-    saveslot[0]->setModified(false);
-    saveslot[1]->setModified(false);
-    saveslot[2]->setModified(false);
     
     return true;
 }
 
-void MainFrame::fileSave(wxCommandEvent &) {
-    save(sramFile);
-}
-
-void MainFrame::fileSaveAs(wxCommandEvent &) {
-    static wxFileDialog *dlg = new wxFileDialog(this, 
-        wxT("Choose a .SAV File"), "", "", 
-        wxT("NES SRAM File (*.sav)|*.sav"), (wxSAVE | wxCHANGE_DIR));
-    
-    int value = dlg->ShowModal();
-    
-    if (value == wxID_OK) {
-        sramFile = dlg->GetPath();
-        save(sramFile);
-    }
-}
-
-void MainFrame::setOpen(bool open) {
-    fileSaveItem->Enable(open);
-    fileSaveAsItem->Enable(open);
-    fileCloseItem->Enable(open);
-    
-    if (!open && (currentSlot != -1)) {
-        currentSlot = -1;
-        
-        delete saveslot[0];
-        delete saveslot[1];
-        delete saveslot[2];
-        delete sram;
-    }
-    
-    this->open = open;
-}
-
 bool MainFrame::close() {
-    if (saveslot[0]->isModified() || 
-        saveslot[1]->isModified() || 
-        saveslot[2]->isModified()) {
+    // we must be open to close
+    wxASSERT(isOpen());
+    
+    if (sram->isModified()) {
         int choice = wxMessageBox(wxT("Save Game File Before Closing?"),
                                   wxT("Warning: Unsaved Changes"),
                                   wxYES_NO | wxCANCEL | wxICON_QUESTION,
@@ -886,23 +345,512 @@ bool MainFrame::close() {
         }
     }
     
-    notebook->Show(false);
+    XRCCTRL(*this, "IDN_HACK4U", wxNotebook)->Show(false);
+    GetMenuBar()->FindItem(XRCID("IDM_GAME_GAME1"))->Check();
     
-    games[0]->Check(true);
-    games[0]->Enable(false);
-    games[1]->Enable(false);
-    games[2]->Enable(false);
+    open = false;
     
-    setOpen(false);
+    delete sram;
+    sram = 0;
+    
+    GetMenuBar()->EnableTop(gameMenu, false);
+    GetMenuBar()->EnableTop(locationMenu, false);
     
     return true;
 }
 
-void MainFrame::fileClose(wxCommandEvent &) {
-    close();
+void MainFrame::load(const wxString &filename) {
+    if (isOpen()) {
+        if (!close()) {
+            return;
+        }
+    }
+    
+    try {
+        sram = new SRAMFile(filename);
+    } catch (InvalidSRAMException &e) {
+        if (e.getError() == ISE_NOSUCHFILE) {
+            // unable to open file
+            wxMessageBox(wxT("Unable to open the SRAM file."),
+                         wxT("File Open Error"), wxOK | wxICON_ERROR);
+        } else if (e.getError() == ISE_IOERROR) {
+            wxMessageBox(wxT("Unable to read the SRAM file."),
+                         wxT("File I/O Error"), wxOK | wxICON_ERROR);
+        } else {
+            // must be a bad checksum if we're here
+            wxASSERT(e.getError() == ISE_BADCHECKSUM);
+            
+            wxMessageBox(wxT("No Ultima: Quest of the Avatar games"
+                             " exist in the SRAM file you loaded."),
+                         wxT("Error: No Games Found"), wxOK | wxICON_ERROR);
+        }
+        
+        return;
+    }
+    
+    for (int i = 0; i < 3; ++i) {
+        if (sram->isValid(i)) {
+            loadGame(i);
+            break;
+        }
+    }
+    
+    open = true;
+    
+    GetMenuBar()->EnableTop(gameMenu, true);
+    GetMenuBar()->EnableTop(locationMenu, true);
 }
 
-void MainFrame::fileExit(wxCommandEvent &) {
+void MainFrame::loadGame(int game) {
+    saveslot = sram->getSaveSlot(game);
+    
+    ignoreEvents = true;
+    
+    // load hero's name
+    XRCCTRL(*this, "IDT_HERO_NAME", wxTextCtrl)->
+        SetValue(saveslot->getHerosName());
+        
+    // load virtues
+    XRCCTRL(*this, "IDS_HERO_HONESTY", wxSlider)->
+        SetValue(saveslot->getVirtue(HONESTY));
+    XRCCTRL(*this, "IDS_HERO_COMPASSION", wxSlider)->
+        SetValue(saveslot->getVirtue(COMPASSION));
+    XRCCTRL(*this, "IDS_HERO_VALOR", wxSlider)->
+        SetValue(saveslot->getVirtue(VALOR));
+    XRCCTRL(*this, "IDS_HERO_JUSTICE", wxSlider)->
+        SetValue(saveslot->getVirtue(JUSTICE));
+    XRCCTRL(*this, "IDS_HERO_SACRIFICE", wxSlider)->
+        SetValue(saveslot->getVirtue(SACRIFICE));
+    XRCCTRL(*this, "IDS_HERO_HONOR", wxSlider)->
+        SetValue(saveslot->getVirtue(HONOR));
+    XRCCTRL(*this, "IDS_HERO_SPIRITUALITY", wxSlider)->
+        SetValue(saveslot->getVirtue(SPIRITUALITY));
+    XRCCTRL(*this, "IDS_HERO_HUMILITY", wxSlider)->
+        SetValue(saveslot->getVirtue(HUMILITY));
+        
+    // load party's start location
+    XRCCTRL(*this, "IDC_PARTY_START", wxChoice)->
+        SetSelection(INN_INDEX[saveslot->getStartLocation()]);
+        
+    // load party's gold
+    XRCCTRL(*this, "IDT_PARTY_GOLD", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), saveslot->getGold()));
+        
+    // load party members
+    XRCCTRL(*this, "IDC_PARTY_MEMBER1", wxChoice)->
+        SetSelection(saveslot->getMember(0) - 1);
+    XRCCTRL(*this, "IDC_PARTY_MEMBER2", wxChoice)->
+        SetSelection(saveslot->getMember(1));
+    XRCCTRL(*this, "IDC_PARTY_MEMBER3", wxChoice)->
+        SetSelection(saveslot->getMember(2));
+    XRCCTRL(*this, "IDC_PARTY_MEMBER4", wxChoice)->
+        SetSelection(saveslot->getMember(3));
+        
+    // load joined members
+    XRCCTRL(*this, "IDC_PARTY_MAGE", wxCheckBox)->
+        SetValue(saveslot->hasJoined(MAGE));
+    XRCCTRL(*this, "IDC_PARTY_BARD", wxCheckBox)->
+        SetValue(saveslot->hasJoined(BARD));
+    XRCCTRL(*this, "IDC_PARTY_FIGHTER", wxCheckBox)->
+        SetValue(saveslot->hasJoined(FIGHTER));
+    XRCCTRL(*this, "IDC_PARTY_DRUID", wxCheckBox)->
+        SetValue(saveslot->hasJoined(DRUID));
+    XRCCTRL(*this, "IDC_PARTY_TINKER", wxCheckBox)->
+        SetValue(saveslot->hasJoined(TINKER));
+    XRCCTRL(*this, "IDC_PARTY_PALADIN", wxCheckBox)->
+        SetValue(saveslot->hasJoined(PALADIN));
+    XRCCTRL(*this, "IDC_PARTY_RANGER", wxCheckBox)->
+        SetValue(saveslot->hasJoined(RANGER));
+    XRCCTRL(*this, "IDC_PARTY_SHEPHERD", wxCheckBox)->
+        SetValue(saveslot->hasJoined(SHEPHERD));
+        
+    // load known magic
+    XRCCTRL(*this, "IDC_PARTY_LIGHT", wxCheckBox)->
+        SetValue(saveslot->hasMagic(LIGHT));
+    XRCCTRL(*this, "IDC_PARTY_MISSILE", wxCheckBox)->
+        SetValue(saveslot->hasMagic(MISSILE));
+    XRCCTRL(*this, "IDC_PARTY_AWAKEN", wxCheckBox)->
+        SetValue(saveslot->hasMagic(AWAKEN));
+    XRCCTRL(*this, "IDC_PARTY_CURE", wxCheckBox)->
+        SetValue(saveslot->hasMagic(CURE));
+    XRCCTRL(*this, "IDC_PARTY_WIND", wxCheckBox)->
+        SetValue(saveslot->hasMagic(WIND));
+    XRCCTRL(*this, "IDC_PARTY_HEAL", wxCheckBox)->
+        SetValue(saveslot->hasMagic(HEAL));
+    XRCCTRL(*this, "IDC_PARTY_FIRE", wxCheckBox)->
+        SetValue(saveslot->hasMagic(FIRE));
+    XRCCTRL(*this, "IDC_PARTY_EXIT", wxCheckBox)->
+        SetValue(saveslot->hasMagic(EXIT));
+    XRCCTRL(*this, "IDC_PARTY_DISPEL", wxCheckBox)->
+        SetValue(saveslot->hasMagic(DISPEL));
+    XRCCTRL(*this, "IDC_PARTY_VIEW", wxCheckBox)->
+        SetValue(saveslot->hasMagic(VIEW));
+    XRCCTRL(*this, "IDC_PARTY_PROTECT", wxCheckBox)->
+        SetValue(saveslot->hasMagic(PROTECT));
+    XRCCTRL(*this, "IDC_PARTY_ICE", wxCheckBox)->
+        SetValue(saveslot->hasMagic(ICE));
+    XRCCTRL(*this, "IDC_PARTY_BLINK", wxCheckBox)->
+        SetValue(saveslot->hasMagic(BLINK));
+    XRCCTRL(*this, "IDC_PARTY_ENERGY", wxCheckBox)->
+        SetValue(saveslot->hasMagic(ENERGY));
+    XRCCTRL(*this, "IDC_PARTY_QUICK", wxCheckBox)->
+        SetValue(saveslot->hasMagic(QUICK));
+    XRCCTRL(*this, "IDC_PARTY_SLEEP", wxCheckBox)->
+        SetValue(saveslot->hasMagic(SLEEP));
+    XRCCTRL(*this, "IDC_PARTY_REFLECT", wxCheckBox)->
+        SetValue(saveslot->hasMagic(REFLECT));
+    XRCCTRL(*this, "IDC_PARTY_NEGATE", wxCheckBox)->
+        SetValue(saveslot->hasMagic(NEGATE));
+    XRCCTRL(*this, "IDC_PARTY_DESTROY", wxCheckBox)->
+        SetValue(saveslot->hasMagic(DESTROY));
+    XRCCTRL(*this, "IDC_PARTY_JINX", wxCheckBox)->
+        SetValue(saveslot->hasMagic(JINX));
+    XRCCTRL(*this, "IDC_PARTY_SQUISH", wxCheckBox)->
+        SetValue(saveslot->hasMagic(SQUISH));
+    XRCCTRL(*this, "IDC_PARTY_GATE", wxCheckBox)->
+        SetValue(saveslot->hasMagic(GATE));
+    XRCCTRL(*this, "IDC_PARTY_TREMOR", wxCheckBox)->
+        SetValue(saveslot->hasMagic(TREMOR));
+    XRCCTRL(*this, "IDC_PARTY_LIFE", wxCheckBox)->
+        SetValue(saveslot->hasMagic(LIFE));
+    XRCCTRL(*this, "IDC_PARTY_DEFEAT", wxCheckBox)->
+        SetValue(saveslot->hasMagic(DEFEAT));
+        
+    // load herb inventory
+    XRCCTRL(*this, "IDS_INVENTORY_ASH", wxSlider)->
+        SetValue(saveslot->getHerb(ASH));
+    XRCCTRL(*this, "IDS_INVENTORY_GINSENG", wxSlider)->
+        SetValue(saveslot->getHerb(GINSENG));
+    XRCCTRL(*this, "IDS_INVENTORY_GARLIC", wxSlider)->
+        SetValue(saveslot->getHerb(GARLIC));
+    XRCCTRL(*this, "IDS_INVENTORY_SILKWEB", wxSlider)->
+        SetValue(saveslot->getHerb(SILKWEB));
+    XRCCTRL(*this, "IDS_INVENTORY_MOSS", wxSlider)->
+        SetValue(saveslot->getHerb(MOSS));
+    XRCCTRL(*this, "IDS_INVENTORY_PEARL", wxSlider)->
+        SetValue(saveslot->getHerb(PEARL));
+    XRCCTRL(*this, "IDS_INVENTORY_FUNGUS", wxSlider)->
+        SetValue(saveslot->getHerb(FUNGUS));
+    XRCCTRL(*this, "IDS_INVENTORY_MANROOT", wxSlider)->
+        SetValue(saveslot->getHerb(MANROOT));
+        
+    // load rune inventory
+    XRCCTRL(*this, "IDC_INVENTORY_HONESTY", wxCheckBox)->
+        SetValue(saveslot->hasRune(HONESTY));
+    XRCCTRL(*this, "IDC_INVENTORY_COMPASSION", wxCheckBox)->
+        SetValue(saveslot->hasRune(COMPASSION));
+    XRCCTRL(*this, "IDC_INVENTORY_VALOR", wxCheckBox)->
+        SetValue(saveslot->hasRune(VALOR));
+    XRCCTRL(*this, "IDC_INVENTORY_JUSTICE", wxCheckBox)->
+        SetValue(saveslot->hasRune(JUSTICE));
+    XRCCTRL(*this, "IDC_INVENTORY_SACRIFICE", wxCheckBox)->
+        SetValue(saveslot->hasRune(SACRIFICE));
+    XRCCTRL(*this, "IDC_INVENTORY_HONOR", wxCheckBox)->
+        SetValue(saveslot->hasRune(HONOR));
+    XRCCTRL(*this, "IDC_INVENTORY_SPIRITUALITY", wxCheckBox)->
+        SetValue(saveslot->hasRune(SPIRITUALITY));
+    XRCCTRL(*this, "IDC_INVENTORY_HUMILITY", wxCheckBox)->
+        SetValue(saveslot->hasRune(HUMILITY));
+        
+    // load stone inventory
+    XRCCTRL(*this, "IDC_INVENTORY_BLUE", wxCheckBox)->
+        SetValue(saveslot->hasStone(HONESTY));
+    XRCCTRL(*this, "IDC_INVENTORY_YELLOW", wxCheckBox)->
+        SetValue(saveslot->hasStone(COMPASSION));
+    XRCCTRL(*this, "IDC_INVENTORY_RED", wxCheckBox)->
+        SetValue(saveslot->hasStone(VALOR));
+    XRCCTRL(*this, "IDC_INVENTORY_GREEN", wxCheckBox)->
+        SetValue(saveslot->hasStone(JUSTICE));
+    XRCCTRL(*this, "IDC_INVENTORY_ORANGE", wxCheckBox)->
+        SetValue(saveslot->hasStone(SACRIFICE));
+    XRCCTRL(*this, "IDC_INVENTORY_PURPLE", wxCheckBox)->
+        SetValue(saveslot->hasStone(HONOR));
+    XRCCTRL(*this, "IDC_INVENTORY_WHITE", wxCheckBox)->
+        SetValue(saveslot->hasStone(SPIRITUALITY));
+    XRCCTRL(*this, "IDC_INVENTORY_BLACK", wxCheckBox)->
+        SetValue(saveslot->hasStone(HUMILITY));
+        
+    // load tool inventory
+    XRCCTRL(*this, "IDS_INVENTORY_TORCH", wxSlider)->
+        SetValue(saveslot->getTool(TORCH));
+    XRCCTRL(*this, "IDS_INVENTORY_GEM", wxSlider)->
+        SetValue(saveslot->getTool(GEM));
+    XRCCTRL(*this, "IDS_INVENTORY_OIL", wxSlider)->
+        SetValue(saveslot->getTool(OIL));
+        
+    XRCCTRL(*this, "IDC_INVENTORY_KEY", wxCheckBox)->
+        SetValue(saveslot->getTool(KEY));
+    XRCCTRL(*this, "IDC_INVENTORY_SEXTANT", wxCheckBox)->
+        SetValue(saveslot->getTool(SEXTANT));
+    XRCCTRL(*this, "IDC_INVENTORY_SCALE", wxCheckBox)->
+        SetValue(saveslot->getTool(SCALE));
+    XRCCTRL(*this, "IDC_INVENTORY_FLUTE", wxCheckBox)->
+        SetValue(saveslot->getTool(FLUTE));
+    XRCCTRL(*this, "IDC_INVENTORY_CANDLE", wxCheckBox)->
+        SetValue(saveslot->getTool(CANDLE));
+    XRCCTRL(*this, "IDC_INVENTORY_BOOK", wxCheckBox)->
+        SetValue(saveslot->getTool(BOOK));
+    XRCCTRL(*this, "IDC_INVENTORY_BELL", wxCheckBox)->
+        SetValue(saveslot->getTool(BELL));
+    XRCCTRL(*this, "IDC_INVENTORY_HORN", wxCheckBox)->
+        SetValue(saveslot->getTool(HORN));
+    XRCCTRL(*this, "IDC_INVENTORY_SKULL", wxCheckBox)->
+        SetValue(saveslot->getTool(SKULL));
+    XRCCTRL(*this, "IDC_INVENTORY_TRUTHKEY", wxCheckBox)->
+        SetValue(saveslot->getTool(TRUTHKEY));
+    XRCCTRL(*this, "IDC_INVENTORY_LOVEKEY", wxCheckBox)->
+        SetValue(saveslot->getTool(LOVEKEY));
+    XRCCTRL(*this, "IDC_INVENTORY_COURAGEKEY", wxCheckBox)->
+        SetValue(saveslot->getTool(COURAGEKEY));
+    XRCCTRL(*this, "IDC_INVENTORY_WHEEL", wxCheckBox)->
+        SetValue(saveslot->getTool(WHEEL));
+        
+    // load moongates
+    XRCCTRL(*this, "IDC_TRANSPORTATION_TRAMMEL", wxChoice)->
+        SetSelection(saveslot->getPhase(TRAMMEL));
+    setFeluccaOptions(static_cast<enum City>(saveslot->getPhase(TRAMMEL)));
+    XRCCTRL(*this, "IDC_TRANSPORTATION_FELUCCA", wxChoice)->
+        SetSelection(saveslot->getPhase(FELUCCA));
+        
+    // load Balloon location
+    std::pair<int, int> balloon = saveslot->getBalloonLocation();
+    XRCCTRL(*this, "IDT_TRANSPORTATION_BALLOONLATITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), balloon.first));
+    XRCCTRL(*this, "IDT_TRANSPORTATION_BALLOONLONGITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), balloon.second));
+        
+    // load Whirlpool location
+    std::pair<int, int> whirlpool = saveslot->getWhirlpoolLocation();
+    XRCCTRL(*this, "IDT_TRANSPORTATION_WHIRLPOOLLATITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), whirlpool.first));
+    XRCCTRL(*this, "IDT_TRANSPORTATION_WHIRLPOOLLONGITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), whirlpool.second));
+        
+    // load pirate ship locations
+    XRCCTRL(*this, "IDC_TRANSPORTATION_SHIP1", wxCheckBox)->
+        SetValue(saveslot->hasPirateShip(SHIP1));
+    XRCCTRL(*this, "IDC_TRANSPORTATION_SHIP2", wxCheckBox)->
+        SetValue(saveslot->hasPirateShip(SHIP2));
+    XRCCTRL(*this, "IDC_TRANSPORTATION_SHIP3", wxCheckBox)->
+        SetValue(saveslot->hasPirateShip(SHIP3));
+    XRCCTRL(*this, "IDC_TRANSPORTATION_SHIP4", wxCheckBox)->
+        SetValue(saveslot->hasPirateShip(SHIP4));
+        
+    std::pair<int, int> ship = saveslot->getPirateShipLocation(SHIP1);
+    XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP1LATITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), ship.first));
+    XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP1LONGITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), ship.second));
+        
+    ship = saveslot->getPirateShipLocation(SHIP2);
+    XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP2LATITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), ship.first));
+    XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP2LONGITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), ship.second));
+        
+    ship = saveslot->getPirateShipLocation(SHIP3);
+    XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP3LATITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), ship.first));
+    XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP3LONGITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), ship.second));
+        
+    ship = saveslot->getPirateShipLocation(SHIP4);
+    XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP4LATITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), ship.first));
+    XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP4LONGITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), ship.second));
+        
+    // load character stats
+    loadStats(static_cast<enum Character>(
+        XRCCTRL(*this, "IDRB_CHARACTER_SELECT", wxRadioBox)->GetSelection()));
+                      
+    // show the notebook
+    wxNotebook *notebook = XRCCTRL(*this, "IDN_HACK4U", wxNotebook);
+    notebook->SetSelection(0);
+    notebook->Show(true);
+    
+    ignoreEvents = false;
+}
+
+void MainFrame::loadStats(enum Character character) {
+    // ignore events we're about to generate
+    ignoreEvents = true;
+    
+    XRCCTRL(*this, "IDT_CHARACTER_LEVEL", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), saveslot->getLevel(character)));
+    XRCCTRL(*this, "IDT_CHARACTER_HP", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"),
+                 saveslot->getCurrentHP(character)));
+    XRCCTRL(*this, "IDT_CHARACTER_MP", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"),
+                 saveslot->getCurrentMP(character)));
+    XRCCTRL(*this, "IDT_CHARACTER_EXPERIENCE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"),
+                 saveslot->getExperience(character)));
+    XRCCTRL(*this, "IDT_CHARACTER_MAXHP", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), saveslot->getMaxHP(character)));
+    XRCCTRL(*this, "IDT_CHARACTER_MAXMP", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), saveslot->getMaxMP(character)));
+    XRCCTRL(*this, "IDT_CHARACTER_STRENGTH", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), saveslot->getStrength(character)));
+    XRCCTRL(*this, "IDT_CHARACTER_INTELLIGENCE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"),
+                 saveslot->getIntelligence(character)));
+    XRCCTRL(*this, "IDT_CHARACTER_DEXTERITY", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"),
+                 saveslot->getDexterity(character)));
+                 
+    for (int index = 0; index < 6; ++index) {
+        int item = saveslot->getEquipment(character, index);
+        
+        itemChoice[index]->SetSelection(item & 0x7F);
+        itemEquippedCheck[index]->SetValue(item & 0x80);
+    }
+    
+    ignoreEvents = false;
+}
+
+bool MainFrame::save(const wxString &filename) {
+    if (!isValidParty()) {
+        int choice = wxMessageBox(wxT("Duplicate or missing party members"
+                                      " selected.\nContinue Saving?"),
+                                  wxT("Warning: Invalid Party"),
+                                  wxYES_NO | wxICON_QUESTION,
+                                  this);
+                                 
+        if (choice != wxYES) {
+            return false;
+        }
+    }
+    
+    for (int character = MAGE; character < SHEPHERD; ++character) {
+        if (!hasValidEquipment(static_cast<enum Character>(character))) {
+            int choice = wxMessageBox(CHARACTER_NAMES[character] + 
+                                      wxT(" has more than one equipped item of "
+                                          "the same type.\nContinue Saving?"),
+                                      wxT("Warning: Invalid Equipment"),
+                                      wxYES_NO | wxICON_QUESTION,
+                                      this);
+                                      
+            if (choice != wxYES) {
+                return false;
+            }
+        }
+    }
+    
+    try {
+        sram->save(filename);
+    } catch (FileIOException &e) {
+        if (e.getError() == FIE_CANNOTOPEN) {
+            wxMessageBox(wxT("Unable to open the SRAM file."),
+                         wxT("File Open Error"), wxOK | wxICON_ERROR);
+                         
+            return false;
+        } else {
+            // we must be an FIE_IOERROR
+            wxASSERT(e.getError() == FIE_IOERROR);
+            
+            wxMessageBox(wxT("Unable to write to the SRAM file."),
+                         wxT("File I/O error"), wxOK | wxICON_ERROR);
+            
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+void MainFrame::onBalloonChange(wxCommandEvent &event) {
+    if (ignoreEvents) {
+        return;
+    }
+    
+    wxTextCtrl *ctrl = dynamic_cast<wxTextCtrl *>(event.GetEventObject());
+    int value = std::atoi(ctrl->GetValue());
+    std::pair<int, int> location = saveslot->getBalloonLocation();
+    
+    if (event.GetId() == XRCID("IDT_TRANSPORTATION_BALLOONLATITUDE")) {
+        location.first = value;
+    } else {
+        // we must be longitude if we're here
+        wxASSERT(event.GetId() == XRCID("IDT_TRANSPORTATION_BALLOONLONGITUDE"));
+        
+        location.second = value;
+    }
+    
+    saveslot->setBalloonLocation(location);
+}
+
+void MainFrame::onEquipmentChange(wxCommandEvent &event) {
+    wxChoice *ctrl = dynamic_cast<wxChoice *>(event.GetEventObject());
+    int slot;
+    
+    for (slot = 0; slot < 6; ++slot) {
+        if (ctrl == itemChoice[slot]) {
+            break;
+        }
+    }
+    
+    setEquipment(slot);
+}
+
+void MainFrame::onEquippedChange(wxCommandEvent &event) {
+    wxCheckBox *ctrl = dynamic_cast<wxCheckBox *>(event.GetEventObject());
+    int slot;
+    
+    for (slot = 0; slot < 6; ++slot) {
+        if (ctrl == itemEquippedCheck[slot]) {
+            break;
+        }
+    }
+    
+    setEquipment(slot);
+}
+
+void MainFrame::onEquippedUpdate(wxUpdateUIEvent &event) {
+    if (event.GetId() == XRCID("IDC_CHARACTER_EQUIPPED1")) {
+        event.Enable(itemChoice[0]->GetSelection() > 0);
+        
+        if (itemChoice[0]->GetSelection() == 0) {
+            event.Check(false);
+        }
+    } else if (event.GetId() == XRCID("IDC_CHARACTER_EQUIPPED2")) {
+        event.Enable(itemChoice[1]->GetSelection() > 0);
+        
+        if (itemChoice[1]->GetSelection() == 0) {
+            event.Check(false);
+        }
+    } else if (event.GetId() == XRCID("IDC_CHARACTER_EQUIPPED3")) {
+        event.Enable(itemChoice[2]->GetSelection() > 0);
+        
+        if (itemChoice[2]->GetSelection() == 0) {
+            event.Check(false);
+        }
+    } else if (event.GetId() == XRCID("IDC_CHARACTER_EQUIPPED4")) {
+        event.Enable(itemChoice[3]->GetSelection() > 0);
+        
+        if (itemChoice[3]->GetSelection() == 0) {
+            event.Check(false);
+        }
+    } else if (event.GetId() == XRCID("IDC_CHARACTER_EQUIPPED5")) {
+        event.Enable(itemChoice[4]->GetSelection() > 0);
+        
+        if (itemChoice[4]->GetSelection() == 0) {
+            event.Check(false);
+        }
+    } else {
+        // we must be the last box if we're here
+        wxASSERT(event.GetId() == XRCID("IDC_CHARACTER_EQUIPPED6"));
+        
+        event.Enable(itemChoice[5]->GetSelection() > 0);
+        
+        if (itemChoice[5]->GetSelection() == 0) {
+            event.Check(false);
+        }
+    }
+}
+
+void MainFrame::onFileExit(wxCommandEvent &) {
     if (isOpen()) {
         if (close()) {
             Close(true);
@@ -912,7 +860,630 @@ void MainFrame::fileExit(wxCommandEvent &) {
     }
 }
 
-void MainFrame::windowClosing(wxCloseEvent &event) {
+void MainFrame::onFileOpen(wxCommandEvent &) {
+    static wxFileDialog *dlg = new wxFileDialog(this, 
+        wxT("Choose a .SAV File"), "", "", 
+        wxT("NES SRAM File (*.sav)|*.sav"), (wxOPEN | wxCHANGE_DIR));
+        
+    int value = dlg->ShowModal();
+    
+    if (value == wxID_OK) {
+        sramFile = dlg->GetPath();
+        load(sramFile);
+    }
+}
+
+void MainFrame::onFileSaveAs(wxCommandEvent &) {
+    static wxFileDialog *dlg = new wxFileDialog(this, 
+        wxT("Choose a .SAV File"), "", "", 
+        wxT("NES SRAM File (*.sav)|*.sav"), (wxSAVE | wxCHANGE_DIR));
+    
+    int value = dlg->ShowModal();
+    
+    if (value == wxID_OK) {
+        sramFile = dlg->GetPath();
+        save(sramFile);
+    }
+}
+
+void MainFrame::onGameChange(wxCommandEvent &event) {
+    if (event.GetId() == XRCID("IDM_GAME_GAME1")) {
+        loadGame(0);
+    } else if (event.GetId() == XRCID("IDM_GAME_GAME2")) {
+        loadGame(1);
+    } else if (event.GetId() == XRCID("IDM_GAME_GAME3")) {
+        loadGame(2);
+    }
+}
+
+void MainFrame::onGameMenuUpdate(wxUpdateUIEvent &event) {
+    if (isOpen()) {
+        if (event.GetId() == XRCID("IDM_GAME_GAME1")) {
+            event.Enable(sram->isValid(0));
+        } else if (event.GetId() == XRCID("IDM_GAME_GAME2")) {
+            event.Enable(sram->isValid(1));
+        } else {
+            // we must be game 3 if we're here
+            wxASSERT(event.GetId() == XRCID("IDM_GAME_GAME3"));
+            
+            event.Enable(sram->isValid(2));
+        }
+    } else {
+        event.Enable(false);
+    }
+}
+
+void MainFrame::onGoldChange(wxCommandEvent &) {
+    if (ignoreEvents) {
+        return;
+    }
+    
+    saveslot->setGold(std::atoi(XRCCTRL(*this, 
+                                        "IDT_PARTY_GOLD",
+                                        wxTextCtrl)->GetValue()));
+}
+
+void MainFrame::onHelpAbout(wxCommandEvent &) {
+    wxMessageDialog dlg(this, *Hack4u::APP_NAME + wxT(' ') + 
+                        *Hack4u::APP_VERSION + wxT('\n') +
+                        *Hack4u::APP_COPYRIGHT + wxT('\n') +
+                        *Hack4u::APP_URL, wxT("About ") + 
+                        *Hack4u::APP_NAME + wxT("..."),
+                        wxOK | wxICON_INFORMATION);
+    dlg.ShowModal();
+}
+
+void MainFrame::onHerbChange(wxScrollEvent &event) {
+    enum Herb herb = MANROOT;
+    
+    if (event.GetId() == XRCID("IDS_INVENTORY_ASH")) {
+        herb = ASH;
+    } else if (event.GetId() == XRCID("IDS_INVENTORY_GINSENG")) {
+        herb = GINSENG;
+    } else if (event.GetId() == XRCID("IDS_INVENTORY_GARLIC")) {
+        herb = GARLIC;
+    } else if (event.GetId() == XRCID("IDS_INVENTORY_SILKWEB")) {
+        herb = SILKWEB;
+    } else if (event.GetId() == XRCID("IDS_INVENTORY_MOSS")) {
+        herb = MOSS;
+    } else if (event.GetId() == XRCID("IDS_INVENTORY_PEARL")) {
+        herb = PEARL;
+    } else if (event.GetId() == XRCID("IDS_INVENTORY_FUNGUS")) {
+        herb = FUNGUS;
+    }
+    
+    saveslot->setHerb(herb, event.GetPosition());
+}
+
+void MainFrame::onHerosNameChange(wxCommandEvent &) {
+    if (ignoreEvents) {
+        return;
+    }
+    
+    saveslot->setHerosName(XRCCTRL(*this,
+                                   "IDT_HERO_NAME",
+                                   wxTextCtrl)->GetValue());
+}
+
+void MainFrame::onJoinedChange(wxCommandEvent &event) {
+    if (event.GetId() == XRCID("IDC_PARTY_MAGE")) {
+        saveslot->setJoined(MAGE, event.IsChecked());
+    } else if (event.GetId() == XRCID("IDC_PARTY_BARD")) {
+        saveslot->setJoined(BARD, event.IsChecked());
+    } else if (event.GetId() == XRCID("IDC_PARTY_FIGHTER")) {
+        saveslot->setJoined(FIGHTER, event.IsChecked());
+    } else if (event.GetId() == XRCID("IDC_PARTY_DRUID")) {
+        saveslot->setJoined(DRUID, event.IsChecked());
+    } else if (event.GetId() == XRCID("IDC_PARTY_TINKER")) {
+        saveslot->setJoined(TINKER, event.IsChecked());
+    } else if (event.GetId() == XRCID("IDC_PARTY_PALADIN")) {
+        saveslot->setJoined(PALADIN, event.IsChecked());
+    } else if (event.GetId() == XRCID("IDC_PARTY_RANGER")) {
+        saveslot->setJoined(RANGER, event.IsChecked());
+    } else {
+        // we must be shepherd if we're here
+        wxASSERT(event.GetId() == XRCID("IDC_PARTY_SHEPHERD"));
+        
+        saveslot->setJoined(SHEPHERD, event.IsChecked());
+    }
+}
+
+void MainFrame::onLocationBalloon(wxCommandEvent &) {
+    const std::pair<int, int> &balloon = BALLOON_LOCATIONS[location];
+    
+    XRCCTRL(*this, "IDT_TRANSPORTATION_BALLOONLATITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), balloon.first));
+    XRCCTRL(*this, "IDT_TRANSPORTATION_BALLOONLONGITUDE", wxTextCtrl)->
+        SetValue(wxString::Format(wxT("%d"), balloon.second));
+}
+
+void MainFrame::onLocationPlaceChange(wxCommandEvent &event) {
+    if (event.GetId() == XRCID("IDM_LOCATION_PLACE_MOONGLOW")) {
+        location = LMOONGLOW;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_BRITAIN")) {
+        location = LBRITAIN;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_JHELOM")) {
+        location = LJHELOM;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_YEW")) {
+        location = LYEW;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_MINOC")) {
+        location = LMINOC;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_TRINSIC")) {
+        location = LTRINSIC;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_SKARABRAE")) {
+        location = LSKARABRAE;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_MAGINCIA")) {
+        location = LMAGINCIA;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_LYCAEUM")) {
+        location = LLYCAEUM;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_EMPATHABBEY")) {
+        location = LEMPATHABBEY;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_SERPENTSHOLD")) {
+        location = LSERPENTSHOLD;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_PAWS")) {
+        location = LPAWS;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_VESPER")) {
+        location = LVESPER;
+    } else if (event.GetId() == XRCID("IDM_LOCATION_PLACE_BUCCANEERSDEN")) {
+        location = LBUCCANEERSDEN;
+    } else {
+        // we must be Cove if we're here
+        wxASSERT(event.GetId() == XRCID("IDM_LOCATION_PLACE_COVE"));
+        
+        location = LCOVE;
+    }
+}
+
+void MainFrame::onLocationShip(wxCommandEvent &event) {
+    wxCheckBox *check;
+    wxTextCtrl *latitude, *longitude;
+    enum PirateShip ship;
+    
+    if (event.GetId() == XRCID("IDM_LOCATION_SHIP1")) {
+        ship = SHIP1;
+        check = XRCCTRL(*this, "IDC_TRANSPORTATION_SHIP1", wxCheckBox);
+        latitude =
+            XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP1LATITUDE", wxTextCtrl);
+        longitude =
+            XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP1LONGITUDE", wxTextCtrl);
+    } else if (event.GetId() == XRCID("IDM_LOCATION_SHIP2")) {
+        ship = SHIP2;
+        check = XRCCTRL(*this, "IDC_TRANSPORTATION_SHIP2", wxCheckBox);
+        latitude =
+            XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP2LATITUDE", wxTextCtrl);
+        longitude =
+            XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP2LONGITUDE", wxTextCtrl);
+    } else if (event.GetId() == XRCID("IDM_LOCATION_SHIP3")) {
+        ship = SHIP3;
+        check = XRCCTRL(*this, "IDC_TRANSPORTATION_SHIP3", wxCheckBox);
+        latitude =
+            XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP3LATITUDE", wxTextCtrl);
+        longitude =
+            XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP3LONGITUDE", wxTextCtrl);
+    } else {
+        // we must be ship 4 if we're here
+        wxASSERT(event.GetId() == XRCID("IDM_LOCATION_SHIP4"));
+        
+        ship = SHIP4;
+        check = XRCCTRL(*this, "IDC_TRANSPORTATION_SHIP4", wxCheckBox);
+        latitude =
+            XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP4LATITUDE", wxTextCtrl);
+        longitude =
+            XRCCTRL(*this, "IDT_TRANSPORTATION_SHIP4LONGITUDE", wxTextCtrl);
+    }
+    
+    const std::pair<int, int> &loc = PIRATESHIP_LOCATIONS[location];
+    
+    check->SetValue(true);
+    latitude->SetValue(wxString::Format(wxT("%d"), loc.first));
+    longitude->SetValue(wxString::Format(wxT("%d"), loc.second));
+    
+    saveslot->setPirateShip(ship, true);
+}
+
+void MainFrame::onMagicChange(wxCommandEvent &event) {
+    enum Magic magic = DEFEAT;
+    
+    if (event.GetId() == XRCID("IDC_PARTY_LIGHT")) {
+        magic = LIGHT;
+    } else if (event.GetId() == XRCID("IDC_PARTY_MISSILE")) {
+        magic = MISSILE;
+    } else if (event.GetId() == XRCID("IDC_PARTY_AWAKEN")) {
+        magic = AWAKEN;
+    } else if (event.GetId() == XRCID("IDC_PARTY_CURE")) {
+        magic = CURE;
+    } else if (event.GetId() == XRCID("IDC_PARTY_WIND")) {
+        magic = WIND;
+    } else if (event.GetId() == XRCID("IDC_PARTY_HEAL")) {
+        magic = HEAL;
+    } else if (event.GetId() == XRCID("IDC_PARTY_FIRE")) {
+        magic = FIRE;
+    } else if (event.GetId() == XRCID("IDC_PARTY_EXIT")) {
+        magic = EXIT;
+    } else if (event.GetId() == XRCID("IDC_PARTY_DISPEL")) {
+        magic = DISPEL;
+    } else if (event.GetId() == XRCID("IDC_PARTY_VIEW")) {
+        magic = VIEW;
+    } else if (event.GetId() == XRCID("IDC_PARTY_PROTECT")) {
+        magic = PROTECT;
+    } else if (event.GetId() == XRCID("IDC_PARTY_ICE")) {
+        magic = ICE;
+    } else if (event.GetId() == XRCID("IDC_PARTY_BLINK")) {
+        magic = BLINK;
+    } else if (event.GetId() == XRCID("IDC_PARTY_ENERGY")) {
+        magic = ENERGY;
+    } else if (event.GetId() == XRCID("IDC_PARTY_QUICK")) {
+        magic = QUICK;
+    } else if (event.GetId() == XRCID("IDC_PARTY_SLEEP")) {
+        magic = SLEEP;
+    } else if (event.GetId() == XRCID("IDC_PARTY_REFLECT")) {
+        magic = REFLECT;
+    } else if (event.GetId() == XRCID("IDC_PARTY_NEGATE")) {
+        magic = NEGATE;
+    } else if (event.GetId() == XRCID("IDC_PARTY_DESTROY")) {
+        magic = DESTROY;
+    } else if (event.GetId() == XRCID("IDC_PARTY_JINX")) {
+        magic = JINX;
+    } else if (event.GetId() == XRCID("IDC_PARTY_SQUISH")) {
+        magic = SQUISH;
+    } else if (event.GetId() == XRCID("IDC_PARTY_GATE")) {
+        magic = GATE;
+    } else if (event.GetId() == XRCID("IDC_PARTY_TREMOR")) {
+        magic = TREMOR;
+    } else if (event.GetId() == XRCID("IDC_PARTY_LIFE")) {
+        magic = LIFE;
+    }
+    
+    saveslot->setMagic(magic, event.IsChecked());
+}
+
+void MainFrame::onMemberClassChange(wxCommandEvent &event) {
+    int character = event.GetSelection();
+    int member = 3;
+    
+    if (event.GetId() == XRCID("IDC_PARTY_MEMBER1")) {
+        member = 0;
+    } else if (event.GetId() == XRCID("IDC_PARTY_MEMBER2")) {
+        member = 1;
+        
+        if (character == 0) {
+            // remove subsequent members
+            wxCommandEvent evt(wxEVT_COMMAND_CHOICE_SELECTED,
+                               XRCID("IDC_PARTY_MEMBER3"));
+            evt.SetEventObject(memberChoice[2]);
+            evt.SetInt(0);
+            AddPendingEvent(evt);
+            
+            memberChoice[2]->SetSelection(0);
+        }
+    } else if (event.GetId() == XRCID("IDC_PARTY_MEMBER3")) {
+        member = 2;
+        
+        if (character == 0) {
+            // remove subsequent members
+            wxCommandEvent evt(wxEVT_COMMAND_CHOICE_SELECTED,
+                               XRCID("IDC_PARTY_MEMBER4"));
+            evt.SetEventObject(memberChoice[3]);
+            evt.SetInt(0);
+            AddPendingEvent(evt);
+            
+            memberChoice[3]->SetSelection(0);
+        }
+    }
+    
+    saveslot->setMember(member, ((member == 0) ? 
+                                              (character + 1) : character));
+}
+
+void MainFrame::onMemberUpdate(wxUpdateUIEvent &event) {
+    if (event.GetId() == XRCID("IDC_PARTY_MEMBER3")) {
+        event.Enable(memberChoice[1]->GetSelection() > 0);
+    } else {
+        // we must be 4 if we're here
+        wxASSERT(event.GetId() == XRCID("IDC_PARTY_MEMBER4"));
+        
+        event.Enable(memberChoice[2]->GetSelection() > 0);
+    }
+}
+
+void MainFrame::onPhaseChange(wxCommandEvent &event) {
+    enum City trammel;
+    int felucca;
+    
+    if (event.GetId() == XRCID("IDC_TRANSPORTATION_TRAMMEL")) {
+        trammel = static_cast<enum City>(event.GetSelection());
+        setFeluccaOptions(trammel);
+    } else {
+        trammel = static_cast<enum City>
+            (XRCCTRL(*this,
+                     "IDC_TRANSPORTATION_TRAMMEL",
+                     wxChoice)->GetSelection());
+    }
+    
+    felucca =
+        XRCCTRL(*this, "IDC_TRANSPORTATION_FELUCCA", wxChoice)->GetSelection();
+    saveslot->setPhase(trammel, felucca);
+}
+
+void MainFrame::onRuneChange(wxCommandEvent &event) {
+    enum Virtue rune = HUMILITY;
+    
+    if (event.GetId() == XRCID("IDC_INVENTORY_HONESTY")) {
+        rune = HONESTY;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_COMPASSION")) {
+        rune = COMPASSION;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_VALOR")) {
+        rune = VALOR;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_JUSTICE")) {
+        rune = JUSTICE;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_SACRIFICE")) {
+        rune = SACRIFICE;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_HONOR")) {
+        rune = HONOR;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_SPIRITUALITY")) {
+        rune = SPIRITUALITY;
+    }
+    
+    saveslot->setRune(rune, event.IsChecked());
+}
+
+void MainFrame::onSaveUpdate(wxUpdateUIEvent &event) {
+    // no need to save unless we have an open modified game
+    event.Enable(isOpen() &&
+        (sram->getSaveSlot(0)->isModified() ||
+         sram->getSaveSlot(1)->isModified() ||
+         sram->getSaveSlot(2)->isModified()));
+}
+
+void MainFrame::onShipChange(wxCommandEvent &event) {
+    enum PirateShip ship;
+    
+    if (event.GetId() == XRCID("IDC_TRANSPORTATION_SHIP1")) {
+        ship = SHIP1;
+    } else if (event.GetId() == XRCID("IDC_TRANSPORTATION_SHIP2")) {
+        ship = SHIP2;
+    } else if (event.GetId() == XRCID("IDC_TRANSPORTATION_SHIP3")) {
+        ship = SHIP3;
+    } else {
+        // we must be the last ship if we're here
+        wxASSERT(event.GetId() == XRCID("IDC_TRANSPORTATION_SHIP4"));
+        
+        ship = SHIP4;
+    }
+    
+    saveslot->setPirateShip(ship, event.IsChecked());
+}
+
+void MainFrame::onShipLocationChange(wxCommandEvent &event) {
+    if (ignoreEvents) {
+        return;
+    }
+    
+    wxTextCtrl *ctrl = dynamic_cast<wxTextCtrl *>(event.GetEventObject());
+    int value = std::atoi(ctrl->GetValue());
+    enum PirateShip ship;
+    std::pair<int, int> location;
+    
+    if (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP1LATITUDE")) {
+        ship = SHIP1;
+        location = saveslot->getPirateShipLocation(ship);
+        location.first = value;
+    } else if (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP2LATITUDE")) {
+        ship = SHIP2;
+        location = saveslot->getPirateShipLocation(ship);
+        location.first = value;
+    } else if (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP3LATITUDE")) {
+        ship = SHIP3;
+        location = saveslot->getPirateShipLocation(ship);
+        location.first = value;
+    } else if (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP4LATITUDE")) {
+        ship = SHIP4;
+        location = saveslot->getPirateShipLocation(ship);
+        location.first = value;
+    } else if (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP1LONGITUDE")) {
+        ship = SHIP1;
+        location = saveslot->getPirateShipLocation(ship);
+        location.second = value;
+    } else if (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP2LONGITUDE")) {
+        ship = SHIP2;
+        location = saveslot->getPirateShipLocation(ship);
+        location.second = value;
+    } else if (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP3LONGITUDE")) {
+        ship = SHIP3;
+        location = saveslot->getPirateShipLocation(ship);
+        location.second = value;
+    } else {
+        // we must be the fourth ship's longitude if we're here
+        wxASSERT(event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP4LONGITUDE"));
+        
+        ship = SHIP4;
+        location = saveslot->getPirateShipLocation(ship);
+        location.second = value;
+    }
+    
+    saveslot->setPirateShipLocation(ship, location);
+}
+
+void MainFrame::onShipUpdate(wxUpdateUIEvent &event) {
+    if ((event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP1LATITUDE")) ||
+       (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP1LONGITUDE"))) {
+        event.Enable(XRCCTRL(*this,
+                             "IDC_TRANSPORTATION_SHIP1",
+                             wxCheckBox)->IsChecked());
+    } else if ((event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP2LATITUDE")) ||
+               (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP2LONGITUDE"))) {
+        event.Enable(XRCCTRL(*this,
+                             "IDC_TRANSPORTATION_SHIP2",
+                             wxCheckBox)->IsChecked());
+    } else if ((event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP3LATITUDE")) ||
+               (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP3LONGITUDE"))) {
+        event.Enable(XRCCTRL(*this,
+                             "IDC_TRANSPORTATION_SHIP3",
+                             wxCheckBox)->IsChecked());
+    } else {
+        // we must be the fourth ship
+        wxASSERT((event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP4LATITUDE")) ||
+                 (event.GetId() == XRCID("IDT_TRANSPORTATION_SHIP4LONGITUDE")));
+        
+        event.Enable(XRCCTRL(*this,
+                             "IDC_TRANSPORTATION_SHIP4",
+                             wxCheckBox)->IsChecked());
+    }
+}
+
+void MainFrame::onStartLocationChange(wxCommandEvent &event) {
+    int city = event.GetSelection();
+    
+    for (int i = MOONGLOW_INN; i <= VESPER_INN; ++i) {
+        if (city == INN_INDEX[i]) {
+            saveslot->setStartLocation(static_cast<enum StartLocation>(i));
+            break;
+        }
+    }
+}
+
+void MainFrame::onStatChange(wxCommandEvent &event) {
+    if (ignoreEvents) {
+        return;
+    }
+    
+    wxTextCtrl *ctrl = dynamic_cast<wxTextCtrl *>(event.GetEventObject());
+    enum Character character = static_cast<enum Character>
+        (XRCCTRL(*this, "IDRB_CHARACTER_SELECT", wxRadioBox)->GetSelection());
+    int value = std::atoi(ctrl->GetValue());
+
+    if (event.GetId() == XRCID("IDT_CHARACTER_LEVEL")) {
+        saveslot->setLevel(character, value);
+    } else if (event.GetId() == XRCID("IDT_CHARACTER_HP")) {
+        saveslot->setCurrentHP(character, value);
+    } else if (event.GetId() == XRCID("IDT_CHARACTER_MP")) {
+        saveslot->setCurrentMP(character, value);
+    } else if (event.GetId() == XRCID("IDT_CHARACTER_EXPERIENCE")) {
+        saveslot->setExperience(character, value);
+    } else if (event.GetId() == XRCID("IDT_CHARACTER_MAXHP")) {
+        saveslot->setMaxHP(character, value);
+    } else if (event.GetId() == XRCID("IDT_CHARACTER_MAXMP")) {
+        saveslot->setMaxMP(character, value);
+    } else if (event.GetId() == XRCID("IDT_CHARACTER_STRENGTH")) {
+        saveslot->setStrength(character, value);
+    } else if (event.GetId() == XRCID("IDT_CHARACTER_INTELLIGENCE")) {
+        saveslot->setIntelligence(character, value);
+    } else if (event.GetId() == XRCID("IDT_CHARACTER_DEXTERITY")) {
+        saveslot->setDexterity(character, value);
+    }
+}
+
+void MainFrame::onStoneChange(wxCommandEvent &event) {
+    enum Virtue stone = HUMILITY;
+
+    if (event.GetId() == XRCID("IDC_INVENTORY_BLUE")) {
+        stone = HONESTY;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_YELLOW")) {
+        stone = COMPASSION;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_RED")) {
+        stone = VALOR;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_GREEN")) {
+        stone = JUSTICE;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_ORANGE")) {
+        stone = SACRIFICE;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_PURPLE")) {
+        stone = HONOR;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_WHITE")) {
+        stone = SPIRITUALITY;
+    }
+    
+    saveslot->setStone(stone, event.IsChecked());
+}
+
+void MainFrame::onToolHaveChange(wxCommandEvent &event) {
+    enum Tool tool = WHEEL;
+
+    if (event.GetId() == XRCID("IDC_INVENTORY_KEY")) {
+        tool = KEY;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_SEXTANT")) {
+        tool = SEXTANT;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_SCALE")) {
+        tool = SCALE;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_FLUTE")) {
+        tool = FLUTE;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_CANDLE")) {
+        tool = CANDLE;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_BOOK")) {
+        tool = BOOK;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_BELL")) {
+        tool = BELL;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_HORN")) {
+        tool = HORN;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_SKULL")) {
+        tool = SKULL;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_TRUTHKEY")) {
+        tool = TRUTHKEY;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_LOVEKEY")) {
+        tool = LOVEKEY;
+    } else if (event.GetId() == XRCID("IDC_INVENTORY_COURAGEKEY")) {
+        tool = COURAGEKEY;
+    }
+    
+    saveslot->setTool(tool, (event.IsChecked() ? 1 : 0));
+}
+
+void MainFrame::onToolQuantityChange(wxScrollEvent &event) {
+    enum Tool tool = OIL;
+    
+    if (event.GetId() == XRCID("IDS_INVENTORY_TORCH")) {
+        tool = TORCH;
+    } else if (event.GetId() == XRCID("IDS_INVENTORY_GEM")) {
+        tool = GEM;
+    }
+    
+    saveslot->setTool(tool, event.GetPosition());
+}
+
+void MainFrame::onVirtueChange(wxScrollEvent &event) {
+    enum Virtue virtue = HUMILITY;
+
+    if (event.GetId() == XRCID("IDS_HERO_HONESTY")) {
+        virtue = HONESTY;
+    } else if (event.GetId() == XRCID("IDS_HERO_COMPASSION")) {
+        virtue = COMPASSION;
+    } else if (event.GetId() == XRCID("IDS_HERO_VALOR")) {
+        virtue = VALOR;
+    } else if (event.GetId() == XRCID("IDS_HERO_JUSTICE")) {
+        virtue = JUSTICE;
+    } else if (event.GetId() == XRCID("IDS_HERO_SACRIFICE")) {
+        virtue = SACRIFICE;
+    } else if (event.GetId() == XRCID("IDS_HERO_HONOR")) {
+        virtue = HONOR;
+    } else if (event.GetId() == XRCID("IDS_HERO_SPIRITUALITY")) {
+        virtue = SPIRITUALITY;
+    }
+    
+    saveslot->setVirtue(virtue, event.GetPosition());
+}
+
+void MainFrame::onWhirlpoolChange(wxCommandEvent &event) {
+    if (ignoreEvents) {
+        return;
+    }
+    
+    wxTextCtrl *ctrl = dynamic_cast<wxTextCtrl *>(event.GetEventObject());
+    std::pair<int, int> location = saveslot->getWhirlpoolLocation();
+    int value = std::atoi(ctrl->GetValue());
+    
+    if (event.GetId() == XRCID("IDT_TRANSPORTATION_WHIRLPOOLLATITUDE")) {
+        location.first = value;
+    } else {
+        // we must be longitude if we're here
+        wxASSERT(event.GetId() ==
+                 XRCID("IDT_TRANSPORTATION_WHIRLPOOLLONGITUDE"));
+                 
+        location.second = value;
+    }
+    
+    saveslot->setWhirlpoolLocation(location);
+}
+
+void MainFrame::onWindowClosing(wxCloseEvent &event) {
     if (event.CanVeto()) {
         if (isOpen()) {
             if (!close()) {
@@ -925,393 +1496,267 @@ void MainFrame::windowClosing(wxCloseEvent &event) {
     Destroy();
 }
 
-void MainFrame::gameChange(wxCommandEvent &event) {
-    int id = event.GetId();
-    
-    currentSlot = -1;
-    
-    if (id == XRCID("IDM_GAME_GAME1")) {
-        loadGame(0);
-    } else if (id == XRCID("IDM_GAME_GAME2")) {
-        loadGame(1);
-    } else if (id == XRCID("IDM_GAME_GAME3")) {
-        loadGame(2);
-    }
-}
+BEGIN_EVENT_TABLE(MainFrame, wxFrame)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_MAGE"), MainFrame::onJoinedChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_BARD"), MainFrame::onJoinedChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_FIGHTER"), MainFrame::onJoinedChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_DRUID"), MainFrame::onJoinedChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_TINKER"), MainFrame::onJoinedChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_PALADIN"), MainFrame::onJoinedChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_RANGER"), MainFrame::onJoinedChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_SHEPHERD"), MainFrame::onJoinedChange)
 
-void MainFrame::helpAbout(wxCommandEvent &) {
-    wxMessageDialog dlg(this, *Hack4u::APP_NAME + wxT(' ') + 
-                        *Hack4u::APP_VERSION + wxT('\n') +
-                        *Hack4u::APP_COPYRIGHT + wxT('\n') +
-                        *Hack4u::APP_URL, wxT("About ") + 
-                        *Hack4u::APP_NAME + wxT("..."),
-                        wxOK | wxICON_INFORMATION);
-    dlg.ShowModal();
-}
+    EVT_CHECKBOX(XRCID("IDC_PARTY_LIGHT"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_MISSILE"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_AWAKEN"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_CURE"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_WIND"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_HEAL"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_FIRE"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_EXIT"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_DISPEL"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_VIEW"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_PROTECT"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_ICE"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_BLINK"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_ENERGY"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_QUICK"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_SLEEP"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_REFLECT"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_NEGATE"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_DESTROY"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_JINX"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_SQUISH"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_GATE"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_TREMOR"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_LIFE"), MainFrame::onMagicChange)
+    EVT_CHECKBOX(XRCID("IDC_PARTY_DEFEAT"), MainFrame::onMagicChange)
+    
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_HONESTY"), MainFrame::onRuneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_COMPASSION"), MainFrame::onRuneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_VALOR"), MainFrame::onRuneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_JUSTICE"), MainFrame::onRuneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_SACRIFICE"), MainFrame::onRuneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_HONOR"), MainFrame::onRuneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_SPIRITUALITY"), MainFrame::onRuneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_HUMILITY"), MainFrame::onRuneChange)
+    
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_BLUE"), MainFrame::onStoneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_YELLOW"), MainFrame::onStoneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_RED"), MainFrame::onStoneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_GREEN"), MainFrame::onStoneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_ORANGE"), MainFrame::onStoneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_PURPLE"), MainFrame::onStoneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_WHITE"), MainFrame::onStoneChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_BLACK"), MainFrame::onStoneChange)
+    
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_KEY"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_SEXTANT"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_SCALE"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_FLUTE"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_CANDLE"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_BOOK"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_BELL"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_HORN"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_SKULL"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_TRUTHKEY"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_COURAGEKEY"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_LOVEKEY"), MainFrame::onToolHaveChange)
+    EVT_CHECKBOX(XRCID("IDC_INVENTORY_WHEEL"), MainFrame::onToolHaveChange)
+    
+    EVT_CHECKBOX(XRCID("IDC_TRANSPORTATION_SHIP1"), MainFrame::onShipChange)
+    EVT_CHECKBOX(XRCID("IDC_TRANSPORTATION_SHIP2"), MainFrame::onShipChange)
+    EVT_CHECKBOX(XRCID("IDC_TRANSPORTATION_SHIP3"), MainFrame::onShipChange)
+    EVT_CHECKBOX(XRCID("IDC_TRANSPORTATION_SHIP4"), MainFrame::onShipChange)
+    
+    EVT_CHECKBOX(XRCID("IDC_CHARACTER_EQUIPPED1"),
+        MainFrame::onEquippedChange)
+    EVT_CHECKBOX(XRCID("IDC_CHARACTER_EQUIPPED2"),
+        MainFrame::onEquippedChange)
+    EVT_CHECKBOX(XRCID("IDC_CHARACTER_EQUIPPED3"),
+        MainFrame::onEquippedChange)
+    EVT_CHECKBOX(XRCID("IDC_CHARACTER_EQUIPPED4"),
+        MainFrame::onEquippedChange)
+    EVT_CHECKBOX(XRCID("IDC_CHARACTER_EQUIPPED5"),
+        MainFrame::onEquippedChange)
+    EVT_CHECKBOX(XRCID("IDC_CHARACTER_EQUIPPED6"),
+        MainFrame::onEquippedChange)
+        
+    EVT_CHOICE(XRCID("IDC_PARTY_START"), MainFrame::onStartLocationChange)
+        
+    EVT_CHOICE(XRCID("IDC_PARTY_MEMBER1"), MainFrame::onMemberClassChange)
+    EVT_CHOICE(XRCID("IDC_PARTY_MEMBER2"), MainFrame::onMemberClassChange)
+    EVT_CHOICE(XRCID("IDC_PARTY_MEMBER3"), MainFrame::onMemberClassChange)
+    EVT_CHOICE(XRCID("IDC_PARTY_MEMBER4"), MainFrame::onMemberClassChange)
+    
+    EVT_CHOICE(XRCID("IDC_TRANSPORTATION_TRAMMEL"), MainFrame::onPhaseChange)
+    EVT_CHOICE(XRCID("IDC_TRANSPORTATION_FELUCCA"), MainFrame::onPhaseChange)
+    
+    EVT_CHOICE(XRCID("IDC_CHARACTER_EQUIPMENT1"), MainFrame::onEquipmentChange)
+    EVT_CHOICE(XRCID("IDC_CHARACTER_EQUIPMENT2"), MainFrame::onEquipmentChange)
+    EVT_CHOICE(XRCID("IDC_CHARACTER_EQUIPMENT3"), MainFrame::onEquipmentChange)
+    EVT_CHOICE(XRCID("IDC_CHARACTER_EQUIPMENT4"), MainFrame::onEquipmentChange)
+    EVT_CHOICE(XRCID("IDC_CHARACTER_EQUIPMENT5"), MainFrame::onEquipmentChange)
+    EVT_CHOICE(XRCID("IDC_CHARACTER_EQUIPMENT6"), MainFrame::onEquipmentChange)
+    
+    EVT_CLOSE(MainFrame::onWindowClosing)
+    
+    EVT_COMMAND_SCROLL(XRCID("IDS_HERO_HONESTY"), MainFrame::onVirtueChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_HERO_COMPASSION"), MainFrame::onVirtueChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_HERO_VALOR"), MainFrame::onVirtueChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_HERO_JUSTICE"), MainFrame::onVirtueChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_HERO_SACRIFICE"), MainFrame::onVirtueChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_HERO_HONOR"), MainFrame::onVirtueChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_HERO_SPIRITUALITY"),MainFrame::onVirtueChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_HERO_HUMILITY"), MainFrame::onVirtueChange)
 
-void MainFrame::herosNameChange(wxCommandEvent &) {
-    if (currentSlot == -1) {
-        return;
-    }
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_ASH"), MainFrame::onHerbChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_GINSENG"), MainFrame::onHerbChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_GARLIC"), MainFrame::onHerbChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_SILKWEB"), MainFrame::onHerbChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_MOSS"), MainFrame::onHerbChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_PEARL"), MainFrame::onHerbChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_FUNGUS"), MainFrame::onHerbChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_MANROOT"), MainFrame::onHerbChange)
     
-    wxString string = herosNameText->GetValue();
-    saveslot[currentSlot]->setHerosName(string);
-}
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_TORCH"),
+        MainFrame::onToolQuantityChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_GEM"),
+        MainFrame::onToolQuantityChange)
+    EVT_COMMAND_SCROLL(XRCID("IDS_INVENTORY_OIL"),
+        MainFrame::onToolQuantityChange)
+        
+    EVT_MENU(wxID_OPEN, MainFrame::onFileOpen)
+    EVT_MENU(wxID_SAVE, MainFrame::onFileSave)
+    EVT_MENU(wxID_SAVEAS, MainFrame::onFileSaveAs)
+    EVT_MENU(wxID_CLOSE, MainFrame::onFileClose)
+    EVT_MENU(wxID_EXIT, MainFrame::onFileExit)
 
-void MainFrame::memberClassChange(wxCommandEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
+    EVT_MENU(XRCID("IDM_GAME_GAME1"), MainFrame::onGameChange)
+    EVT_MENU(XRCID("IDM_GAME_GAME2"), MainFrame::onGameChange)
+    EVT_MENU(XRCID("IDM_GAME_GAME3"), MainFrame::onGameChange)
     
-    wxChoice *ctrl = (wxChoice *)event.GetEventObject();
-    int character = ctrl->GetSelection();   
-    int member = 3;
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_MOONGLOW"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_BRITAIN"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_JHELOM"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_YEW"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_MINOC"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_TRINSIC"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_SKARABRAE"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_MAGINCIA"),
+        MainFrame::onLocationPlaceChange)
     
-    if (ctrl == memberClass[0]) {
-        member = 0;
-    } else if (ctrl == memberClass[1]) {
-        member = 1;
-    } else if (ctrl == memberClass[2]) {
-        member = 2;
-    }
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_LYCAEUM"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_EMPATHABBEY"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_SERPENTSHOLD"),
+        MainFrame::onLocationPlaceChange)
     
-    saveslot[currentSlot]->setMember(member, ((member == 0) ? 
-                                              (character + 1) : character));
-}
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_PAWS"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_VESPER"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_BUCCANEERSDEN"),
+        MainFrame::onLocationPlaceChange)
+    EVT_MENU(XRCID("IDM_LOCATION_PLACE_COVE"),
+        MainFrame::onLocationPlaceChange)
+    
+    EVT_MENU(XRCID("IDM_LOCATION_BALLOON"), MainFrame::onLocationBalloon)
+    
+    EVT_MENU(XRCID("IDM_LOCATION_SHIP1"), MainFrame::onLocationShip)
+    EVT_MENU(XRCID("IDM_LOCATION_SHIP2"), MainFrame::onLocationShip)
+    EVT_MENU(XRCID("IDM_LOCATION_SHIP3"), MainFrame::onLocationShip)
+    EVT_MENU(XRCID("IDM_LOCATION_SHIP4"), MainFrame::onLocationShip)
 
-void MainFrame::virtueChange(wxScrollEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
+    EVT_MENU(wxID_ABOUT, MainFrame::onHelpAbout)
     
-    wxSlider *ctrl = (wxSlider *)event.GetEventObject();
-    int virtue = HUMILITY;
+    EVT_RADIOBOX(XRCID("IDRB_CHARACTER_SELECT"), MainFrame::onCharacterChange)
     
-    if (ctrl == honestySlider) {
-        virtue = HONESTY;
-    } else if (ctrl == compassionSlider) {
-        virtue = COMPASSION;
-    } else if (ctrl == valorSlider) {
-        virtue = VALOR;
-    } else if (ctrl == justiceSlider) {
-        virtue = JUSTICE;
-    } else if (ctrl == sacrificeSlider) {
-        virtue = SACRIFICE;
-    } else if (ctrl == honorSlider) {
-        virtue = HONOR;
-    } else if (ctrl == spiritualitySlider) {
-        virtue = SPIRITUALITY;
-    }
+    EVT_TEXT(XRCID("IDT_HERO_NAME"), MainFrame::onHerosNameChange)
     
-    saveslot[currentSlot]->setVirtue(virtue, ctrl->GetValue());
-}
+    EVT_TEXT(XRCID("IDT_PARTY_GOLD"), MainFrame::onGoldChange)
+    
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_BALLOONLATITUDE"),
+        MainFrame::onBalloonChange)
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_BALLOONLONGITUDE"),
+        MainFrame::onBalloonChange)
+        
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_WHIRLPOOLLATITUDE"),
+        MainFrame::onWhirlpoolChange)
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_WHIRLPOOLLONGITUDE"),
+        MainFrame::onWhirlpoolChange)
+    
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_SHIP1LATITUDE"),
+        MainFrame::onShipLocationChange)
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_SHIP1LONGITUDE"),
+        MainFrame::onShipLocationChange)
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_SHIP2LATITUDE"),
+        MainFrame::onShipLocationChange)
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_SHIP2LONGITUDE"),
+        MainFrame::onShipLocationChange)
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_SHIP3LATITUDE"),
+        MainFrame::onShipLocationChange)
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_SHIP3LONGITUDE"),
+        MainFrame::onShipLocationChange)
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_SHIP4LATITUDE"),
+        MainFrame::onShipLocationChange)
+    EVT_TEXT(XRCID("IDT_TRANSPORTATION_SHIP4LONGITUDE"),
+        MainFrame::onShipLocationChange)
+        
+    EVT_TEXT(XRCID("IDT_CHARACTER_LEVEL"), MainFrame::onStatChange)
+    EVT_TEXT(XRCID("IDT_CHARACTER_EXPERIENCE"), MainFrame::onStatChange)
+    EVT_TEXT(XRCID("IDT_CHARACTER_HP"), MainFrame::onStatChange)
+    EVT_TEXT(XRCID("IDT_CHARACTER_MP"), MainFrame::onStatChange)
+    EVT_TEXT(XRCID("IDT_CHARACTER_MAXHP"), MainFrame::onStatChange)
+    EVT_TEXT(XRCID("IDT_CHARACTER_MAXMP"), MainFrame::onStatChange)
+    EVT_TEXT(XRCID("IDT_CHARACTER_STRENGTH"), MainFrame::onStatChange)
+    EVT_TEXT(XRCID("IDT_CHARACTER_INTELLIGENCE"), MainFrame::onStatChange)
+    EVT_TEXT(XRCID("IDT_CHARACTER_DEXTERITY"), MainFrame::onStatChange)
+    
+    EVT_UPDATE_UI(wxID_CLOSE, MainFrame::onSaveCloseUpdate)
+    EVT_UPDATE_UI(wxID_SAVE, MainFrame::onSaveUpdate)
+    EVT_UPDATE_UI(wxID_SAVEAS, MainFrame::onSaveCloseUpdate)
+    
+    EVT_UPDATE_UI(XRCID("IDM_GAME_GAME1"), MainFrame::onGameMenuUpdate)
+    EVT_UPDATE_UI(XRCID("IDM_GAME_GAME2"), MainFrame::onGameMenuUpdate)
+    EVT_UPDATE_UI(XRCID("IDM_GAME_GAME3"), MainFrame::onGameMenuUpdate)
+    
+    EVT_UPDATE_UI(XRCID("IDC_PARTY_MEMBER3"), MainFrame::onMemberUpdate)
+    EVT_UPDATE_UI(XRCID("IDC_PARTY_MEMBER4"), MainFrame::onMemberUpdate)
+    
+    EVT_UPDATE_UI(XRCID("IDT_TRANSPORTATION_SHIP1LATITUDE"),
+        MainFrame::onShipUpdate)
+    EVT_UPDATE_UI(XRCID("IDT_TRANSPORTATION_SHIP2LATITUDE"),
+        MainFrame::onShipUpdate)
+    EVT_UPDATE_UI(XRCID("IDT_TRANSPORTATION_SHIP3LATITUDE"),
+        MainFrame::onShipUpdate)
+    EVT_UPDATE_UI(XRCID("IDT_TRANSPORTATION_SHIP4LATITUDE"),
+        MainFrame::onShipUpdate)
+    
+    EVT_UPDATE_UI(XRCID("IDT_TRANSPORTATION_SHIP1LONGITUDE"),
+        MainFrame::onShipUpdate)
+    EVT_UPDATE_UI(XRCID("IDT_TRANSPORTATION_SHIP2LONGITUDE"),
+        MainFrame::onShipUpdate)
+    EVT_UPDATE_UI(XRCID("IDT_TRANSPORTATION_SHIP3LONGITUDE"),
+        MainFrame::onShipUpdate)
+    EVT_UPDATE_UI(XRCID("IDT_TRANSPORTATION_SHIP4LONGITUDE"),
+        MainFrame::onShipUpdate)
+    
+    EVT_UPDATE_UI(XRCID("IDC_CHARACTER_EQUIPPED1"), MainFrame::onEquippedUpdate)
+    EVT_UPDATE_UI(XRCID("IDC_CHARACTER_EQUIPPED2"), MainFrame::onEquippedUpdate)
+    EVT_UPDATE_UI(XRCID("IDC_CHARACTER_EQUIPPED3"), MainFrame::onEquippedUpdate)
+    EVT_UPDATE_UI(XRCID("IDC_CHARACTER_EQUIPPED4"), MainFrame::onEquippedUpdate)
+    EVT_UPDATE_UI(XRCID("IDC_CHARACTER_EQUIPPED5"), MainFrame::onEquippedUpdate)
+    EVT_UPDATE_UI(XRCID("IDC_CHARACTER_EQUIPPED6"), MainFrame::onEquippedUpdate)
+END_EVENT_TABLE()
 
-void MainFrame::magicChange(wxCommandEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxCheckBox *ctrl = (wxCheckBox *)event.GetEventObject();
-    int magic = DEFEAT;
-    
-    if (ctrl == lightSpellCheck) {
-        magic = LIGHT;
-    } else if (ctrl == missileSpellCheck) {
-        magic = MISSILE;
-    } else if (ctrl == awakenSpellCheck) {
-        magic = AWAKEN;
-    } else if (ctrl == cureSpellCheck) {
-        magic = CURE;
-    } else if (ctrl == windSpellCheck) {
-        magic = WIND;
-    } else if (ctrl == healSpellCheck) {
-        magic = HEAL;
-    } else if (ctrl == fireSpellCheck) {
-        magic = FIRE;
-    } else if (ctrl == exitSpellCheck) {
-        magic = EXIT;
-    } else if (ctrl == dispelSpellCheck) {
-        magic = DISPEL;
-    } else if (ctrl == viewSpellCheck) {
-        magic = VIEW;
-    } else if (ctrl == protectSpellCheck) {
-        magic = PROTECT;
-    } else if (ctrl == iceSpellCheck) {
-        magic = ICE;
-    } else if (ctrl == blinkSpellCheck) {
-        magic = BLINK;
-    } else if (ctrl == energySpellCheck) {
-        magic = ENERGY;
-    } else if (ctrl == quickSpellCheck) {
-        magic = QUICK;
-    } else if (ctrl == sleepSpellCheck) {
-        magic = SLEEP;
-    } else if (ctrl == reflectSpellCheck) {
-        magic = REFLECT;
-    } else if (ctrl == negateSpellCheck) {
-        magic = NEGATE;
-    } else if (ctrl == destroySpellCheck) {
-        magic = DESTROY;
-    } else if (ctrl == jinxSpellCheck) {
-        magic = JINX;
-    } else if (ctrl == squishSpellCheck) {
-        magic = SQUISH;
-    } else if (ctrl == gateSpellCheck) {
-        magic = GATE;
-    } else if (ctrl == tremorSpellCheck) {
-        magic = TREMOR;
-    } else if (ctrl == lifeSpellCheck) {
-        magic = LIFE;
-    }
-    
-    saveslot[currentSlot]->setMagic(magic, ctrl->IsChecked());
-}
-
-void MainFrame::phaseChange(wxCommandEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxChoice *ctrl = (wxChoice *)event.GetEventObject();
-    int trammel, felucca;
-    
-    if (ctrl == trammelChoice) {
-        trammel = ctrl->GetSelection();
-        setFeluccaOptions(trammel);
-    } else {
-        trammel = trammelChoice->GetSelection();
-    }
-    
-    felucca = feluccaChoice->GetSelection();
-    
-    saveslot[currentSlot]->setPhase(trammel, felucca);
-}
-
-void MainFrame::goldChange(wxCommandEvent &) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    saveslot[currentSlot]->setGold(atoi(goldText->GetValue()));
-}
-
-void MainFrame::herbChange(wxScrollEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxSlider *ctrl = (wxSlider *)event.GetEventObject();
-    int herb = MANROOT;
-    
-    if (ctrl == ashSlider) {
-        herb = ASH;
-    } else if (ctrl == ginsengSlider) {
-        herb = GINSENG;
-    } else if (ctrl == garlicSlider) {
-        herb = GARLIC;
-    } else if (ctrl == silkwebSlider) {
-        herb = SILKWEB;
-    } else if (ctrl == mossSlider) {
-        herb = MOSS;
-    } else if (ctrl == pearlSlider) {
-        herb = PEARL;
-    } else if (ctrl == fungusSlider) {
-        herb = FUNGUS;
-    }
-    
-    saveslot[currentSlot]->setHerb(herb, ctrl->GetValue());
-}
-
-void MainFrame::runeChange(wxCommandEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxCheckBox *ctrl = (wxCheckBox *)event.GetEventObject();
-    int rune = HUMILITY;
-    
-    if (ctrl == honestyRuneCheck) {
-        rune = HONESTY;
-    } else if (ctrl == compassionRuneCheck) {
-        rune = COMPASSION;
-    } else if (ctrl == valorRuneCheck) {
-        rune = VALOR;
-    } else if (ctrl == justiceRuneCheck) {
-        rune = JUSTICE;
-    } else if (ctrl == sacrificeRuneCheck) {
-        rune = SACRIFICE;
-    } else if (ctrl == honorRuneCheck) {
-        rune = HONOR;
-    } else if (ctrl == spiritualityRuneCheck) {
-        rune = SPIRITUALITY;
-    }
-    
-    saveslot[currentSlot]->setRune(rune, ctrl->IsChecked());
-}
-
-void MainFrame::stoneChange(wxCommandEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxCheckBox *ctrl = (wxCheckBox *)event.GetEventObject();
-    int stone = HUMILITY;
-    
-    if (ctrl == blueStoneCheck) {
-        stone = HONESTY;
-    } else if (ctrl == yellowStoneCheck) {
-        stone = COMPASSION;
-    } else if (ctrl == redStoneCheck) {
-        stone = VALOR;
-    } else if (ctrl == greenStoneCheck) {
-        stone = JUSTICE;
-    } else if (ctrl == orangeStoneCheck) {
-        stone = SACRIFICE;
-    } else if (ctrl == purpleStoneCheck) {
-        stone = HONOR;
-    } else if (ctrl == whiteStoneCheck) {
-        stone = SPIRITUALITY;
-    }
-    
-    saveslot[currentSlot]->setStone(stone, ctrl->IsChecked());
-}
-
-void MainFrame::toolQuantityChange(wxScrollEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxSlider *ctrl = (wxSlider *)event.GetEventObject();
-    int tool = OIL;
-    
-    if (ctrl == torchSlider) {
-        tool = TORCH;
-    } else if (ctrl == gemSlider) {
-        tool = GEM;
-    }
-    
-    saveslot[currentSlot]->setTool(tool, ctrl->GetValue());
-}
-
-void MainFrame::toolHaveChange(wxCommandEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxCheckBox *ctrl = (wxCheckBox *)event.GetEventObject();
-    int tool = WHEEL;
-    
-    if (ctrl == keyCheck) {
-        tool = KEY;
-    } else if (ctrl == sextantCheck) {
-        tool = SEXTANT;
-    } else if (ctrl == scaleCheck) {
-        tool = SCALE;
-    } else if (ctrl == fluteCheck) {
-        tool = FLUTE;
-    } else if (ctrl == candleCheck) {
-        tool = CANDLE;
-    } else if (ctrl == bookCheck) {
-        tool = BOOK;
-    } else if (ctrl == bellCheck) {
-        tool = BELL;
-    } else if (ctrl == hornCheck) {
-        tool = HORN;
-    } else if (ctrl == skullCheck) {
-        tool = SKULL;
-    } else if (ctrl == truthKeyCheck) {
-        tool = TRUTHKEY;
-    } else if (ctrl == courageKeyCheck) {
-        tool = COURAGEKEY;
-    } else if (ctrl == loveKeyCheck) {
-        tool = LOVEKEY;
-    }
-    
-    saveslot[currentSlot]->setTool(tool, (ctrl->IsChecked() ? 1 : 0));
-}
-
-void MainFrame::characterChange(wxCommandEvent &) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    loadStats((*(saveslot[currentSlot])), characterChoice->GetSelection());
-}
-
-void MainFrame::statChange(wxCommandEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxTextCtrl *ctrl = (wxTextCtrl *)event.GetEventObject();
-    int character = characterChoice->GetSelection();
-    
-    if (ctrl == levelText) {
-        saveslot[currentSlot]->setLevel(character, atoi(ctrl->GetValue()));
-    } else if (ctrl == experienceText) {
-        saveslot[currentSlot]->setExperience(character, atoi(ctrl->GetValue()));
-    } else if (ctrl == currentHPText) {
-        saveslot[currentSlot]->setCurrentHP(character, atoi(ctrl->GetValue()));
-    } else if (ctrl == currentMPText) {
-        saveslot[currentSlot]->setCurrentMP(character, atoi(ctrl->GetValue()));
-    } else if (ctrl == maxHPText) {
-        saveslot[currentSlot]->setMaxHP(character, atoi(ctrl->GetValue()));
-    } else if (ctrl == maxMPText) {
-        saveslot[currentSlot]->setMaxMP(character, atoi(ctrl->GetValue()));
-    } else if (ctrl == strengthText) {
-        saveslot[currentSlot]->setStrength(character, atoi(ctrl->GetValue()));
-    } else if (ctrl == intelligenceText) {
-        saveslot[currentSlot]->setIntelligence(character, atoi(ctrl->GetValue()));
-    } else if (ctrl == dexterityText) {
-        saveslot[currentSlot]->setDexterity(character, atoi(ctrl->GetValue()));
-    }
-}
-
-void MainFrame::setEquipment(int slot) {
-    int character = characterChoice->GetSelection();
-    int item = itemChoice[slot]->GetSelection();
-    
-    if (itemEquippedCheck[slot]->IsChecked()) {
-        // can't equip nothing
-        if (item != 0) {
-            item |= 0x80;
-        }
-    }
-    
-    saveslot[currentSlot]->setEquipment(character, slot, item);
-}
-
-void MainFrame::equipmentChange(wxCommandEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxChoice *ctrl = (wxChoice *)event.GetEventObject();
-    int slot;
-    
-    for (slot = 0; slot < 6; slot++) {
-        if (ctrl == itemChoice[slot]) {
-            break;
-        }
-    }
-    
-    setEquipment(slot);
-}
-
-void MainFrame::equippedChange(wxCommandEvent &event) {
-    if (currentSlot == -1) {
-        return;
-    }
-    
-    wxCheckBox *ctrl = (wxCheckBox *)event.GetEventObject();
-    int slot;
-    
-    for (slot = 0; slot < 6; slot++) {
-        if (ctrl == itemEquippedCheck[slot]) {
-            break;
-        }
-    }
-    
-    setEquipment(slot);
-}
+IMPLEMENT_CLASS(MainFrame, wxFrame)
 

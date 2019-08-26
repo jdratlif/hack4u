@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
-| hack4u 1.0
+| hack4u 1.1
 | Copyright (C) 2004-2005 emuWorks
-| Written by John Ratliff
+| Written by John David Ratliff
 | http://games.technoplaza.net/
 --------------------------------------------------------------------------------
 
@@ -26,82 +26,38 @@
 - Installation -
 ----------------
 
-  For Windows, Linux, and Mac OS-X, I have provided a binary version. You should
-  be able to download it and double-click the hack4u executable to start the
-  program.
+  For Windows, Linux (x86), FreeBSD (x86), and Mac OS X (ppc), I have provided a
+  binary version. You should be able to download it and double-click the hack4u
+  executable to start the program.
   
-  On Windows and Mac OS-X, there shouldn't be any extra dependencies required.
-  For the Linux binary, you will need GTK+. There are two versions, one for
-  GTK+ 1.2, and another for GTK+ 2.0.
+  On Windows and Mac OS X, there shouldn't be any extra dependencies required.
+  For the Linux and FreeBSD binaries, you will need GTK+. Starting with version
+  1.1, we no longer produce GTK+ 1.2 binaries. You can compile it yourself for
+  GTK+ 1.2 or install GTK+ 2.0.
   
   For all other platforms, you will need to compile the source code yourself. It
   shouldn't be too hard to compile. It is expected to compile on any nearly
-  any Unix.
+  any unix-like system that supports GTK.
   
   To compile the source, you will need an ISO C++ compiler (I recommend GNU G++
-  >= 3.3), and the wxWidgets library. You can compile under wxWidgets 2.4.2, but
-  >= 2.5.3 is recommended due to vast improvements to wxWidgets since 2.4.2
-  not the least of which is the XRC system. You can download the wxWidgets
-  library at http://www.wxwidgets.org/.
+  >= 3.4), and the wxWidgets library. You will also need wxWidgets 2.6.2 or
+  better to compile starting with version 1.1. It can be freely downloaded from
+  http://www.wxwidgets.org/.
   
   After you have wxWidgets installed, you should be able to do something like
   this:
   
   ./configure && make
   
-  This should produce a program hack4u in the source subdirectory. If it
+  This should produce a hack4u binary in the source subdirectory. If it
   doesn't, contact me and we'll talk about it.
-  
-  You can use make install to install the program, but it's not a perfect
-  solution yet as I can't seem to figure out how to install the XRC file where
-  I want. So currently, the XRC file doesn't get installed. There are a few
-  options:
-  
-  a) specify the path to the XRC file manually at runtime
-     hack4u /path/to/xrc/hack4u.xrc
-     
-  b) set a default path and put the XRC file there
-     ./configure XRC_PREFIX=/usr/share/hack4u
-     make && make install
-     mkdir /usr/share/hack4u && cp source/xrc/hack4u.xrc /usr/share/hack4u
-     
-  c) accept the default XRC prefix (./xrc) and put the XRC file there
-     mkdir /path/to/binary/xrc && cp source/xrc/hack4u.xrc /path/to/binary/xrc
-  
-  The binary package uses option C cause that's just easiest if you don't care
-  about putting binaries and share files in separate locations. If you do, then
-  I'd pick B.
-  
-  Fortunately, starting with version 0.90, the program will no longer crash if
-  the XRC file isn't found. It will give an error message on the console and
-  exit gracefully.
-  
-  I am working on a gentoo ebuild, but they get added very slowly, so it may
-  take some time before it is added to portage. Still, if you use gentoo, you
-  might try 'emerge hack4u' and see what happens.
-  
-  Compiling on wxWidgets 2.4.2 requires not only that you build wxWidgets, but
-  also the XRC library which was not built by default in 2.4.2. To do this, go
-  to your wxWidgets build directory in the contrib/src/xrc directory and do a
-  make && make install. When compiling hack4u, you will need to specify the
-  library. Under Linux, I was able to do the following:
-  
-  ./configure LIBS="-lwx_gtk2-2.4 -lwx_gtk2_xrc-2.4" && make
-  
-  Under Linux with GTK+ 2.0.49. I don't know if the same procedure would work
-  under mingw or cygwin for Linux or not. The library name would obviously be
-  different. As I mentioned, if you use 2.5.3, this won't be a problem.
-  
-  If you compile with wxWidgets 2.4.2, you will get a warning about wxCLOSE_BOX
-  not being recognized when you start the program. This message can be safely
-  ignored.
 
 ---------
 - Usage -
 ---------
 
-  Using the program should (I hope) be fairly straightforward. Start the program
-  hack4u either by double-clicking or from the command line.
+  Using the program should be fairly straightforward. Start the program hack4u
+  either by double-clicking or from the command line.
   
   Load the SRAM .SAV file. For FCEU on Windows, this is in the FCEU directory
   in the SAV subdirectory. For FCEU on Unix, this is in the ~/.fceu directory. I
@@ -116,13 +72,13 @@
   program will not be able to edit anything. We can only make changes to
   existing files. We cannot generate them.
   
-  There are three tabs, "General", "Inventory", and "Character". They will allow
-  you to edit almost any part of the game. Items you have, your characters
-  stats, magic you know, etc.
+  There are five tabs, "Hero", "Party", "Inventory", "Transporation", and
+  "Character". They will allow you to edit almost any part of the game. Items
+  you have, your characters stats, magic you know, etc.
   
-  The one thing that cannot yet be edited (that I plan to implement) is
-  characters waiting in Britannia's Hostel. If there is something you want to be
-  able to edit that you cannot, contact me and I'll see what I can do.
+  I have added editing of nearly everything I consider remotely useful. If there
+  is something you want to be able to edit that you cannot, contact me and I'll
+  see what I can do.
   
   When you load a .SAV file, it will make a backup in a file named the same as
   your SRAM file with a .bak on the end. If something goes wrong when you try
@@ -144,48 +100,63 @@
     sure all the ranges I put in are correct. Contact me if you feel a valid
     value is being ignored by the program.
     
-  - You can create some invalid combinations. Having a blank between party
-    members, equipping two weapons or bows or armors, or duplicating party
-    members (e.g. two Paladins, two Fighters). The program will warn you about
-    these, but will not prevent you from using them. None of these combinations
-    seem to *adversely* affect the game, but I've only tested a few for about
-    a minute each.
+  - You can create some invalid combinations. Equipping two weapons, bows, or
+    armors, or duplicating party members (e.g. two Paladins, two Fighters). The
+    program will warn you about these, but will not prevent you from using them.
+    None of these combinations seem to *adversely* affect the game, but I've
+    only tested these for a short time.
     
     Duplicating Party Members: Since each member has stats for their class, if
     you use duplicate party members, all stats are shared, including current HP,
-    and MP. If one member would die, all duplicates die too.
-    
-    Blank inbetween Members: This looks neat to have a blank walking around, but
-    it will prevent members after the blank from having their stats displayed in
-    battle. I noticed no other adverse affects, but I only tested a short time.
+    and MP. If one member would die, the duplicates may die too. However, since
+    the game has to check for death conditions, depending upon order of death,
+    the one who died may be brought back to life. Duplicate at your own risk.
     
     Equipping Multiple Items: I didn't notice any problems with this. The game
     seems to notice only the first item you equip, but since it was never
     intended, there may be problems I didn't notice.
-    
-  - Taking away items you already found in your quest will not let you
-    "rediscover" these items. They are gone as far as the game knows. This
-    probably means things you add can still be found. I don't know what impact
-    this might have on gameplay if you do either one.
     
   - I've never heard of the 'Wheel' or the 'Dagger'. Neither seem to be of much
     use, but maybe I just didn't know what to do with them.
     
   - Virtues
   
-    I don't know what ranges correspond to what "ranks" (very poor, poor, well,
-    very well), but I do know that 0 is bad and 100 is good (avatar in fact).
-    So 99 is the best you can be without being the avatar. 100 will give you
-    partial avatarhood in that virtue. 100 in all should make you the avatar.
+    I don't know exactly what ranges correspond to what "ranks" (very poor,
+    poor, well, very well), but I do know that 0 is bad and 100 is good (partial
+    avatarhood). So 99 is the best you can be without being the avatar. It seems
+    to be broken down as follows (but I haven't tested this reliably):
+    
+    0-24 Very Poor
+    25-49 Poor
+    50-74 Well
+    75-98 Very Well
+    99    Worth of Avatarhood
+    100   Partial Avatarhood
     
 --------------------
 - Revision History -
 --------------------
 
+  Version 1.1 - Tuesday, Mar 21, 2006
+    - Major code cleanup
+    - Fixed bug where it wouldn't save over the current SAV file
+    - Fixed bug where some games weren't selectable
+    - Removed outdated wxGTK hacks for bugs in wxGTK 2.4.2
+    - Now requires wxWidgets >= 2.6.2
+    - Removed need for XRC file to be included with executable
+    - Fixed bug where hack4u would restore deleted games
+    - Removed possibility of blanks between characters
+    - Removed certain impossible choices from being selected
+    - Added joined party member editing
+    - Added balloon location editing
+    - Added pirate ship editing
+    - Added whirlpool editing
+    - Synchronized found treasure and treasure inventory offsets
+    - Added common locations menu for boat and balloon
   Version 1.0 - Wednesday, Aug 3, 2005
     - Minor Code Cleanup
     - Added GTK+ 1.2 Binary for Linux
-    - Added Mac OS-X Binary
+    - Added Mac OS X Binary
   Version 0.92 - Wednesday, Dec 8, 2004
     - Fixed bug that caused files to load even if no valid save data existed
     - Added file I/O error checking
@@ -199,7 +170,7 @@
     - Replaced herb/virtue/tool spin controls with sliders
     - Replaced stat spin controls with text controls
     - Added validation for stat controls
-    - Added validation for equipment and party members (with warnings if invalid)
+    - Added validation for equipment and party members (w/ warnings if invalid)
     - Changed menu shortcuts to more universal ones
     - Fixed a bug where the game menu didn't go back to 1 on close/reopen
     - Added XRC_PREFIX to configure to change the default XRC path

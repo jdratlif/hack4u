@@ -1,3 +1,18 @@
-EXTRA_DIST = Doxyfile Info.plist docs/*.txt apidocs
+EXTRA_DIST = apidocs docs/*.txt Doxyfile Info.plist
 SUBDIRS = source
+
+.PHONY: allclean apidocs touch
+
+allclean: clean
+	-rm -rf apidocs
+	-rm -f *.bz2 *.gz *.zip
+	-find -iname "*~" -exec rm -f {} \;
+
+apidocs: Doxyfile
+	@doxygen
+    
+touch:
+	-find -iname "*.cc" -exec touch {} \;
+	-find -iname "*.hh" -exec touch {} \;
+	-find -iname "*.xrc" -exec touch {} \;
 
