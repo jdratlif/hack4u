@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: MainFrame.cc,v 1.24 2004/12/05 02:59:28 technoplaza Exp $
+// $Id: MainFrame.cc,v 1.25 2004/12/08 11:00:36 technoplaza Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -614,13 +614,27 @@ void MainFrame::load(wxString &filename) {
     
     sram = new char[SRAM_SIZE];
     std::ifstream in(filename.mb_str(), std::ios::in | std::ios::binary);
-    in.read(sram, SRAM_SIZE);
-    in.close();
     
-    wxString bakfile = filename + ".bak";
-    std::ofstream out(bakfile.mb_str(), std::ios::out | std::ios::binary);
-    out.write(sram, SRAM_SIZE);
-    out.close();
+    if (!in) {
+        // unable to open file
+        wxMessageBox(wxT("Unable to open the SRAM file."),
+                     wxT("File Open Error"), wxOK | wxICON_ERROR);
+        
+        delete sram;
+        return;
+    }
+    
+    in.read(sram, SRAM_SIZE);
+    
+    if (in.rdstate() & std::ios::failbit) {
+        wxMessageBox(wxT("Unable to read the SRAM file."),
+                     wxT("File I/O Error"), wxOK | wxICON_ERROR);
+        
+        in.close();
+        return;
+    }
+    
+    in.close();
     
     for (int slot = 0; slot < 3; slot++) {
         memcpy(nvram, (sram + SRAM_OFFSET + (slot * SAVE_SIZE)), SAVE_SIZE);
@@ -634,6 +648,8 @@ void MainFrame::load(wxString &filename) {
         }
     }
     
+    setOpen(true);
+    
     if (saveslot[0]->isValid()) {
         loadGame(0);
     } else if (saveslot[1]->isValid()) {
@@ -641,11 +657,21 @@ void MainFrame::load(wxString &filename) {
     } else if (saveslot[2]->isValid()) {
         loadGame(2);
     } else {
+        setOpen(false);
+        
         wxMessageBox(wxT("No Ultima: Quest of the Avatar games exist in the SRAM file you loaded."),
                      wxT("Error: No Games Found"), wxOK | wxICON_ERROR);
     }
     
-    setOpen(true);
+    if (isOpen()) {
+        wxString bakfile = filename + ".bak";
+        std::ofstream out(bakfile.mb_str(), std::ios::out | std::ios::binary);
+        
+        if (out) {
+            out.write(sram, SRAM_SIZE);
+            out.close();
+        }
+    }
 }
 
 void MainFrame::fileOpen(wxCommandEvent &event) {
@@ -778,12 +804,29 @@ bool MainFrame::save(wxString &filename) {
     }
     
     std::ofstream out(filename.mb_str(), std::ios::binary | std::ios::out);
+    
+    if (!out) {
+        wxMessageBox(wxT("Unable to open the SRAM file."),
+                     wxT("File Open Error"), wxOK | wxICON_ERROR);
+                     
+        return false;
+    }
+    
     out.write(sram, SRAM_SIZE);
+    
+    if (out.rdstate() & std::ios::failbit) {
+        wxMessageBox(wxT("Unable to write to the SRAM file."),
+                     wxT("File I/O error"), wxOK | wxICON_ERROR);
+                     
+        out.close();
+        return false;
+    }
+    
     out.close();
     
-    saveslot[0]->modified = false;
-    saveslot[1]->modified = false;
-    saveslot[2]->modified = false;
+    saveslot[0]->setModified(false);
+    saveslot[1]->setModified(false);
+    saveslot[2]->setModified(false);
     
     return true;
 }
@@ -827,7 +870,7 @@ bool MainFrame::close() {
         saveslot[1]->isModified() || 
         saveslot[2]->isModified()) {
         int choice = wxMessageBox(wxT("Save Game File Before Closing?"),
-                                  wxT("Warning: Unsaved Changed"),
+                                  wxT("Warning: Unsaved Changes"),
                                   wxYES_NO | wxCANCEL | wxICON_QUESTION,
                                   this);
         
@@ -846,10 +889,6 @@ bool MainFrame::close() {
     games[0]->Enable(false);
     games[1]->Enable(false);
     games[2]->Enable(false);
-    
-    fileSaveItem->Enable(false);
-    fileSaveAsItem->Enable(false);
-    fileCloseItem->Enable(false);
     
     setOpen(false);
     

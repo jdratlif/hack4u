@@ -1,5 +1,5 @@
 dnl Initialize autoconf
-AC_INIT([hack4u], [0.91], [emuWorks@technoplaza.net])
+AC_INIT([hack4u], [0.92], [emuWorks@technoplaza.net])
 
 dnl require autoconf >= 2.57
 AC_PREREQ([2.57])

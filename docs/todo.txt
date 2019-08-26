@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------------
 
 hack4u implements the set of features I set out to create with this program. It
-is effective version 1.0, but to remain consistent with the versioning scheme
+is effectively version 1.0, but to remain consistent with the versioning scheme
 I've chosen, it is 0.90. 0.90 means a not well tested 1.0. I'm 99% positive it
 works the way it looks and should react the way you expect. But of course in
 a project like this, there could possibly be some bugs to fix. If none are found

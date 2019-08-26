@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-| hack4u 0.91
+| hack4u 0.92
 | Copyright (C) 2004 emuWorks
 | Written by John Ratliff
 | http://games.technoplaza.net/
@@ -188,6 +188,10 @@
 - Revision History -
 --------------------
 
+  Version 0.92 - Wednesday, Dec 8, 2004
+    - Fixed bug that caused files to load even if no valid save data existed
+    - Added file I/O error checking
+    - Resized GUI to fit in 800x600
   Version 0.91 - Saturday, Dec 4, 2004
     - Added code comments and API documentation
     - Minor code cleanup
