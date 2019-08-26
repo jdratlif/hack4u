@@ -1,3 +1,7 @@
+1.0  Minor Code Cleanup
+0.92 Fixed bug that caused crashing if you loaded an invalid SRAM file.
+     Added file I/O checks.
+     Rearranged GUI to better fit an 800x600 screen in GTK.
 0.91 Added code comments
      Minor code cleanup
      Made methods const that should have already been const

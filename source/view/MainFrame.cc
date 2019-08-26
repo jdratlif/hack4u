@@ -1,23 +1,26 @@
 /*
- * Copyright (C) 2004 emuWorks
+ * hack4u
+ * Copyright (C) 2004-2005 emuWorks
  * http://games.technoplaza.net/
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This file is part of hack4u.
  *
- * This program is distributed in the hope that it will be useful,
+ * hack4u is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * hack4u is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * along with hack4u; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: MainFrame.cc,v 1.25 2004/12/08 11:00:36 technoplaza Exp $
+// $Id: MainFrame.cc,v 1.26 2005/08/03 11:11:39 technoplaza Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -674,7 +677,7 @@ void MainFrame::load(wxString &filename) {
     }
 }
 
-void MainFrame::fileOpen(wxCommandEvent &event) {
+void MainFrame::fileOpen(wxCommandEvent &) {
     static wxFileDialog *dlg = new wxFileDialog(this, 
         wxT("Choose a .SAV File"), "", "", 
         wxT("NES SRAM File (*.sav)|*.sav"), (wxOPEN | wxCHANGE_DIR));
@@ -831,11 +834,11 @@ bool MainFrame::save(wxString &filename) {
     return true;
 }
 
-void MainFrame::fileSave(wxCommandEvent &event) {
+void MainFrame::fileSave(wxCommandEvent &) {
     save(sramFile);
 }
 
-void MainFrame::fileSaveAs(wxCommandEvent &event) {
+void MainFrame::fileSaveAs(wxCommandEvent &) {
     static wxFileDialog *dlg = new wxFileDialog(this, 
         wxT("Choose a .SAV File"), "", "", 
         wxT("NES SRAM File (*.sav)|*.sav"), (wxSAVE | wxCHANGE_DIR));
@@ -895,11 +898,11 @@ bool MainFrame::close() {
     return true;
 }
 
-void MainFrame::fileClose(wxCommandEvent &event) {
+void MainFrame::fileClose(wxCommandEvent &) {
     close();
 }
 
-void MainFrame::fileExit(wxCommandEvent &event) {
+void MainFrame::fileExit(wxCommandEvent &) {
     if (isOpen()) {
         if (close()) {
             Close(true);
@@ -936,7 +939,7 @@ void MainFrame::gameChange(wxCommandEvent &event) {
     }
 }
 
-void MainFrame::helpAbout(wxCommandEvent &event) {
+void MainFrame::helpAbout(wxCommandEvent &) {
     wxMessageDialog dlg(this, *Hack4u::APP_NAME + wxT(' ') + 
                         *Hack4u::APP_VERSION + wxT('\n') +
                         *Hack4u::APP_COPYRIGHT + wxT('\n') +
@@ -946,7 +949,7 @@ void MainFrame::helpAbout(wxCommandEvent &event) {
     dlg.ShowModal();
 }
 
-void MainFrame::herosNameChange(wxCommandEvent &event) {
+void MainFrame::herosNameChange(wxCommandEvent &) {
     if (currentSlot == -1) {
         return;
     }
@@ -1084,7 +1087,7 @@ void MainFrame::phaseChange(wxCommandEvent &event) {
     saveslot[currentSlot]->setPhase(trammel, felucca);
 }
 
-void MainFrame::goldChange(wxCommandEvent &event) {
+void MainFrame::goldChange(wxCommandEvent &) {
     if (currentSlot == -1) {
         return;
     }
@@ -1227,7 +1230,7 @@ void MainFrame::toolHaveChange(wxCommandEvent &event) {
     saveslot[currentSlot]->setTool(tool, (ctrl->IsChecked() ? 1 : 0));
 }
 
-void MainFrame::characterChange(wxCommandEvent &event) {
+void MainFrame::characterChange(wxCommandEvent &) {
     if (currentSlot == -1) {
         return;
     }

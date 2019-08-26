@@ -157,7 +157,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-EXTRA_DIST = Doxyfile docs/hack4u.txt docs/todo.txt docs/sram-hacking.txt apidocs
+EXTRA_DIST = Doxyfile Info.plist docs/*.txt apidocs
 SUBDIRS = source
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive

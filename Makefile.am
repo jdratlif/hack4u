@@ -1,3 +1,3 @@
-EXTRA_DIST = Doxyfile docs/hack4u.txt docs/todo.txt docs/sram-hacking.txt apidocs
+EXTRA_DIST = Doxyfile Info.plist docs/*.txt apidocs
 SUBDIRS = source
 

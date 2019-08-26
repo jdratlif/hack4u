@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
-| hack4u 0.92
-| Copyright (C) 2004 emuWorks
+| hack4u 1.0
+| Copyright (C) 2004-2005 emuWorks
 | Written by John Ratliff
 | http://games.technoplaza.net/
 --------------------------------------------------------------------------------
@@ -26,31 +26,31 @@
 - Installation -
 ----------------
 
-  For Windows and Linux, I have provided a binary version. You should be able to
-  download it and double-click the hack4u executable to start the program.
+  For Windows, Linux, and Mac OS-X, I have provided a binary version. You should
+  be able to download it and double-click the hack4u executable to start the
+  program.
   
-  On Windows, there shouldn't be any extra dependencies required. For the Linux
-  binary, you will need GTK+ >= 2.0. I used GTK+ 2.0.49 at the time of the
-  build. The program can most likely be built against GTK+ 1.2, but this hasn't
-  been tested.
+  On Windows and Mac OS-X, there shouldn't be any extra dependencies required.
+  For the Linux binary, you will need GTK+. There are two versions, one for
+  GTK+ 1.2, and another for GTK+ 2.0.
   
   For all other platforms, you will need to compile the source code yourself. It
-  shouldn't be too hard to compile. It is expected (but untested) to compile and
-  run on Linux, Solaris, Mac OS-X, and any Unix that supports the GTK+ toolkit.
+  shouldn't be too hard to compile. It is expected to compile on any nearly
+  any Unix.
   
   To compile the source, you will need an ISO C++ compiler (I recommend GNU G++
   >= 3.3), and the wxWidgets library. You can compile under wxWidgets 2.4.2, but
   >= 2.5.3 is recommended due to vast improvements to wxWidgets since 2.4.2
   not the least of which is the XRC system. You can download the wxWidgets
-  library at http://www.wxwidgets.org.
+  library at http://www.wxwidgets.org/.
   
   After you have wxWidgets installed, you should be able to do something like
   this:
   
   ./configure && make
   
-  This will (*should*) produce a program hack4u in the source subdirectory. If
-  it doesn't, well, contact me and we'll talk about it.
+  This should produce a program hack4u in the source subdirectory. If it
+  doesn't, contact me and we'll talk about it.
   
   You can use make install to install the program, but it's not a perfect
   solution yet as I can't seem to figure out how to install the XRC file where
@@ -95,11 +95,6 @@
   If you compile with wxWidgets 2.4.2, you will get a warning about wxCLOSE_BOX
   not being recognized when you start the program. This message can be safely
   ignored.
-  
-  I no longer have any access to Macs, so I cannot compile an OS-X binary. If
-  you have access to a Mac with OS-X, I can try and help you compile the program
-  and see if we can get it to work. Compiling wxWidgets applications and the
-  library itself under Max OS-X is currently a nightmare, but it can be done.
 
 ---------
 - Usage -
@@ -162,15 +157,14 @@
     
     Blank inbetween Members: This looks neat to have a blank walking around, but
     it will prevent members after the blank from having their stats displayed in
-    battle. I noticed no other adverse affects, but I only tested a short time
-    keep in mind.
+    battle. I noticed no other adverse affects, but I only tested a short time.
     
     Equipping Multiple Items: I didn't notice any problems with this. The game
     seems to notice only the first item you equip, but since it was never
     intended, there may be problems I didn't notice.
     
   - Taking away items you already found in your quest will not let you
-    "rediscover" these items. They are "gone" as far as the game knows. This
+    "rediscover" these items. They are gone as far as the game knows. This
     probably means things you add can still be found. I don't know what impact
     this might have on gameplay if you do either one.
     
@@ -188,6 +182,10 @@
 - Revision History -
 --------------------
 
+  Version 1.0 - Wednesday, Aug 3, 2005
+    - Minor Code Cleanup
+    - Added GTK+ 1.2 Binary for Linux
+    - Added Mac OS-X Binary
   Version 0.92 - Wednesday, Dec 8, 2004
     - Fixed bug that caused files to load even if no valid save data existed
     - Added file I/O error checking

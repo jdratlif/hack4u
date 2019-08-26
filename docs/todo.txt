@@ -2,15 +2,7 @@
 | hack4u TODO List
 --------------------------------------------------------------------------------
 
-hack4u implements the set of features I set out to create with this program. It
-is effectively version 1.0, but to remain consistent with the versioning scheme
-I've chosen, it is 0.90. 0.90 means a not well tested 1.0. I'm 99% positive it
-works the way it looks and should react the way you expect. But of course in
-a project like this, there could possibly be some bugs to fix. If none are found
-in a set period of time (I'm thinking 6 months), then the program will become
-1.0.
-
-Nevertheless, there are some things I've thought about implementing that may or
+There are some things I've thought about implementing that may or
 may not have been on my original list that I decided weren't that important for
 one reason or another. I may or may not implement these or other things in the
 program, but here is a list of things I'd like to see happen.

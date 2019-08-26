@@ -6,7 +6,7 @@
 | The most recent version of this guide can always be found at
 | http://games.technoplaza.net/hack4u/sram-hacking.txt
 |
-| Copyright (C) 2004 emuWorks (http://games.technoplaza.net/)
+| Copyright (C) 2004-2005 emuWorks (http://games.technoplaza.net/)
 |   Permission is granted to copy, distribute and/or modify this document
 |   under the terms of the GNU Free Documentation License, Version 1.2
 |   or any later version published by the Free Software Foundation;
@@ -45,7 +45,7 @@
   
   Ultima: Quest of the Avatar was released for the NES in 1990. The copyrights
   are attributed to Origin Systems (creators of the Ultima series) in 1985 for
-  the original version, and to FCI and Polycannon in 1990 for the NES version.
+  the original version, and to FCI and Pony Canyon in 1990 for the NES version.
   
   This guide refers to the NES version released in the US in 1990. I do not know
   if it was released in Japan or Europe. If it was, this information may or may
@@ -73,8 +73,7 @@
   a simple algorithm to compute by hand. Fortunately, I've written a nice
   program that will do it for you. You may be reading this guide as part of that
   program, but if not, you can find it at http://games.technoplaza.net/hack4u/.
-  Windows and Linux are known to work, and I believe the source will compile on
-  Mac OS-X, but I have no Mac to try it with.
+  It is available for Windows, Linux, and Mac OS-X.
   
   The sanity algorithm is described in section 6.0.
   
@@ -82,6 +81,8 @@
 | 2.0 Revision History
 --------------------------------------------------------------------------------
 
+  Version 1.1 - August 3, 2005
+    - minor corrections (typos mostly)
   Version 1.0 - December 4, 2004
     - initial version of this guide
     
@@ -124,7 +125,7 @@
   Since I can't do anything about their copyrights, I'll just have to lead by
   example.
   
-  This document is Copyright (C) 2004 emuWorks (http://games.technoplaza.net/)
+  This document is Copyright (C) 2004-2005 emuWorks 
     Permission is granted to copy, distribute and/or modify this document
     under the terms of the GNU Free Documentation License, Version 1.2
     or any later version published by the Free Software Foundation;
@@ -142,10 +143,8 @@
 
   Finally, we get to the good stuff.
   
-  Ultima: Quest of the Avatar, which for ease of typing I'll refer to as
-  Ultima IV or Ultima 4 (the second NES Ultima title was actually the fourth
-  in the Ultima series) included, like many games for the NES, an SRAM or a
-  battery backed RAM.
+  Ultima: Quest of the Avatar for the NES included, like many games for the NES,
+  an SRAM (aka battery backed RAM).
   
   This SRAM was a portion of writable memory inside the cartridge that when the
   NES was off was saved by a battery also contained inside the cartridge. This
@@ -165,19 +164,20 @@
   the CPU address, it will always be in this range. The SRAM address with be in
   the range $0000-$1FFF. $0000 SRAM = $6000 CPU.
   
-  The SAM was used by Ultima to save three different games. Each games used
-  $200 (512) bytes of memory. The three game addresses start at $1A00, $1C00,
+  The SRAM was used by Ultima to save three different games. Each game used
+  $200 (512) bytes of memory. The three SRAM addresses start at $1A00, $1C00,
   and $1E00. They end at $1BFF, $1DFF, and $1FFF. The nine other bytes are used
   to sanity check the SRAM, and will be discussed later.
   
   Since each game is identical in storage location, I will use relative SRAM
   offsets. In other words, if I refer to address $27 in game 1, I really mean
-  SRAM address $1A27. Just add the game address + the relative offset to get the
-  SRAM offset. You can then add the starting CPU address if you want the actual
-  CPU address, but this is probably not useful unless you're just curious.
+  SRAM address $1A27. Just add the start address + the relative offset to get
+  the SRAM address. You can then add the starting CPU address if you want the
+  actual CPU address, but this is probably not useful unless you're just
+  curious.
   
-  Here are the relative offsets in the SRAM games that I know about. There are
-  many bytes unaccounted for. Some may be unused, and some may just be
+  Here are the relative offsets in the SRAM that I know about. There are many
+  bytes unaccounted for. Some may be unused, and some may just be
   uninteresting for purposes of save state hacking. There will be a more
   detailed explanation after I present the list.
   
@@ -250,16 +250,16 @@
 | 5.1 Phases of the Moon
 --------------------------------------------------------------------------------
   
-  There are two moons in the world of Ultima, Trammel and Felucca. Trammel is
+  There are two moons in the world of Ultima: Trammel and Felucca. Trammel is
   the one on the left, while Felucca is on the right. Respectively, they
   determine where the Moongate is, and where it will lead.
   
-  There are $17 (24 = 8 cities * 3 destinations each) possible phases. The
+  There are $18 (24 = 8 cities * 3 destinations each) possible phases. The
   relative offset $01 determines which of these it is.
   
   Here are all the possible values the offset $01 can have and their meanings.
   
-  $00 Moonglow - Moonglow
+  $00 Moonglow - Moonglow (Black Stone)
   $01          - Britain
   $02          - Jhelom
   
@@ -275,7 +275,7 @@
   $0A     - Jhelom
   $0B     - Yew
   
-  $0C Minoc - Minoc
+  $0C Minoc - Minoc (Shrine of Spirituality)
   $0D       - Trinsic
   $0E       - Skara Brae
   
@@ -293,7 +293,6 @@
   
   This value is not that useful since the moon phases change often enough it is
   usually easier to wait for a specific phase in-game than to alter the state.
-  Nevertheless, I found it and it looked interesting.
   
 --------------------------------------------------------------------------------
 | 5.2 The Hero's Name
@@ -321,7 +320,7 @@
   Ultima's alphabet for names is simply. I only know the characters that you are
   legitimately allowed to give the Hero. However, I would expect you can use any
   of the character symbols, so feel free to experiment with values other than
-  the ones I list if you're interested. My save state editor program hack4u
+  the ones I've listed if you're interested. My save state editor program hack4u
   limits you to the game provided character alphabet.
   
   A-Z = $91-$AA
@@ -332,8 +331,7 @@
   NUL = $00     (this signifies a name with less than 5 (or 6) characters).
   
   I always name my hero either Dominic or Liam, depending upon how many
-  characters I'm allowed. Since we are restricted to 5, I guess that mean's
-  Liam's a go here.
+  characters I'm allowed. Since we are restricted to 5, Liam it is.
   
   Liam is spelled $9C $D9 $D1 $DD $00. That fills the offsets $02-$06.
   
@@ -348,14 +346,13 @@
   Honor, Spirituality, and Humility. They are always numbered from 0-7.
   
   The game represents everything in refernece to these eight virtues. The cities
-  Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara Brae, and Humility. The
+  Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara Brae, and Maginicia. The
   cities are always numbered 0-7, too. The characters Mage, Bard, Fighter,
   Druid, Tinker, Paladin, Ranger, and Shepherd are also represented 0-7. All
   these values are tied together. Moonglow is the city of Honesty and Mages.
   
   The virtues are tracked all throughout the game in the offsets $0C-$13.
-  $0C = Honesty, $13 = Humility. You should be able to fill in the rest based
-  on what I've told you above. If not,
+  $0C = Honesty, $13 = Humility. Here is the full list:
   
   $0C Honesty
   $0D Compassion
@@ -369,9 +366,9 @@
   I'm not 100% what the exact values represent, but here is what I know. The
   higher the number, the better your character is.
   
-  The values range (I think) from $00-$64 (0-100). $64 means you have partial
+  I believe the values range between $00-$64 (0-100). $64 means you have partial
   avatarhood, $63 is the best you can be without having partial avatarhood,
-  $32 (50) is where you start, and so on down.
+  $32 (50) is where you start, and so on.
   
   However, avatarhood is measured two ways (probably for simplicitiy in the
   program). Offset $14 is also used to measure partial avatarhood in a virtue.
@@ -386,7 +383,7 @@
   10011010, the bit 7 is on (1), and bit 0 is off (0). Knowing that virtues are
   represented 0-7, we know that Honesty is bit 0, and Humility is bit 7.
   
-  If all the bits are on, you are the avatar. But if you virtues don't
+  If all the bits are on, you are the avatar. But if you virtue values don't
   correspond, you will lose your avatar status very easily. My program,
   hack4u, will keep both values in sync automatically.
   
@@ -402,7 +399,7 @@
   We want to turn on bit 5 (honor = 5). So we binary OR the starting value with
   (1 LSH 5 = %00100000). Then we get %00100001 which is $21 in hex. If you don't
   understand binary math operations, you should look for a tutorial, or just
-  use my program. That's easiest of all.
+  use my program. That's even easier.
   
 --------------------------------------------------------------------------------
 | 5.4 Current Party Members
@@ -410,7 +407,7 @@
 
   Ultima IV can support four characters in your party as one time. The
   characters are one of the following: Mage, Bard, Fighter, Druid, Tinker,
-  Paladin, Ranger, Shepherd. You can also have no one in your party at a
+  Paladin, Ranger, or Shepherd. You can also have no one in your party at a
   certain location, but to avoid confusing the game, you should make sure the
   empty slots are at the end.
   
@@ -555,8 +552,7 @@
   So, if we want 9999 gold, which is $270F hex, we want to put $0F in $27 and
   $27 in $28.
   
-  Complexities like this are just another reason to use my hack4u program, and
-  no, I'll never stop the shameless self-promotion.
+  Complexities like this are just another reason to use my hack4u program.
   
   Tools come in two formats, have/have not, and quantity. The quantity tools
   are torches, gems, and oil. You can have 0 (none) up to 99 (max). You might
@@ -592,7 +588,7 @@
   $02 Bow
   $03 X-Bow
   $04 +1 Bow
-  $05 Dagger (anyone ever heard of this. I haven't)
+  $05 Dagger (Has nyone ever heard of this? I haven't)
   $06 Staff
   $07 Club
   $08 Axe
@@ -652,21 +648,21 @@
   
   To keep the game thinking the SRAM is good, since it doesn't let you play the
   game if it thinks it's not, we need to duplicate the process it uses to
-  create sanity values that it can check.
+  create sanity values that it can check. Here is how it works.
   
   Take the $200 bytes used by the particular save game.
   
   You need a value which will be the sanity byte. Set this value to 0. You also
   need a counter value. Set this value to 0.
   
-  For every byte $001 to $1FF ($200 bytes = $000 - $1FFF), do the following
+  For every byte $001 to $1FF ($200 bytes = $000 - $1FF), do the following
   1) XOR (binary exclusive OR) this number with one of the following numbers
      $55, $AA, $33, $CC, $A5, $5A, $BB, $99. The number depends upon your
      counter. Counter at 0 = $55, Counter at 7 = $99.
   2) Add the XORed value to the sanity value.
   3) If the sanity value exceeds $FF (255), drop the higher numbers.
      $123 = $23. $1FE = $FE. etc.
-  4) Incrememt the counter.
+  4) Increment the counter.
   5) If the counter is > 7, set the counter to 0.
   6) Repeat steps 1-5 for each byte $001 - $1FF
   
@@ -690,22 +686,23 @@
   
 ------------------------------ begin sanity.c ----------------------------------
 /*
+ * sanity
  * Copyright (C) 2004 emuWorks
  * http://games.technoplaza.net/
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * sanity is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * sanity is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * along with sanity; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 #include <stdio.h>
@@ -837,6 +834,6 @@ int main(int argc, char *argv[]) {
 | 7.0 Contact Information
 --------------------------------------------------------------------------------
 
-  The author John Ratliff can be contact at
+  The author, John Ratliff, can be contact at
   http://www.technoplaza.net/feedback.php.
 
