@@ -1,0 +1,1704 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwidgets.org/wxxrc">
+    <object class="wxFrame" name="ID_MAIN_FRAME" subclass="MainFrame">
+        <style>wxCAPTION|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxCLOSE_BOX</style>
+        <size>800,600</size>
+        <object class="wxMenuBar" name="ID_MENUBAR">
+            <object class="wxMenu">
+                <label>_File</label>
+                <object class="wxMenuItem" name="IDM_FILE_LOAD">
+                    <label>_Load\tCtrl-Shift-L</label>
+                </object>
+                <object class="wxMenuItem" name="IDM_FILE_SAVE">
+                    <label>_Save\tCtrl-Shift-S</label>
+                </object>
+                <object class="wxMenuItem" name="IDM_FILE_SAVE_AS">
+                    <label>Save _As\tCtrl-Shift-A</label>
+                </object>
+                <object class="separator">
+                </object>
+                <object class="wxMenuItem" name="IDM_FILE_EXIT">
+                    <label>E_xit\tCtrl-Shift-X</label>
+                </object>
+            </object>
+            <object class="wxMenu">
+                <label>_Game</label>
+                <object class="wxMenuItem" name="IDM_GAME_GAME1">
+                    <label>Game _1</label>
+                    <radio>1</radio>
+                    <checked>1</checked>
+                </object>
+                <object class="wxMenuItem" name="IDM_GAME_GAME2">
+                    <label>Game _2</label>
+                    <radio>1</radio>
+                </object>
+                <object class="wxMenuItem" name="IDM_GAME_GAME3">
+                    <label>Game _3</label>
+                    <radio>1</radio>
+                </object>
+            </object>
+            <object class="wxMenu">
+                <label>_Help</label>
+                <object class="wxMenuItem" name="IDM_HELP_ABOUT">
+                    <label>_About hack4u...</label>
+                </object>
+            </object>
+        </object>
+        <object class="wxNotebook" name="ID_NOTEBOOK">
+            <object class="notebookpage">
+                <label>General</label>
+                <object class="wxPanel" name="ID_PANEL_GENERAL">
+                    <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>2</border>
+                            <option>1</option>
+                            <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>4</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Hero's Name</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxTextCtrl" name="ID_GENERAL_HEROSNAME">
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>4</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Party Members</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxFlexGridSizer">
+                                                <cols>4</cols>
+                                                <rows>2</rows>
+                                                <vgap>0</vgap>
+                                                <hgap>0</hgap>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Hero: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_GENERAL_PARTY1">
+                                                        <content>
+                                                            <item>Mage</item>
+                                                            <item>Bard</item>
+                                                            <item>Fighter</item>
+                                                            <item>Druid</item>
+                                                            <item>Tinker</item>
+                                                            <item>Paladin</item>
+                                                            <item>Ranger</item>
+                                                            <item>Shepherd</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Second: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_GENERAL_PARTY2">
+                                                        <content>
+                                                            <item>Mage</item>
+                                                            <item>Bard</item>
+                                                            <item>Fighter</item>
+                                                            <item>Druid</item>
+                                                            <item>Tinker</item>
+                                                            <item>Paladin</item>
+                                                            <item>Ranger</item>
+                                                            <item>Shepherd</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Third: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_GENERAL_PARTY3">
+                                                        <content>
+                                                            <item>Mage</item>
+                                                            <item>Bard</item>
+                                                            <item>Fighter</item>
+                                                            <item>Druid</item>
+                                                            <item>Tinker</item>
+                                                            <item>Paladin</item>
+                                                            <item>Ranger</item>
+                                                            <item>Shepherd</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Fourth: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_GENERAL_PARTY4">
+                                                        <content>
+                                                            <item>Mage</item>
+                                                            <item>Bard</item>
+                                                            <item>Fighter</item>
+                                                            <item>Druid</item>
+                                                            <item>Tinker</item>
+                                                            <item>Paladin</item>
+                                                            <item>Ranger</item>
+                                                            <item>Shepherd</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>4</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Virtues</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxFlexGridSizer">
+                                                <cols>4</cols>
+                                                <rows>4</rows>
+                                                <vgap>0</vgap>
+                                                <hgap>0</hgap>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Honesty: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_GENERAL_HONESTY">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>50</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Compassion: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_GENERAL_COMPASSION">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>50</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Valor: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_GENERAL_VALOR">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>50</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Justice: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_GENERAL_JUSTICE">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>50</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Sacrifice: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_GENERAL_SACRIFICE">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>50</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Honor: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_GENERAL_HONOR">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>50</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Spirituality: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_GENERAL_SPIRITUALITY">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>50</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Humility: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_GENERAL_HUMILITY">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>50</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>4</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Magic</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_LEFT|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxFlexGridSizer">
+                                                <cols>10</cols>
+                                                <rows>3</rows>
+                                                <vgap>0</vgap>
+                                                <hgap>0</hgap>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_LIGHT">
+                                                        <label>Light</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_MISSILE">
+                                                        <label>Missile</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_AWAKEN">
+                                                        <label>Awaken</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_CURE">
+                                                        <label>Cure</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_WIND">
+                                                        <label>Wind</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_HEAL">
+                                                        <label>Heal</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_FIRE">
+                                                        <label>Fire</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_EXIT">
+                                                        <label>Exit</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_DISPEL">
+                                                        <label>Dispel</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_VIEW">
+                                                        <label>View</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_PROTECT">
+                                                        <label>Protect</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_ICE">
+                                                        <label>Ice</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_BLINK">
+                                                        <label>Blink</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_ENERGY">
+                                                        <label>Energy</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_QUICK">
+                                                        <label>Quick</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_SLEEP">
+                                                        <label>Sleep</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_REFLECT">
+                                                        <label>Reflect</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_NEGATE">
+                                                        <label>Negate</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_DESTROY">
+                                                        <label>Destroy</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_JINX">
+                                                        <label>Jinx</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_SQUISH">
+                                                        <label>Squish</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_GATE">
+                                                        <label>Gate</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_TREMOR">
+                                                        <label>Tremor</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_LIFE">
+                                                        <label>Life</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_GENERAL_DEFEAT">
+                                                        <label>Defeat</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP</flag>
+                                    <border>4</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Moongates</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxFlexGridSizer">
+                                                <cols>2</cols>
+                                                <rows>2</rows>
+                                                <vgap>0</vgap>
+                                                <hgap>0</hgap>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Trammel (Left Moon): </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_GENERAL_TRAMMEL">
+                                                        <content>
+                                                            <item>Moonglow</item>
+                                                            <item>Britain</item>
+                                                            <item>Jhelom</item>
+                                                            <item>Yew</item>
+                                                            <item>Minoc</item>
+                                                            <item>Trinsic</item>
+                                                            <item>Skara Brae</item>
+                                                            <item>Magincia</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Felucca (Right Moon): </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_GENERAL_FELUCCA">
+                                                        <content>
+                                                            <item>Moonglow</item>
+                                                            <item>Britain</item>
+                                                            <item>Jhelom</item>
+                                                            <item>Yew</item>
+                                                            <item>Minoc</item>
+                                                            <item>Trinsic</item>
+                                                            <item>Skara Brae</item>
+                                                            <item>Magincia</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="notebookpage">
+                <label>Inventory</label>
+                <object class="wxPanel" name="ID_PANEL_INVENTORY">
+                    <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <option>1</option>
+                            <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Gold</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxSpinCtrl" name="ID_INVENTORY_GOLD">
+                                                <style>wxSP_ARROW_KEYS</style>
+                                                <value>400</value>
+                                                <min>0</min>
+                                                <max>9999</max>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Herbs</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxFlexGridSizer">
+                                                <cols>8</cols>
+                                                <rows>2</rows>
+                                                <vgap>0</vgap>
+                                                <hgap>0</hgap>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Ash: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_ASH">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>8</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Ginseng: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_GINSENG">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>8</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Garlic: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_GARLIC">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>9</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Silkweb: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_SILKWEB">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>7</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Moss: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_MOSS">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>5</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Pearl: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_PEARL">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>4</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Fungus: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_FUNGUS">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>0</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Manroot: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_MANROOT">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>0</value>
+                                                        <min>0</min>
+                                                        <max>100</max>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxLEFT|wxRIGHT</flag>
+                                    <border>0</border>
+                                    <object class="wxBoxSizer">
+                                        <orient>wxHORIZONTAL</orient>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_TOP|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                                <orient>wxVERTICAL</orient>
+                                                <label>Runes</label>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxFlexGridSizer">
+                                                        <cols>2</cols>
+                                                        <rows>4</rows>
+                                                        <vgap>0</vgap>
+                                                        <hgap>0</hgap>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_HONESTY">
+                                                                <label>Honesty</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_COMPASSION">
+                                                                <label>Compassion</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_VALOR">
+                                                                <label>Valor</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_JUSTICE">
+                                                                <label>Justice</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_SACRIFICE">
+                                                                <label>Sacrifice</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_HONOR">
+                                                                <label>Honor</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_SPIRITUALITY">
+                                                                <label>Spirituality</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_HUMILITY">
+                                                                <label>Humility</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_TOP|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                                <orient>wxVERTICAL</orient>
+                                                <label>Stones</label>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxFlexGridSizer">
+                                                        <cols>2</cols>
+                                                        <rows>4</rows>
+                                                        <vgap>0</vgap>
+                                                        <hgap>0</hgap>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_BLUE">
+                                                                <label>Blue</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_YELLOW">
+                                                                <label>Yellow</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_RED">
+                                                                <label>Red</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_GREEN">
+                                                                <label>Green</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_ORANGE">
+                                                                <label>Orange</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_PURPLE">
+                                                                <label>Purple</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_WHITE">
+                                                                <label>White</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                        <object class="sizeritem">
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                            <border>5</border>
+                                                            <object class="wxCheckBox" name="ID_INVENTORY_BLACK">
+                                                                <label>Black</label>
+                                                                <checked>0</checked>
+                                                            </object>
+                                                        </object>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Tools</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_LEFT|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxBoxSizer">
+                                                <orient>wxHORIZONTAL</orient>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Torch: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_TORCH">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>0</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Gems: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_GEM">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>0</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Oil: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_INVENTORY_OIL">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>0</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_LEFT|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxFlexGridSizer">
+                                                <cols>7</cols>
+                                                <rows>2</rows>
+                                                <vgap>0</vgap>
+                                                <hgap>0</hgap>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_KEY">
+                                                        <label>Key</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_SEXTANT">
+                                                        <label>Sextant</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_SCALE">
+                                                        <label>Scale</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_FLUTE">
+                                                        <label>Flute</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_CANDLE">
+                                                        <label>Candle</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_BOOK">
+                                                        <label>Book</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_BELL">
+                                                        <label>Bell</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_HORN">
+                                                        <label>Horn</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_SKULL">
+                                                        <label>Skull</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_TRUTHKEY">
+                                                        <label>Truth Key</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_COURAGEKEY">
+                                                        <label>Courage Key</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_LOVEKEY">
+                                                        <label>Love Key</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_INVENTORY_WHEEL">
+                                                        <label>Wheel</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="notebookpage">
+                <label>Character</label>
+                <object class="wxPanel" name="ID_PANEL_CHARACTER">
+                    <style>wxSUNKEN_BORDER|wxTAB_TRAVERSAL</style>
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <flag>wxGROW|wxALL</flag>
+                            <border>5</border>
+                            <option>1</option>
+                            <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Character</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxChoice" name="ID_CHARACTER_CHARACTER">
+                                                <content>
+                                                    <item>Mage</item>
+                                                    <item>Bard</item>
+                                                    <item>Fighter</item>
+                                                    <item>Druid</item>
+                                                    <item>Tinker</item>
+                                                    <item>Paladin</item>
+                                                    <item>Ranger</item>
+                                                    <item>Shepherd</item>
+                                                </content>
+                                                <selection>0</selection>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Stats</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_LEFT|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxFlexGridSizer">
+                                                <cols>4</cols>
+                                                <rows>5</rows>
+                                                <vgap>0</vgap>
+                                                <hgap>0</hgap>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Level: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_LEVEL">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>2</value>
+                                                        <min>2</min>
+                                                        <max>8</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Experience: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_EXPERIENCE">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>100</value>
+                                                        <min>100</min>
+                                                        <max>9999</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Current HP: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_CURRENTHP">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>200</value>
+                                                        <min>0</min>
+                                                        <max>800</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Current MP: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_CURRENTMP">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>0</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Max HP: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_MAXHP">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>200</value>
+                                                        <min>200</min>
+                                                        <max>800</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Max MP: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_MAXMP">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>0</value>
+                                                        <min>0</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Strength: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_STRENGTH">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>20</value>
+                                                        <min>1</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Intelligence: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_INTELLIGENCE">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>20</value>
+                                                        <min>1</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Dexterity: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxSpinCtrl" name="ID_CHARACTER_DEXTERITY">
+                                                        <style>wxSP_ARROW_KEYS</style>
+                                                        <value>20</value>
+                                                        <min>1</min>
+                                                        <max>99</max>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_LEFT|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticBoxSizer" name="wxID_ANY">
+                                        <orient>wxVERTICAL</orient>
+                                        <label>Equipment</label>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxFlexGridSizer">
+                                                <cols>3</cols>
+                                                <rows>6</rows>
+                                                <vgap>0</vgap>
+                                                <hgap>0</hgap>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>First: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_CHARACTER_FIRST">
+                                                        <content>
+                                                            <item>Nothing</item>
+                                                            <item>Sling</item>
+                                                            <item>Bow</item>
+                                                            <item>X-Bow</item>
+                                                            <item>+1 Bow</item>
+                                                            <item>Dagger</item>
+                                                            <item>Staff</item>
+                                                            <item>Club</item>
+                                                            <item>Axe</item>
+                                                            <item>Sword</item>
+                                                            <item>+1 Sword</item>
+                                                            <item>+2 Sword</item>
+                                                            <item>+1 Axe</item>
+                                                            <item>Wand</item>
+                                                            <item>+2 Axe</item>
+                                                            <item>Sword of Paradise</item>
+                                                            <item>Cloth</item>
+                                                            <item>Leather</item>
+                                                            <item>Chain</item>
+                                                            <item>Ring</item>
+                                                            <item>+1 Cloth</item>
+                                                            <item>Plate</item>
+                                                            <item>+1 Chain</item>
+                                                            <item>+1 Plate</item>
+                                                            <item>Robe</item>
+                                                            <item>Exotic Armor</item>
+                                                        </content>
+                                                        <selection>6</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHARACTER_FIRSTEQUIPPED">
+                                                        <label>Equipped</label>
+                                                        <checked>1</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Second: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_CHARACTER_SECOND">
+                                                        <content>
+                                                            <item>Nothing</item>
+                                                            <item>Sling</item>
+                                                            <item>Bow</item>
+                                                            <item>X-Bow</item>
+                                                            <item>+1 Bow</item>
+                                                            <item>Dagger</item>
+                                                            <item>Staff</item>
+                                                            <item>Club</item>
+                                                            <item>Axe</item>
+                                                            <item>Sword</item>
+                                                            <item>+1 Sword</item>
+                                                            <item>+2 Sword</item>
+                                                            <item>+1 Axe</item>
+                                                            <item>Wand</item>
+                                                            <item>+2 Axe</item>
+                                                            <item>Sword of Paradise</item>
+                                                            <item>Cloth</item>
+                                                            <item>Leather</item>
+                                                            <item>Chain</item>
+                                                            <item>Ring</item>
+                                                            <item>+1 Cloth</item>
+                                                            <item>Plate</item>
+                                                            <item>+1 Chain</item>
+                                                            <item>+1 Plate</item>
+                                                            <item>Robe</item>
+                                                            <item>Exotic Armor</item>
+                                                        </content>
+                                                        <selection>16</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHARACTER_SECONDEQUIPPED">
+                                                        <label>Equipped</label>
+                                                        <checked>1</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Third: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_CHARACTER_THIRD">
+                                                        <content>
+                                                            <item>Nothing</item>
+                                                            <item>Sling</item>
+                                                            <item>Bow</item>
+                                                            <item>X-Bow</item>
+                                                            <item>+1 Bow</item>
+                                                            <item>Dagger</item>
+                                                            <item>Staff</item>
+                                                            <item>Club</item>
+                                                            <item>Axe</item>
+                                                            <item>Sword</item>
+                                                            <item>+1 Sword</item>
+                                                            <item>+2 Sword</item>
+                                                            <item>+1 Axe</item>
+                                                            <item>Wand</item>
+                                                            <item>+2 Axe</item>
+                                                            <item>Sword of Paradise</item>
+                                                            <item>Cloth</item>
+                                                            <item>Leather</item>
+                                                            <item>Chain</item>
+                                                            <item>Ring</item>
+                                                            <item>+1 Cloth</item>
+                                                            <item>Plate</item>
+                                                            <item>+1 Chain</item>
+                                                            <item>+1 Plate</item>
+                                                            <item>Robe</item>
+                                                            <item>Exotic Armor</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHARACTER_THIRDEQUIPPED">
+                                                        <label>Equipped</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Fourth: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_CHARACTER_FOURTH">
+                                                        <content>
+                                                            <item>Nothing</item>
+                                                            <item>Sling</item>
+                                                            <item>Bow</item>
+                                                            <item>X-Bow</item>
+                                                            <item>+1 Bow</item>
+                                                            <item>Dagger</item>
+                                                            <item>Staff</item>
+                                                            <item>Club</item>
+                                                            <item>Axe</item>
+                                                            <item>Sword</item>
+                                                            <item>+1 Sword</item>
+                                                            <item>+2 Sword</item>
+                                                            <item>+1 Axe</item>
+                                                            <item>Wand</item>
+                                                            <item>+2 Axe</item>
+                                                            <item>Sword of Paradise</item>
+                                                            <item>Cloth</item>
+                                                            <item>Leather</item>
+                                                            <item>Chain</item>
+                                                            <item>Ring</item>
+                                                            <item>+1 Cloth</item>
+                                                            <item>Plate</item>
+                                                            <item>+1 Chain</item>
+                                                            <item>+1 Plate</item>
+                                                            <item>Robe</item>
+                                                            <item>Exotic Armor</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHARACTER_FOURTHEQUIPPED">
+                                                        <label>Equipped</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Fifth: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_CHARACTER_FIFTH">
+                                                        <content>
+                                                            <item>Nothing</item>
+                                                            <item>Sling</item>
+                                                            <item>Bow</item>
+                                                            <item>X-Bow</item>
+                                                            <item>+1 Bow</item>
+                                                            <item>Dagger</item>
+                                                            <item>Staff</item>
+                                                            <item>Club</item>
+                                                            <item>Axe</item>
+                                                            <item>Sword</item>
+                                                            <item>+1 Sword</item>
+                                                            <item>+2 Sword</item>
+                                                            <item>+1 Axe</item>
+                                                            <item>Wand</item>
+                                                            <item>+2 Axe</item>
+                                                            <item>Sword of Paradise</item>
+                                                            <item>Cloth</item>
+                                                            <item>Leather</item>
+                                                            <item>Chain</item>
+                                                            <item>Ring</item>
+                                                            <item>+1 Cloth</item>
+                                                            <item>Plate</item>
+                                                            <item>+1 Chain</item>
+                                                            <item>+1 Plate</item>
+                                                            <item>Robe</item>
+                                                            <item>Exotic Armor</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHARACTER_FIFTHEQUIPPED">
+                                                        <label>Eqiupped</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE</flag>
+                                                    <border>5</border>
+                                                    <object class="wxStaticText" name="wxID_STATIC">
+                                                        <label>Sixth: </label>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxChoice" name="ID_CHARACTER_SIXTH">
+                                                        <content>
+                                                            <item>Nothing</item>
+                                                            <item>Sling</item>
+                                                            <item>Bow</item>
+                                                            <item>X-Bow</item>
+                                                            <item>+1 Bow</item>
+                                                            <item>Dagger</item>
+                                                            <item>Staff</item>
+                                                            <item>Club</item>
+                                                            <item>Axe</item>
+                                                            <item>Sword</item>
+                                                            <item>+1 Sword</item>
+                                                            <item>+2 Sword</item>
+                                                            <item>+1 Axe</item>
+                                                            <item>Wand</item>
+                                                            <item>+2 Axe</item>
+                                                            <item>Sword of Paradise</item>
+                                                            <item>Cloth</item>
+                                                            <item>Leather</item>
+                                                            <item>Chain</item>
+                                                            <item>Ring</item>
+                                                            <item>+1 Cloth</item>
+                                                            <item>Plate</item>
+                                                            <item>+1 Chain</item>
+                                                            <item>+1 Plate</item>
+                                                            <item>Robe</item>
+                                                            <item>Exotic Armor</item>
+                                                        </content>
+                                                        <selection>0</selection>
+                                                    </object>
+                                                </object>
+                                                <object class="sizeritem">
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                                    <border>5</border>
+                                                    <object class="wxCheckBox" name="ID_CHARACTER_SIXTHEQUIPPED">
+                                                        <label>Equipped</label>
+                                                        <checked>0</checked>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
+</resource>

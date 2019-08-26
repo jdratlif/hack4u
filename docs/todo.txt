@@ -1,0 +1,23 @@
+--------------------------------------------------------------------------------
+| hack4u TODO List
+--------------------------------------------------------------------------------
+
+This file is a list of things that remain incomplete in hack4u that need to be
+implemented.
+
+- equipment checking
+- tooltips & status bar
+- toolbar
+- ankh icon
+- replace ChangeLog with CVS generated ChangeLog
+- add need to save check on exit (wxCloseEvent)
+- characters waiting in the hostel
+- make backup of the .SAV file
+- need validation of character alphabet for Name input (A-Z, a-z, !, ' ', -)
+- restrict spin ctrls to their range
+- replace spin ctrls with sliders
+- replace gold spinner with text ctrl
+- add close to menu
+- disable save/save as until load
+- write documentation
+- add internal help

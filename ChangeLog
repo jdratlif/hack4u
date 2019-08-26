@@ -1,0 +1,5 @@
+0.1 Created basic GUI outline
+0.2 Switched from embedded C++ to XRC
+0.3 Added model of the sram data
+0.4 Added model/view tie-in through controller
+
