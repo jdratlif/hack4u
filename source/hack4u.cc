@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: hack4u.cc,v 1.6 2004/12/03 10:34:46 technoplaza Exp $
+// $Id: hack4u.cc,v 1.7 2004/12/05 02:59:28 technoplaza Exp $
  
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -38,10 +38,15 @@
 using namespace hack4u;
 
 // static variable initialization
-const wxString *Hack4u::APP_NAME = new wxString(wxT(PACKAGE_NAME));
-const wxString *Hack4u::APP_VERSION = new wxString(wxT(PACKAGE_VERSION));
+const wxString *Hack4u::APP_NAME =
+    new wxString(wxT(PACKAGE_NAME));
+
+const wxString *Hack4u::APP_VERSION =
+    new wxString(wxT(PACKAGE_VERSION));
+
 const wxString *Hack4u::APP_COPYRIGHT =
     new wxString(wxT("Copyright (C) 2004 emuWorks"));
+
 const wxString *Hack4u::APP_URL =
     new wxString(wxT("http://games.technoplaza.net/"));
 

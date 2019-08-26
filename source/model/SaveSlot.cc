@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: SaveSlot.cc,v 1.6 2004/12/02 08:48:37 technoplaza Exp $
+// $Id: SaveSlot.cc,v 1.7 2004/12/05 02:59:28 technoplaza Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -34,8 +34,10 @@
 
 using namespace hack4u;
 
-const int SaveSlot::CHECKSUM_XORS[] = {0x55, 0xAA, 0x33, 0xCC, 
-                                       0xA5, 0x5A, 0xBB, 0x99};
+const int SaveSlot::CHECKSUM_XORS[] = {
+    0x55, 0xAA, 0x33, 0xCC,
+    0xA5, 0x5A, 0xBB, 0x99
+};
 
 SaveSlot::SaveSlot(const unsigned char *data) {
     nvram = new unsigned char[0x200];
@@ -54,7 +56,7 @@ SaveSlot::~SaveSlot() {
     delete nvram;
 }
 
-unsigned char SaveSlot::checksum() {
+unsigned char SaveSlot::checksum() const {
     unsigned char sum = 0;
     int index = 0;
     
@@ -68,7 +70,7 @@ unsigned char SaveSlot::checksum() {
     return sum;
 }
 
-int SaveSlot::getPhase(int moon) {
+int SaveSlot::getPhase(int moon) const {
     int phase = nvram[MOON_OFFSET];
     
     if (moon == TRAMMEL) {
@@ -85,7 +87,7 @@ void SaveSlot::setPhase(int trammel, int felucca) {
     setModified();
 }
 
-wxString SaveSlot::getHerosName() {
+wxString SaveSlot::getHerosName() const {
     wxString name;
     
     for (int offset = NAME_OFFSET; offset <= (NAME_OFFSET + 5); offset++) {
@@ -115,7 +117,7 @@ void SaveSlot::setHerosName(wxString &name) {
     setModified();
 }
 
-int SaveSlot::getVirtue(int virtue) {
+int SaveSlot::getVirtue(int virtue) const {
     return (int)(nvram[VIRTUE_OFFSET + virtue]);
 }
 
@@ -136,7 +138,7 @@ void SaveSlot::setVirtue(int virtue, unsigned char value) {
     setModified();
 }
 
-int SaveSlot::getMember(int position) {
+int SaveSlot::getMember(int position) const {
     return (nvram[MEMBER_OFFSET + position]);
 }
 
@@ -145,7 +147,7 @@ void SaveSlot::setMember(int position, int character) {
     setModified();
 }
 
-bool SaveSlot::hasStone(int stone) {
+bool SaveSlot::hasStone(int stone) const {
     unsigned char stones = *(nvram + STONES_OFFSET);
     
     return (stones & (1 << stone));
@@ -165,7 +167,7 @@ void SaveSlot::setStone(int stone, bool give) {
     setModified();
 }
 
-bool SaveSlot::hasRune(int rune) {
+bool SaveSlot::hasRune(int rune) const {
     unsigned char runes = *(nvram + RUNES_OFFSET);
     
     return (runes & (1 << rune));
@@ -185,7 +187,7 @@ void SaveSlot::setRune(int rune, bool give) {
     setModified();
 }
 
-bool SaveSlot::hasMagic(int magic) {
+bool SaveSlot::hasMagic(int magic) const {
     int offset = MAGIC_OFFSET;
     
     if (magic > 7) {
@@ -217,7 +219,7 @@ void SaveSlot::setMagic(int magic, bool give) {
     setModified();
 }
 
-int SaveSlot::getHerb(int herb) {
+int SaveSlot::getHerb(int herb) const {
     return nvram[HERB_OFFSET + herb];
 }
 
@@ -226,7 +228,7 @@ void SaveSlot::setHerb(int herb, unsigned char value) {
     setModified();
 }
 
-wxInt16 SaveSlot::getGold() {
+wxInt16 SaveSlot::getGold() const {
     wxUint16 *ptr = (wxUint16 *)(nvram + GOLD_OFFSET);
     
     return wxINT16_SWAP_ON_BE(ptr[0]);
@@ -239,7 +241,7 @@ void SaveSlot::setGold(wxInt16 gold) {
     setModified();
 }
 
-int SaveSlot::getTool(int tool) {
+int SaveSlot::getTool(int tool) const {
     return (int)nvram[TOOL_OFFSET + tool];
 }
 
@@ -248,16 +250,16 @@ void SaveSlot::setTool(int tool, unsigned char value) {
     setModified();
 }
 
-int SaveSlot::getEquipment(int player, int slot) {
-    return nvram[EQUIPMENT_OFFSET + (player * 6) + slot];
+int SaveSlot::getEquipment(int character, int slot) const {
+    return nvram[EQUIPMENT_OFFSET + (character * 6) + slot];
 }
 
-void SaveSlot::setEquipment(int player, int slot, unsigned char value) {
-    nvram[EQUIPMENT_OFFSET + (player * 6) + slot] = value;
+void SaveSlot::setEquipment(int character, int slot, unsigned char value) {
+    nvram[EQUIPMENT_OFFSET + (character * 6) + slot] = value;
     setModified();
 }
 
-int SaveSlot::getLevel(int character) {
+int SaveSlot::getLevel(int character) const {
     return nvram[LEVEL_OFFSET + character];
 }
 
@@ -266,7 +268,7 @@ void SaveSlot::setLevel(int character, unsigned char level) {
     setModified();
 }
 
-wxInt16 SaveSlot::getCurrentHP(int character) {
+wxInt16 SaveSlot::getCurrentHP(int character) const {
     wxInt16 *ptr = (wxInt16 *)(nvram + CURRENT_HP_OFFSET + (character * 2));
     
     return wxINT16_SWAP_ON_BE(ptr[0]);
@@ -279,7 +281,7 @@ void SaveSlot::setCurrentHP(int character, wxInt16 value) {
     setModified();
 }
 
-wxInt16 SaveSlot::getMaxHP(int character) {
+wxInt16 SaveSlot::getMaxHP(int character) const {
     wxInt16 *ptr = (wxInt16 *)(nvram + MAX_HP_OFFSET + (character * 2));
     
     return wxINT16_SWAP_ON_BE(ptr[0]);
@@ -292,7 +294,7 @@ void SaveSlot::setMaxHP(int character, wxInt16 value) {
     setModified();
 }
 
-int SaveSlot::getCurrentMP(int character) {
+int SaveSlot::getCurrentMP(int character) const {
     return nvram[CURRENT_MP_OFFSET + character];
 }
 
@@ -301,7 +303,7 @@ void SaveSlot::setCurrentMP(int character, unsigned char value) {
     setModified();
 }
 
-int SaveSlot::getMaxMP(int character) {
+int SaveSlot::getMaxMP(int character) const {
     return nvram[MAX_MP_OFFSET + character];
 }
 
@@ -310,7 +312,7 @@ void SaveSlot::setMaxMP(int character, unsigned char value) {
     setModified();
 }
 
-int SaveSlot::getStrength(int character) {
+int SaveSlot::getStrength(int character) const {
     return nvram[STRENGTH_OFFSET + character];
 }
 
@@ -319,7 +321,7 @@ void SaveSlot::setStrength(int character, unsigned char value) {
     setModified();
 }
 
-int SaveSlot::getIntelligence(int character) {
+int SaveSlot::getIntelligence(int character) const {
     return nvram[INTELLIGENCE_OFFSET + character];
 }
 
@@ -328,7 +330,7 @@ void SaveSlot::setIntelligence(int character, unsigned char value) {
     setModified();
 }
 
-int SaveSlot::getDexterity(int character) {
+int SaveSlot::getDexterity(int character) const {
     return nvram[DEXTERITY_OFFSET + character];
 }
 
@@ -337,7 +339,7 @@ void SaveSlot::setDexterity(int character, unsigned char value) {
     setModified();
 }
 
-wxInt16 SaveSlot::getExperience(int character) {
+wxInt16 SaveSlot::getExperience(int character) const {
     wxInt16 *ptr = (wxInt16 *)(nvram + EXPERIENCE_OFFSET + (character * 2));
     
     return wxINT16_SWAP_ON_BE(ptr[0]);

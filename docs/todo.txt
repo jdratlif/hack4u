@@ -15,7 +15,6 @@ may not have been on my original list that I decided weren't that important for
 one reason or another. I may or may not implement these or other things in the
 program, but here is a list of things I'd like to see happen.
 
-- write document describing the sram file and its (known) meanings
 - add internal help
 
   The list is in order of decreasing importantance (to me at least). As you can
@@ -29,36 +28,7 @@ program, but here is a list of things I'd like to see happen.
   search for the address where this is stored. Since I'd already designed the
   GUI framework by the time I remembered this, it seemed a waste of time.
 
-- tooltips & status bar
+- edit pirate ships & baloon locations
 
-  Tooltips and a status bar would be nice, but are hardly necessary.
-
-- separate MainFrame into view/controller pieces
-
-  The MainFrame class and it's implementation file MainFrame.cc is horribly
-  overloaded. More than 40 KB and there is no distinction between controller and
-  view even though the class is designated part of the view. I wasn't sure if
-  this was possible originally, but I know now it was.
-
-- comment the code according to doxygen standards (or maybe just at all :-)
-
-  The code should definitely be commented, but I've yet to learn any of the C++
-  documentation standards. I love javadoc though and would never leave out
-  comments in a Java program the way I did here. If you're trying to read the
-  code, Sorry.
-
-- toolbar
-
-  A toolbar, like a status bar would be nice, but it's functional overkill.
-
-- add installer program for Windows
-
-  An installer program would be nice for Windows especially, but it's almost
-  surely overkill.
-
-- change C-style casts to C++ casts
-
-  For some reason, Bjarne Stroustrup doesn't like C-style casts in C++. I've
-  read about this on the net, but I don't have his book. I'd like to know the
-  motivation for it, and if I think it's persuasive, I'll change the code.
+  This might be a good idea if I get around to it.
 

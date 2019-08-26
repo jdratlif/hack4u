@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-| hack4u 0.90
+| hack4u 0.91
 | Copyright (C) 2004 emuWorks
 | Written by John Ratliff
 | http://games.technoplaza.net/
@@ -188,6 +188,9 @@
 - Revision History -
 --------------------
 
+  Version 0.91 - Saturday, Dec 4, 2004
+    - Added code comments and API documentation
+    - Minor code cleanup
   Version 0.90 - Friday, Dec 3, 2004
     - Added hero's name validation (only proper characters are allowed now)
     - Changed Panel backgrounds to white

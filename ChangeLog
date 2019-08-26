@@ -1,3 +1,6 @@
+0.91 Added code comments
+     Minor code cleanup
+     Made methods const that should have already been const
 0.90 Added hero's name validation (only proper characters can exist now)
      Changed gold to text control and added validation (range 0-9999)
      Changed Panel backgrounds to white

@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: FileDropTarget.hh,v 1.1 2004/11/30 14:29:34 technoplaza Exp $
+// $Id: FileDropTarget.hh,v 1.2 2004/12/05 02:59:28 technoplaza Exp $
 
 #ifndef _FILE_DROP_TARGET_HH
 #define _FILE_DROP_TARGET_HH
@@ -29,11 +29,27 @@
 namespace hack4u {
     class MainFrame;
     
+    /**
+     * Class implementing a wxFileDropTarget for the MainFrame class.
+     */
     class FileDropTarget : public wxFileDropTarget {
     public:
+        /**
+         * Constructor for the FileDropTarget.
+         * 
+         * @param owner The MainFrame associated with this FileDropTarget.
+         */
         FileDropTarget(MainFrame *owner) { this->owner = owner; }
-    
-        virtual bool OnDropFiles(wxCoord, wxCoord, const wxArrayString &);
+        
+        /**
+         * Virtual method called when files are dropped on this target.
+         *
+         * @param x The x-coordinate of the drop.
+         * @param y The y-coordinate of the drop.
+         * @param files The files dropped on this target.
+         */
+        virtual bool OnDropFiles(wxCoord x, wxCoord y, 
+                                 const wxArrayString &files);
     private:
         MainFrame *owner;
     };

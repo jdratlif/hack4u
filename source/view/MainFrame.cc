@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: MainFrame.cc,v 1.23 2004/12/03 10:34:46 technoplaza Exp $
+// $Id: MainFrame.cc,v 1.24 2004/12/05 02:59:28 technoplaza Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -77,7 +77,7 @@ IMPLEMENT_DYNAMIC_CLASS(MainFrame, wxFrame)
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_CLOSE(MainFrame::windowClosing)
 
-    EVT_MENU(XRCID("IDM_FILE_LOAD"), MainFrame::fileLoad)
+    EVT_MENU(XRCID("IDM_FILE_OPEN"), MainFrame::fileOpen)
     EVT_MENU(XRCID("IDM_FILE_SAVE"), MainFrame::fileSave)
     EVT_MENU(XRCID("IDM_FILE_SAVE_AS"), MainFrame::fileSaveAs)
     EVT_MENU(XRCID("IDM_FILE_CLOSE"), MainFrame::fileClose)
@@ -648,7 +648,7 @@ void MainFrame::load(wxString &filename) {
     setOpen(true);
 }
 
-void MainFrame::fileLoad(wxCommandEvent &event) {
+void MainFrame::fileOpen(wxCommandEvent &event) {
     static wxFileDialog *dlg = new wxFileDialog(this, 
         wxT("Choose a .SAV File"), "", "", 
         wxT("NES SRAM File (*.sav)|*.sav"), (wxOPEN | wxCHANGE_DIR));
@@ -661,7 +661,7 @@ void MainFrame::fileLoad(wxCommandEvent &event) {
     }
 }
 
-bool MainFrame::isValidParty() {
+bool MainFrame::isValidParty() const {
     char members = 0;
     bool end = false;
     
@@ -690,7 +690,7 @@ bool MainFrame::isValidParty() {
     return true;
 }
 
-bool MainFrame::hasValidEquipment(int character) {
+bool MainFrame::hasValidEquipment(int character) const {
     bool bow = false;
     bool weapon = false;
     bool armor = false;
@@ -753,8 +753,6 @@ bool MainFrame::save(wxString &filename) {
             }
         }
     }
-    
-    char *checksum;
     
     for (int offset = 0; offset < 3; offset++) {
         char *nvram = (char *)saveslot[offset]->nvram;
