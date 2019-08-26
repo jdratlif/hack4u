@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: MainFrame.cc,v 1.15 2004/11/30 14:29:34 technoplaza Exp $
+// $Id: MainFrame.cc,v 1.16 2004/12/01 21:57:39 technoplaza Exp $
  
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -617,13 +617,11 @@ void MainFrame::fileSaveAs(wxCommandEvent &event) {
 }
 
 void MainFrame::setOpen(bool open) {
-    this->open = open;
-    
     fileSaveItem->Enable(open);
     fileSaveAsItem->Enable(open);
     fileCloseItem->Enable(open);
     
-    if (!open) {
+    if (!open && (currentSlot != -1)) {
         currentSlot = -1;
         
         delete saveslot[0];
@@ -631,6 +629,8 @@ void MainFrame::setOpen(bool open) {
         delete saveslot[2];
         delete sram;
     }
+    
+    this->open = open;
 }
 
 bool MainFrame::close() {

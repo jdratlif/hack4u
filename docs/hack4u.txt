@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-| hack4u 0.81
+| hack4u 0.82
 | Copyright (C) 2004 emuWorks
 | Written by John Ratliff
 | http://games.technoplaza.net/
@@ -26,22 +26,23 @@
 - Installation -
 ----------------
 
-  For Windows, I have provided a binary version. You should be able to download
-  this and double-click the hack4u.exe executable to start the program.
+  For Windows and Linux, I have provided a binary version. You should be able to
+  download it and double-click the hack4u executable to start the program.
+  
+  On Windows, there shouldn't be any extra dependencies required. For the Linux
+  binary, you will need GTK+ >= 2.0. I used GTK+ 2.0.49 at the time of the
+  build. The program can most likely be built against GTK+ 1.2, but this hasn't
+  been tested.
   
   For all other platforms, you will need to compile the source code yourself. It
-  should be able to be compiled on Linux, Solaris, Mac OS-X, and any Unix that
-  supports the Gnome Toolkit.
+  shouldn't be too hard to compile. It is expected (but untested) to compile and
+  run on Linux, Solaris, Mac OS-X, and any Unix that supports the GTK+ toolkit.
   
   To compile the source, you will need an ISO C++ compiler (I recommend GNU G++
-  >= 3.3), and the wxWidgets library. I believe hack4u will compile under
-  wxWidgets 2.4.2, but I have only tested it under 2.5.3, so I would recommend
-  at least that version. Why use the development version? Two reaons. First,
-  XRC is not compiled into wxWidgets by default, and I don't like extra steps.
-  Second, even though it is called the "development" version, the authors
-  themselves release commercial software based on 2.5.3 (like Julian Smart's
-  DialogBlocks 1.83). You can download the wxWidgets library at
-  http://www.wxwidgets.org.
+  >= 3.3), and the wxWidgets library. You can compile under wxWidgets 2.4.2, but
+  >= 2.5.3 is recommended due to vast improvements to wxWidgets since 2.4.2
+  not the least of which is the XRC system. You can download the wxWidgets
+  library at http://www.wxwidgets.org.
   
   After you have wxWidgets installed, you should be able to do something like
   this:
@@ -65,6 +66,27 @@
   I am working on a gentoo ebuild, but they get added very slowly, so it may
   take some time before it is added to portage. Still, if you use gentoo, you
   might try 'emerge hack4u' and see what happens.
+  
+  Compiling on wxWidgets 2.4.2 requires not only that you build wxWidgets, but
+  also the XRC library which was not built by default in 2.4.2. To do this, go
+  to your wxWidgets build directory in the contrib/src/xrc directory and do a
+  make && make install. When compiling hack4u, you will need to specify the
+  library. Under Linux, I was able to do the following:
+  
+  ./configure LIBS="-lwx_gtk2-2.4 -lwx_gtk2_xrc-2.4" && make
+  
+  Under Linux with GTK+ 2.0.49. I don't know if the same procedure would work
+  under mingw or cygwin for Linux or not. The library name would obviously be
+  different. As I mentioned, if you use 2.5.3, this won't be a problem.
+  
+  If you compile with wxWidgets 2.4.2, you will get a warning about wxCLOSE_BOX
+  not being recognized when you start the program. This message can be safely
+  ignored.
+  
+  I no longer have any access to Macs, so I cannot compile an OS-X binary. If
+  you have access to a Mac with OS-X, I can try and help you compile the program
+  and see if we can get it to work. Compiling wxWidgets applications and the
+  library itself under Max OS-X is currently a nightmare, but it can be done.
 
 ---------
 - Usage -
@@ -133,6 +155,11 @@
     and they have all worked flawlessly. However, I haven't tested every
     combination individually. So some parts may be broken.
     
+  - Taking away items you already found in your quest will not let you
+    "rediscover" these items. They are "gone" as far as the game knows. This
+    probably means things you add can still be found. I don't know what impact
+    this might have on gameplay if you do either one.
+    
   - I've never heard of the 'Wheel' or the 'Dagger'. Neither seem to be of much
     use, but maybe I just didn't know what to do with them.
     
@@ -140,6 +167,11 @@
 - Revision History -
 --------------------
 
+  Version 0.82 - Wednesday, Dec 1, 2004
+    - Added Linux binary version.
+    - Fixed bug that caused crashing (segfault) in Linux
+    - Added resize and maximize options to the frame for greater platform
+      compatability
   Version 0.81 - Tuesday, Nov 30, 2004
     - Added Drag N Drop support
     - Added Loading/Saving of All Three Games
@@ -149,6 +181,14 @@
   Version 0.80 - Monday, Nov 29, 2004
     - Support for Loading/Saving Game 1
     - First Private Beta
+
+-----------
+- License -
+-----------
+
+  hack4u is free software released under the GNU General Public License. For
+  more information, you can visit http://www.gnu.org/. For the terms of the
+  license, you can visit http://resume.technoplaza.net/license/gnu-gpl.html
   
 -----------------------
 - Contact Information -

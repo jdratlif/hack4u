@@ -1,5 +1,5 @@
 dnl Initialize autoconf
-AC_INIT([hack4u], [0.81], [emuWorks@technoplaza.net])
+AC_INIT([hack4u], [0.82], [emuWorks@technoplaza.net])
 
 dnl use the config.h header
 AC_CONFIG_HEADERS([config.h])
@@ -31,3 +31,4 @@ fi
 dnl configure files to produce
 AC_CONFIG_FILES([Makefile source/Makefile])
 AC_OUTPUT
+
