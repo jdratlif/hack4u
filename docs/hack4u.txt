@@ -1,8 +1,161 @@
 --------------------------------------------------------------------------------
-| hack4u 0.90
+| hack4u 0.81
 | Copyright (C) 2004 emuWorks
 | Written by John Ratliff
 | http://games.technoplaza.net/
 --------------------------------------------------------------------------------
 
-WRITE ME!
+----------------
+- Introduction -
+----------------
+
+  hack4u is a tool for editing save state files for Ultima: Quest of the
+  Avatar on the NES. It was released as Ultima II on the NES, but it is
+  actually the fourth game in the series, hence the program's name.
+  
+  You can take the battery backed RAM files created by Nintendo emulators such
+  as FCEU, Nesten, Nestopia, VirtuaNES, and more and modify them. These files
+  have the extention .SAV and are usually named the same as your ROM file. So if
+  your Ultima IV ROM is named "Ultima - Quest of the Avatar (U).zip", which is
+  the GoodNES name for one of the known Ultima IV dumps, then your SRAM file
+  is probably "Ultima - Quest of the Avatar (U).sav". FCEU adds the ROM checksum
+  value by default to its files, so on FCEU, it might have a long string of
+  extra characters before the .SAV.
+  
+----------------
+- Installation -
+----------------
+
+  For Windows, I have provided a binary version. You should be able to download
+  this and double-click the hack4u.exe executable to start the program.
+  
+  For all other platforms, you will need to compile the source code yourself. It
+  should be able to be compiled on Linux, Solaris, Mac OS-X, and any Unix that
+  supports the Gnome Toolkit.
+  
+  To compile the source, you will need an ISO C++ compiler (I recommend GNU G++
+  >= 3.3), and the wxWidgets library. I believe hack4u will compile under
+  wxWidgets 2.4.2, but I have only tested it under 2.5.3, so I would recommend
+  at least that version. Why use the development version? Two reaons. First,
+  XRC is not compiled into wxWidgets by default, and I don't like extra steps.
+  Second, even though it is called the "development" version, the authors
+  themselves release commercial software based on 2.5.3 (like Julian Smart's
+  DialogBlocks 1.83). You can download the wxWidgets library at
+  http://www.wxwidgets.org.
+  
+  After you have wxWidgets installed, you should be able to do something like
+  this:
+  
+  ./configure && make
+  
+  This will (*should*) produce a program hack4u in the source subdirectory. If
+  it doesn't, well, contact me and we'll talk about it.
+  
+  Note: make install will currently not install the XRC files necessary to run
+  the program, so if you install somewhere, you need to create a directory xrc
+  and copy the hack4u.xrc file from source/xrc there. In other words, the binary
+  needs a path structure like this:
+  
+  /my/path/to/hack4u
+    /bin
+      - hack4u
+      /xrc
+        - hack4u.xrc
+  
+  I am working on a gentoo ebuild, but they get added very slowly, so it may
+  take some time before it is added to portage. Still, if you use gentoo, you
+  might try 'emerge hack4u' and see what happens.
+
+---------
+- Usage -
+---------
+
+  Using the program should (I hope) be fairly straightforward. Start the program
+  hack4u either by double-clicking or from the command line.
+  
+  Load the SRAM .SAV file. For FCEU on Windows, this is in the FCEU directory
+  in the SAV subdirectory. For FCEU on Unix, this is in the ~/.fceu directory. I
+  don't know about other emulators. The program should work on any emulator that
+  uses the battery backed RAM (SRAM).
+  
+  Once the file is open, it will load the first save game it finds. Ultima used
+  three save slots, and you can edit any of the three that are available. I
+  assume in most cases this will be the the first game "Game1". You can choose
+  a different save slot from the Game menu. If any are greyed out, that means
+  they are not valid. You must have at least one save in SRAM to edit, or the
+  program will not be able to edit anything. We can only make changes to
+  existing files. We cannot generate them.
+  
+  There are three tabs, "General", "Inventory", and "Character". They will allow
+  you to edit almost any part of the game. Items you have, your characters
+  stats, magic you know, etc.
+  
+  The one thing that cannot yet be edited (that I plan to implement) is
+  characters waiting in Britannia's Hostel. If there is something you want to be
+  able to edit that you cannot, contact me and I'll see what I can do.
+  
+  When you load a .SAV file, it will make a backup in a file named the same as
+  your SRAM file with a .bak on the end. If something goes wrong when you try
+  to start your edited game, just delete the SRAM file and rename the backup to
+  .sav instead of .sav.bak.
+  
+---------
+- Notes -
+---------
+
+  Some important things to be aware of.
+  
+  - This is BETA software. Your use of it is AT YOUR OWN RISK. I take no
+    responsibility if this program screws up your Ultima Data, or any other
+    thing on your or any other computer. I'm pretty sure it won't, but don't
+    blame me if it does!
+    
+  - The program does not yet support many validity checks. This means you can
+    create combinations that are completely illegal in the game. You can also
+    put in values that are way outside the possible range. I don't know what
+    will happen in the game if you do this.
+    
+    Off the top of my head, here is a list of things to watch out for.
+    
+    Gold should be 0-9999. More than 9999 confuses the game.
+    Inventory quantities should be 0-99. You can have 255 herbs, but I have not
+        tested this thoroughly.
+    Virtues should be 0-100 (0 = evil incarnate, 100 = avatar)
+    The Hero's Name can consist of the following characters
+        A-Z, a-z, '-', '!', and ' '. All others are invalid. The name must NOT
+        exceed 5 characters. On Windows, this is enforced, but I don't know
+        about other platforms.
+    Equipping two weapons, bows, or armors at the same time may confuse the
+        game. I haven't tested this condition, but I expect it will not be what
+        you want.
+    
+  - The program is not well tested. I have made several changes to SRAM files
+    and they have all worked flawlessly. However, I haven't tested every
+    combination individually. So some parts may be broken.
+    
+  - I've never heard of the 'Wheel' or the 'Dagger'. Neither seem to be of much
+    use, but maybe I just didn't know what to do with them.
+    
+--------------------
+- Revision History -
+--------------------
+
+  Version 0.81 - Tuesday, Nov 30, 2004
+    - Added Drag N Drop support
+    - Added Loading/Saving of All Three Games
+    - Added Save confirmation on exit
+    - Added Save As and Close
+    - First Public Beta
+  Version 0.80 - Monday, Nov 29, 2004
+    - Support for Loading/Saving Game 1
+    - First Private Beta
+  
+-----------------------
+- Contact Information -
+-----------------------
+
+  The latest version of hack4u can always be found at emuWorks
+  http://games.technoplaza.net/
+  
+  You can contact me at http://www.technoplaza.net/feedback.php
+

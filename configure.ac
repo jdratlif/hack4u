@@ -1,5 +1,5 @@
 dnl Initialize autoconf
-AC_INIT([hack4u], [0.80], [emuWorks@technoplaza.net])
+AC_INIT([hack4u], [0.81], [emuWorks@technoplaza.net])
 
 dnl use the config.h header
 AC_CONFIG_HEADERS([config.h])

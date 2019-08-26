@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: MainFrame.cc,v 1.12 2004/11/30 03:35:59 technoplaza Exp $
+// $Id: MainFrame.cc,v 1.15 2004/11/30 14:29:34 technoplaza Exp $
  
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -45,9 +45,18 @@ const wxString MainFrame::CITY_NAMES[] = { wxT("Moonglow"), wxT("Britain"),
 IMPLEMENT_DYNAMIC_CLASS(MainFrame, wxFrame)
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
+    EVT_CLOSE(MainFrame::windowClosing)
+
     EVT_MENU(XRCID("IDM_FILE_LOAD"), MainFrame::fileLoad)
     EVT_MENU(XRCID("IDM_FILE_SAVE"), MainFrame::fileSave)
+    EVT_MENU(XRCID("IDM_FILE_SAVE_AS"), MainFrame::fileSaveAs)
+    EVT_MENU(XRCID("IDM_FILE_CLOSE"), MainFrame::fileClose)
     EVT_MENU(XRCID("IDM_FILE_EXIT"), MainFrame::fileExit)
+    
+    EVT_MENU(XRCID("IDM_GAME_GAME1"), MainFrame::gameChange)
+    EVT_MENU(XRCID("IDM_GAME_GAME2"), MainFrame::gameChange)
+    EVT_MENU(XRCID("IDM_GAME_GAME3"), MainFrame::gameChange)
+    
     EVT_MENU(XRCID("IDM_HELP_ABOUT"), MainFrame::helpAbout)
     
     EVT_TEXT(XRCID("ID_GENERAL_HEROSNAME"), MainFrame::herosNameChange)
@@ -175,6 +184,8 @@ MainFrame::MainFrame() {
     SetParent(NULL);
     CreateControls();
     Centre();
+    
+    SetDropTarget(new FileDropTarget(this));
 }
 
 void MainFrame::CreateControls() {
@@ -183,14 +194,22 @@ void MainFrame::CreateControls() {
     notebook = XRCCTRL(*this, "ID_NOTEBOOK", wxNotebook);
     notebook->Show(false);
     
-    games[0] = GetMenuBar()->FindItem(XRCID("IDM_GAME_GAME1"));
+    wxMenuBar &menubar = *GetMenuBar();
+    
+    games[0] = menubar.FindItem(XRCID("IDM_GAME_GAME1"));
     games[0]->Enable(false);
     
-    games[1] = GetMenuBar()->FindItem(XRCID("IDM_GAME_GAME2"));
+    games[1] = menubar.FindItem(XRCID("IDM_GAME_GAME2"));
     games[1]->Enable(false);
     
-    games[2] = GetMenuBar()->FindItem(XRCID("IDM_GAME_GAME3"));
+    games[2] = menubar.FindItem(XRCID("IDM_GAME_GAME3"));
     games[2]->Enable(false);
+    
+    fileSaveItem = menubar.FindItem(XRCID("IDM_FILE_SAVE"));
+    fileSaveAsItem = menubar.FindItem(XRCID("IDM_FILE_SAVE_AS"));
+    fileCloseItem = menubar.FindItem(XRCID("IDM_FILE_CLOSE"));
+    
+    setOpen(false);
     
     herosNameText = XRCCTRL(*this, "ID_GENERAL_HEROSNAME", wxTextCtrl);
     herosNameText->SetMaxLength(5);
@@ -387,9 +406,10 @@ void MainFrame::loadStats(SaveSlot &slot, int character) {
 void MainFrame::loadGame(int game) {
     SaveSlot &slot = *saveslot[game];
     
+    slot.modified = false;
     herosNameText->SetValue(slot.getHerosName());
     
-    firstMemberClass->SetSelection(slot.getMember(0));
+    firstMemberClass->SetSelection(slot.getMember(0) - 1);
     secondMemberClass->SetSelection(slot.getMember(1));
     thirdMemberClass->SetSelection(slot.getMember(2));
     fourthMemberClass->SetSelection(slot.getMember(3));
@@ -480,77 +500,72 @@ void MainFrame::loadGame(int game) {
     loveKeyCheck->SetValue(slot.getTool(LOVEKEY));
     wheelCheck->SetValue(slot.getTool(WHEEL));
     
-    loadStats(slot, MAGE);
+    loadStats(slot, characterChoice->GetSelection());
     
     currentSlot = game;
     notebook->Show(true);
+}
+
+void MainFrame::load(wxString &filename) {
+    if (isOpen()) {
+        if (!close()) {
+            return;
+        }
+    }
+    
+    char nvram[SAVE_SIZE];
+    
+    sram = new char[SRAM_SIZE];
+    std::ifstream in(filename.mb_str(), std::ios::in | std::ios::binary);
+    in.read(sram, SRAM_SIZE);
+    in.close();
+    
+    wxString bakfile = filename + ".bak";
+    std::ofstream out(bakfile.mb_str(), std::ios::out | std::ios::binary);
+    out.write(sram, SRAM_SIZE);
+    out.close();
+    
+    for (int slot = 0; slot < 3; slot++) {
+        memcpy(nvram, (sram + SRAM_OFFSET + (slot * SAVE_SIZE)), SAVE_SIZE);
+        saveslot[slot] = new SaveSlot((const unsigned char *)nvram);
+        games[slot]->Enable(saveslot[slot]->isValid());
+        
+        if (saveslot[slot]->isValid()) {
+            games[slot]->Enable(true);
+        } else {
+            games[0]->Enable(false);
+        }
+    }
+    
+    if (saveslot[0]->isValid()) {
+        loadGame(0);
+    } else if (saveslot[1]->isValid()) {
+        loadGame(1);
+    } else if (saveslot[2]->isValid()) {
+        loadGame(2);
+    } else {
+        wxMessageBox(wxT("No Ultima: Quest of the Avatar games exist in the SRAM file you loaded."),
+                     wxT("Error: No Games Found"), wxOK | wxICON_ERROR);
+    }
+    
+    setOpen(true);
 }
 
 void MainFrame::fileLoad(wxCommandEvent &event) {
     static wxFileDialog *dlg = new wxFileDialog(this, 
         wxT("Choose a .SAV File"), "", "", 
         wxT("NES SRAM File (*.sav)|*.sav"), (wxOPEN | wxCHANGE_DIR));
-    
+        
     int value = dlg->ShowModal();
     
     if (value == wxID_OK) {
         sramFile = dlg->GetPath();
-        
-        char nvram[0x200];
-        std::ifstream in(sramFile.mb_str(), std::ios::in | std::ios::binary);
-        
-        in.seekg(0x1A00, std::ios::beg);
-        in.read(nvram, 0x200);
-        saveslot[0] = new SaveSlot((const unsigned char *)nvram);
-        
-        if (saveslot[0]->isValid()) {
-            games[0]->Enable(true);
-        } else {
-            games[0]->Enable(false);
-        }
-        
-        in.seekg(0x1C00, std::ios::beg);
-        in.read(nvram, 0x200);
-        saveslot[1] = new SaveSlot((const unsigned char *)nvram);
-        
-        if (saveslot[1]->isValid()) {
-            games[1]->Enable(true);
-        } else {
-            games[1]->Enable(false);
-        }
-        
-        in.seekg(0x1E00, std::ios::beg);
-        in.read(nvram, 0x200);
-        saveslot[2] = new SaveSlot((const unsigned char *)nvram);
-        
-        if (saveslot[2]->isValid()) {
-            games[2]->Enable(true);
-        } else {
-            games[2]->Enable(false);
-        }
-        
-        if (saveslot[0]->isValid()) {
-            loadGame(0);
-        } else if (saveslot[1]->isValid()) {
-            loadGame(1);
-        } else if (saveslot[2]->isValid()) {
-            loadGame(2);
-        } else {
-             // no valid games... this is bad...
-            wxMessageBox(wxT("No Ultima: Quest of the Avatar games exist in the file you loaded."),
-                         wxT("Error: No Games Found"), wxOK | wxICON_ERROR);
-        }
-        
-        in.close();
+        load(sramFile);
     }
 }
 
-void MainFrame::fileSave(wxCommandEvent &event) {
-    char *sram = new char[SRAM_SIZE], *checksum;
-    
-    std::ifstream in(sramFile.mb_str(), std::ios::binary | std::ios::in);
-    in.read(sram, SRAM_SIZE);
-    in.close();
+void MainFrame::save(wxString &filename) {
+    char *checksum;
     
     for (int offset = 0; offset < 3; offset++) {
         char *nvram = (char *)saveslot[offset]->nvram;
@@ -575,13 +590,119 @@ void MainFrame::fileSave(wxCommandEvent &event) {
         }
     }
     
-    std::ofstream out(sramFile.mb_str(), std::ios::binary | std::ios::out);
+    std::ofstream out(filename.mb_str(), std::ios::binary | std::ios::out);
     out.write(sram, SRAM_SIZE);
     out.close();
+    
+    saveslot[0]->modified = false;
+    saveslot[1]->modified = false;
+    saveslot[2]->modified = false;
+}
+
+void MainFrame::fileSave(wxCommandEvent &event) {
+    save(sramFile);
+}
+
+void MainFrame::fileSaveAs(wxCommandEvent &event) {
+    static wxFileDialog *dlg = new wxFileDialog(this, 
+        wxT("Choose a .SAV File"), "", "", 
+        wxT("NES SRAM File (*.sav)|*.sav"), (wxSAVE | wxCHANGE_DIR));
+    
+    int value = dlg->ShowModal();
+    
+    if (value == wxID_OK) {
+        sramFile = dlg->GetPath();
+        save(sramFile);
+    }
+}
+
+void MainFrame::setOpen(bool open) {
+    this->open = open;
+    
+    fileSaveItem->Enable(open);
+    fileSaveAsItem->Enable(open);
+    fileCloseItem->Enable(open);
+    
+    if (!open) {
+        currentSlot = -1;
+        
+        delete saveslot[0];
+        delete saveslot[1];
+        delete saveslot[2];
+        delete sram;
+    }
+}
+
+bool MainFrame::close() {
+    if (saveslot[0]->isModified() || 
+        saveslot[1]->isModified() || 
+        saveslot[2]->isModified()) {
+        int choice = wxMessageBox(wxT("Save Game File Before Closing?"),
+                                  wxT("Warning: Unsaved Changed"),
+                                  wxYES_NO | wxCANCEL | wxICON_QUESTION,
+                                  this);
+        
+        if (choice == wxYES) {
+            save(sramFile);
+        } else if (choice == wxCANCEL) {
+            return false;
+        }
+    }
+    
+    notebook->Show(false);
+    
+    games[0]->Enable(false);
+    games[1]->Enable(false);
+    games[2]->Enable(false);
+    
+    fileSaveItem->Enable(false);
+    fileSaveAsItem->Enable(false);
+    fileCloseItem->Enable(false);
+    
+    setOpen(false);
+    
+    return true;
+}
+
+void MainFrame::fileClose(wxCommandEvent &event) {
+    close();
 }
 
 void MainFrame::fileExit(wxCommandEvent &event) {
-    Close(true);
+    if (isOpen()) {
+        if (close()) {
+            Close(true);
+        }
+    } else {
+        Close(true);
+    }
+}
+
+void MainFrame::windowClosing(wxCloseEvent &event) {
+    if (event.CanVeto()) {
+        if (isOpen()) {
+            if (!close()) {
+                event.Veto();
+                return;
+            }
+        }
+    }
+    
+    Destroy();
+}
+
+void MainFrame::gameChange(wxCommandEvent &event) {
+    int id = event.GetId();
+    
+    currentSlot = -1;
+    
+    if (id == XRCID("IDM_GAME_GAME1")) {
+        loadGame(0);
+    } else if (id == XRCID("IDM_GAME_GAME2")) {
+        loadGame(1);
+    } else if (id == XRCID("IDM_GAME_GAME3")) {
+        loadGame(2);
+    }
 }
 
 void MainFrame::helpAbout(wxCommandEvent &event) {
@@ -609,6 +730,7 @@ void MainFrame::memberClassChange(wxCommandEvent &event) {
     }
     
     wxChoice *ctrl = (wxChoice *)event.GetEventObject();
+    int character = ctrl->GetSelection();   
     int member = 3;
     
     if (ctrl == firstMemberClass) {
@@ -618,8 +740,9 @@ void MainFrame::memberClassChange(wxCommandEvent &event) {
     } else if (ctrl == thirdMemberClass) {
         member = 2;
     }
-    
-    saveslot[currentSlot]->setMember(member, ctrl->GetSelection());
+     
+    saveslot[currentSlot]->setMember(member, ((member == 0) ? 
+                                              (character + 1) : character));
 }
 
 void MainFrame::virtueChange(wxCommandEvent &event) {

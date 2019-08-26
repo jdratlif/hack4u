@@ -51,7 +51,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_hack4u_OBJECTS = hack4u.$(OBJEXT) view/MainFrame.$(OBJEXT) \
-	model/SaveSlot.$(OBJEXT)
+	view/FileDropTarget.$(OBJEXT) model/SaveSlot.$(OBJEXT)
 hack4u_OBJECTS = $(am_hack4u_OBJECTS)
 hack4u_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -59,6 +59,7 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/hack4u.Po \
 @AMDEP_TRUE@	model/$(DEPDIR)/SaveSlot.Po \
+@AMDEP_TRUE@	view/$(DEPDIR)/FileDropTarget.Po \
 @AMDEP_TRUE@	view/$(DEPDIR)/MainFrame.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -154,6 +155,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 EXTRA_DIST = xrc/hack4u.xrc
 hack4u_SOURCES = hack4u.cc hack4u.hh \
 	view/MainFrame.cc view/MainFrame.hh \
+	view/FileDropTarget.cc view/FileDropTarget.hh \
 	model/SaveSlot.cc model/SaveSlot.hh
 
 all: all-am
@@ -220,6 +222,8 @@ view/$(DEPDIR)/$(am__dirstamp):
 	@: > view/$(DEPDIR)/$(am__dirstamp)
 view/MainFrame.$(OBJEXT): view/$(am__dirstamp) \
 	view/$(DEPDIR)/$(am__dirstamp)
+view/FileDropTarget.$(OBJEXT): view/$(am__dirstamp) \
+	view/$(DEPDIR)/$(am__dirstamp)
 model/$(am__dirstamp):
 	@$(mkdir_p) model
 	@: > model/$(am__dirstamp)
@@ -235,6 +239,7 @@ hack4u$(EXEEXT): $(hack4u_OBJECTS) $(hack4u_DEPENDENCIES)
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f model/SaveSlot.$(OBJEXT)
+	-rm -f view/FileDropTarget.$(OBJEXT)
 	-rm -f view/MainFrame.$(OBJEXT)
 
 distclean-compile:
@@ -242,6 +247,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hack4u.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@model/$(DEPDIR)/SaveSlot.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@view/$(DEPDIR)/FileDropTarget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@view/$(DEPDIR)/MainFrame.Po@am__quote@
 
 .cc.o:
@@ -275,6 +281,22 @@ view/MainFrame.obj: view/MainFrame.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='view/$(DEPDIR)/MainFrame.Po' tmpdepfile='view/$(DEPDIR)/MainFrame.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o view/MainFrame.obj `if test -f 'view/MainFrame.cc'; then $(CYGPATH_W) 'view/MainFrame.cc'; else $(CYGPATH_W) '$(srcdir)/view/MainFrame.cc'; fi`
+
+view/FileDropTarget.o: view/FileDropTarget.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT view/FileDropTarget.o -MD -MP -MF "view/$(DEPDIR)/FileDropTarget.Tpo" -c -o view/FileDropTarget.o `test -f 'view/FileDropTarget.cc' || echo '$(srcdir)/'`view/FileDropTarget.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "view/$(DEPDIR)/FileDropTarget.Tpo" "view/$(DEPDIR)/FileDropTarget.Po"; else rm -f "view/$(DEPDIR)/FileDropTarget.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='view/FileDropTarget.cc' object='view/FileDropTarget.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='view/$(DEPDIR)/FileDropTarget.Po' tmpdepfile='view/$(DEPDIR)/FileDropTarget.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o view/FileDropTarget.o `test -f 'view/FileDropTarget.cc' || echo '$(srcdir)/'`view/FileDropTarget.cc
+
+view/FileDropTarget.obj: view/FileDropTarget.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT view/FileDropTarget.obj -MD -MP -MF "view/$(DEPDIR)/FileDropTarget.Tpo" -c -o view/FileDropTarget.obj `if test -f 'view/FileDropTarget.cc'; then $(CYGPATH_W) 'view/FileDropTarget.cc'; else $(CYGPATH_W) '$(srcdir)/view/FileDropTarget.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "view/$(DEPDIR)/FileDropTarget.Tpo" "view/$(DEPDIR)/FileDropTarget.Po"; else rm -f "view/$(DEPDIR)/FileDropTarget.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='view/FileDropTarget.cc' object='view/FileDropTarget.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='view/$(DEPDIR)/FileDropTarget.Po' tmpdepfile='view/$(DEPDIR)/FileDropTarget.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o view/FileDropTarget.obj `if test -f 'view/FileDropTarget.cc'; then $(CYGPATH_W) 'view/FileDropTarget.cc'; else $(CYGPATH_W) '$(srcdir)/view/FileDropTarget.cc'; fi`
 
 model/SaveSlot.o: model/SaveSlot.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT model/SaveSlot.o -MD -MP -MF "model/$(DEPDIR)/SaveSlot.Tpo" -c -o model/SaveSlot.o `test -f 'model/SaveSlot.cc' || echo '$(srcdir)/'`model/SaveSlot.cc; \

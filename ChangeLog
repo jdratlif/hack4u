@@ -1,5 +1,8 @@
-0.1 Created basic GUI outline
-0.2 Switched from embedded C++ to XRC
-0.3 Added model of the sram data
-0.4 Added model/view tie-in through controller
+0.1  Created basic GUI outline
+0.2  Switched from embedded C++ to XRC
+0.3  Added model of the sram data
+0.4  Added model/view tie-in through controller
+0.5  Added controller->model tie in
+0.80 Added save support (first public beta release -- Mon, Nov 29, 2004)
+0.81 Added game switch support (can edit all 3 save slots now)
 

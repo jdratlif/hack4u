@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// $Id: SaveSlot.cc,v 1.4 2004/11/30 01:39:34 technoplaza Exp $
+// $Id: SaveSlot.cc,v 1.5 2004/11/30 14:05:57 technoplaza Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -136,11 +136,11 @@ void SaveSlot::setVirtue(int virtue, unsigned char value) {
 }
 
 int SaveSlot::getMember(int position) {
-    return (nvram[MEMBER_OFFSET + position] - 1);
+    return (nvram[MEMBER_OFFSET + position]);
 }
 
 void SaveSlot::setMember(int position, int character) {
-    nvram[MEMBER_OFFSET + position] = (character + 1);
+    nvram[MEMBER_OFFSET + position] = character;
     setModified();
 }
 

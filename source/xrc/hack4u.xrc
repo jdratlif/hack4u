@@ -9,11 +9,16 @@
                 <object class="wxMenuItem" name="IDM_FILE_LOAD">
                     <label>_Load\tCtrl-Shift-L</label>
                 </object>
+                <object class="separator">
+                </object>
                 <object class="wxMenuItem" name="IDM_FILE_SAVE">
                     <label>_Save\tCtrl-Shift-S</label>
                 </object>
                 <object class="wxMenuItem" name="IDM_FILE_SAVE_AS">
                     <label>Save _As\tCtrl-Shift-A</label>
+                </object>
+                <object class="wxMenuItem" name="IDM_FILE_CLOSE">
+                    <label>_Close\tCtrl-Shift-C</label>
                 </object>
                 <object class="separator">
                 </object>
@@ -121,6 +126,7 @@
                                                     <border>5</border>
                                                     <object class="wxChoice" name="ID_GENERAL_PARTY2">
                                                         <content>
+                                                            <item>None</item>
                                                             <item>Mage</item>
                                                             <item>Bard</item>
                                                             <item>Fighter</item>
@@ -145,6 +151,7 @@
                                                     <border>5</border>
                                                     <object class="wxChoice" name="ID_GENERAL_PARTY3">
                                                         <content>
+                                                            <item>None</item>
                                                             <item>Mage</item>
                                                             <item>Bard</item>
                                                             <item>Fighter</item>
@@ -169,6 +176,7 @@
                                                     <border>5</border>
                                                     <object class="wxChoice" name="ID_GENERAL_PARTY4">
                                                         <content>
+                                                            <item>None</item>
                                                             <item>Mage</item>
                                                             <item>Bard</item>
                                                             <item>Fighter</item>
