@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
-| hack4u 1.2
-| Copyright (C) 2004-2006 emuWorks
+| hack4u 1.2a
+| Copyright (C) 2004-2008 emuWorks
 | Written by John David Ratliff
 | http://games.technoplaza.net/
 --------------------------------------------------------------------------------
@@ -26,28 +26,19 @@
 - Installation -
 ----------------
 
-  For Windows, Linux (x86), and Mac OS X, I have provided a binary version. You
-  should be able to download it and double-click the hack4u executable to start
-  the program.
+  Binaries are available for Windows (2000 and later), Linux (requires GTK+ >=
+  2.0), and Mac OS X (Tiger or later). The source is also available if you want
+  to compile it yourself.
   
-  On Windows and Mac OS X, there shouldn't be any extra dependencies required.
-  For the Linux binary, you will need GTK+ 2.0.
+  To compile, you will need a modern C++ compiler and wxWidgets 2.8 or later.
   
-  For all other platforms, you will need to compile the source code yourself. It
-  shouldn't be too hard to compile. It is expected to compile on any nearly
-  any unix-like system that supports GTK.
+  On most platforms, compiling is as easy as opening a terminal and running
+  ./configure && make. That should work on Linux, Mac OS X, and Windows with
+  mingw/msys. There are also Visual Studio project files in the vstudio
+  directory.
   
-  To compile the source, you will need an ISO C++ compiler (I recommend GNU G++
-  >= 3.4), and the wxWidgets library. You will also need wxWidgets 2.6. It can
-  be freely downloaded from http://www.wxwidgets.org/.
-  
-  After you have wxWidgets installed, you should be able to do something like
-  this:
-  
-  ./configure && make
-  
-  This should produce a hack4u binary in the source subdirectory. If it
-  doesn't, contact me and we'll talk about it.
+  For more complete compilation instructions, consult our compiling HOWTO at
+  http://games.technoplaza.net/compile.php.
 
 ---------
 - Usage -
@@ -134,11 +125,18 @@
 - Revision History -
 --------------------
 
-  Version 1.2 - February 23, 2007
+  Version 1.2a - Tuesday, December 16, 2008
+    - Updated code to compile under wxWidgets 2.8.
+    - Updated Visual Studio project files for Visual Studio 2008.
+    - Added upx compression to mac version.
+    - Added icons for the mac version.
+    - Updated compilation instructions.
+
+  Version 1.2 - Friday, February 23, 2007
     - Minor code cleanup (now compiles in unicode mode)
     - Added Visual C++ 2005 project files
 
-  Version 1.1 - March 21, 2006
+  Version 1.1 - Tuesday, March 21, 2006
     - Major code cleanup
     - Fixed bug where it wouldn't save over the current SAV file
     - Fixed bug where some games weren't selectable
@@ -155,21 +153,21 @@
     - Synchronized found treasure and treasure inventory offsets
     - Added common locations menu for boat and balloon
     
-  Version 1.0 - August 3, 2005
+  Version 1.0 - Wednesday, August 3, 2005
     - Minor Code Cleanup
     - Added GTK+ 1.2 Binary for Linux
     - Added Mac OS X Binary
     
-  Version 0.92 - December 8, 2004
+  Version 0.92 - Wednesday, December 8, 2004
     - Fixed bug that caused files to load even if no valid save data existed
     - Added file I/O error checking
     - Resized GUI to fit in 800x600
     
-  Version 0.91 - December 4, 2004
+  Version 0.91 - Saturday, December 4, 2004
     - Added code comments and API documentation
     - Minor code cleanup
     
-  Version 0.90 - December 3, 2004
+  Version 0.90 - Friday, December 3, 2004
     - Added hero's name validation (only proper characters are allowed now)
     - Changed Panel backgrounds to white
     - Replaced herb/virtue/tool spin controls with sliders
@@ -181,20 +179,20 @@
     - Added XRC_PREFIX to configure to change the default XRC path
     - Added argument check to specify XRC file location at runtime
     
-  Version 0.82 - December 1, 2004
+  Version 0.82 - Wednesday, December 1, 2004
     - Added Linux binary version.
     - Fixed bug that caused crashing (segfault) in Linux
     - Added resize and maximize options to the frame for greater platform
       compatability
       
-  Version 0.81 - November 30, 2004
+  Version 0.81 - Tuesday, November 30, 2004
     - Added Drag N Drop support
     - Added Loading/Saving of All Three Games
     - Added Save confirmation on exit
     - Added Save As and Close
     - First Public Beta
     
-  Version 0.80 - November 29, 2004
+  Version 0.80 - Monday, November 29, 2004
     - Support for Loading/Saving Game 1
     - First Private Beta
 

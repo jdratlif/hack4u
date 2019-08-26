@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2006 emuWorks
+ * Copyright (C) 2004-2008 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: SaveSlot.cc,v 1.20 2006/03/21 07:44:25 technoplaza Exp $
+// $Id: SaveSlot.cc,v 1.21 2008/12/16 22:12:52 jdratlif Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>

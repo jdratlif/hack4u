@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2006 emuWorks
+ * Copyright (C) 2004-2008 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,10 +20,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: hack4u.hh,v 1.10 2006/03/14 22:54:22 technoplaza Exp $
+// $Id: hack4u.hh,v 1.11 2008/12/16 22:12:52 jdratlif Exp $
  
-#ifndef _HACK4U_HH
-#define _HACK4U_HH
+#ifndef HACK4U_HACK4U_HH_
+#define HACK4U_HACK4U_HH_
 
 /**
  * Private hack4u namespace is used for all classs and members of this project.

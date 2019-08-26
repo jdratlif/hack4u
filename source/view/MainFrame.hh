@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2006 emuWorks
+ * Copyright (C) 2004-2008 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,10 +20,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: MainFrame.hh,v 1.39 2006/03/21 12:00:18 technoplaza Exp $
+// $Id: MainFrame.hh,v 1.41 2008/12/16 22:12:52 jdratlif Exp $
 
-#ifndef _MAINFRAME_HH_
-#define _MAINFRAME_HH_
+#ifndef HACK4U_MAINFRAME_HH_
+#define HACK4U_MAINFRAME_HH_
 
 #include "model/ModelConstants.hh"
 

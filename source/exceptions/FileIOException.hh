@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2006 emuWorks
+ * Copyright (C) 2004-2008 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,10 +20,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: FileIOException.hh,v 1.1 2006/03/14 22:54:22 technoplaza Exp $
+// $Id: FileIOException.hh,v 1.3 2008/12/16 22:12:52 jdratlif Exp $
 
-#ifndef _FILEIOEXCEPTION_HH_
-#define _FILEIOEXCEPTION_HH_
+#ifndef HACK4U_FILEIOEXCEPTION_HH_
+#define HACK4U_FILEIOEXCEPTION_HH_
 
 #include <stdexcept>
 

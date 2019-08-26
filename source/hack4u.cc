@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2006 emuWorks
+ * Copyright (C) 2004-2008 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: hack4u.cc,v 1.13 2006/03/20 01:00:18 technoplaza Exp $
+// $Id: hack4u.cc,v 1.16 2008/12/16 22:29:21 jdratlif Exp $
  
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -47,10 +47,10 @@ const wxString *Hack4u::APP_NAME =
     new wxString(wxT("hack4u"));
 
 const wxString *Hack4u::APP_VERSION =
-    new wxString(wxT("1.2"));
+    new wxString(wxT("1.2a"));
 
 const wxString *Hack4u::APP_COPYRIGHT =
-    new wxString(wxT("Copyright (C) 2004-2006 emuWorks"));
+    new wxString(wxT("Copyright (C) 2004-2008 emuWorks"));
 
 const wxString *Hack4u::APP_URL =
     new wxString(wxT("http://games.technoplaza.net/"));

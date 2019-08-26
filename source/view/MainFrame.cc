@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2006 emuWorks
+ * Copyright (C) 2004-2008 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: MainFrame.cc,v 1.50 2006/03/21 11:53:54 technoplaza Exp $
+// $Id: MainFrame.cc,v 1.56 2008/12/16 23:02:04 jdratlif Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -33,6 +33,7 @@
 #endif
 
 #include <wx/xrc/xmlres.h>
+#include <wx/notebook.h>
 
 #include <cstring>
 #include <fstream>
@@ -40,7 +41,7 @@
 #include "hack4u.hh"
 #include "exceptions/FileIOException.hh"
 #include "exceptions/InvalidSRAMException.hh"
-#include "res/icon16x16.xpm"
+#include "res/ankh32x32.xpm"
 #include "model/SaveSlot.hh"
 #include "view/FileDropTarget.hh"
 #include "view/MainFrame.hh"
@@ -101,7 +102,7 @@ MainFrame::MainFrame() : saveslot(0), sram(0), location(LMOONGLOW),
 
 void MainFrame::CreateControls() {
     wxXmlResource::Get()->LoadFrame(this, GetParent(), wxT("IDF_HACK4U"));
-    SetIcon(wxIcon(icon16x16_xpm));
+    SetIcon(wxIcon(ankh32x32_xpm));
     
     wxMenuBar *mb = GetMenuBar();
     gameMenu = mb->FindMenu(wxT("Game"));
@@ -380,8 +381,8 @@ void MainFrame::load(const wxString &filename) {
             // must be a bad checksum if we're here
             wxASSERT(e.getError() == ISE_BADCHECKSUM);
             
-            wxMessageBox(wxT("No Ultima: Quest of the Avatar games"
-                             " exist in the SRAM file you loaded."),
+            wxMessageBox(wxT("No Ultima: Quest of the Avatar games")
+                         wxT(" exist in the SRAM file you loaded."),
                          wxT("Error: No Games Found"), wxOK | wxICON_ERROR);
         }
         
@@ -712,8 +713,8 @@ void MainFrame::loadStats(enum Character character) {
 
 bool MainFrame::save(const wxString &filename) {
     if (!isValidParty()) {
-        int choice = wxMessageBox(wxT("Duplicate or missing party members"
-                                      " selected.\nContinue Saving?"),
+        int choice = wxMessageBox(wxT("Duplicate or missing party members")
+                                  wxT(" selected.\nContinue Saving?"),
                                   wxT("Warning: Invalid Party"),
                                   wxYES_NO | wxICON_QUESTION,
                                   this);
@@ -726,8 +727,8 @@ bool MainFrame::save(const wxString &filename) {
     for (int character = MAGE; character < SHEPHERD; ++character) {
         if (!hasValidEquipment(static_cast<enum Character>(character))) {
             int choice = wxMessageBox(CHARACTER_NAMES[character] + 
-                                      wxT(" has more than one equipped item of "
-                                          "the same type.\nContinue Saving?"),
+                                      wxT(" has more than one equipped item of ")
+                                      wxT("the same type.\nContinue Saving?"),
                                       wxT("Warning: Invalid Equipment"),
                                       wxYES_NO | wxICON_QUESTION,
                                       this);
@@ -863,7 +864,7 @@ void MainFrame::onFileExit(wxCommandEvent &) {
 void MainFrame::onFileOpen(wxCommandEvent &) {
     static wxFileDialog *dlg = new wxFileDialog(this, 
         wxT("Choose a .SAV File"), wxT(""), wxT(""), 
-        wxT("NES SRAM File (*.sav)|*.sav"), (wxOPEN | wxCHANGE_DIR));
+        wxT("NES SRAM File (*.sav)|*.sav"), (wxFD_OPEN | wxFD_CHANGE_DIR));
         
     int value = dlg->ShowModal();
     
@@ -876,7 +877,7 @@ void MainFrame::onFileOpen(wxCommandEvent &) {
 void MainFrame::onFileSaveAs(wxCommandEvent &) {
     static wxFileDialog *dlg = new wxFileDialog(this, 
         wxT("Choose a .SAV File"), wxT(""), wxT(""), 
-        wxT("NES SRAM File (*.sav)|*.sav"), (wxSAVE | wxCHANGE_DIR));
+        wxT("NES SRAM File (*.sav)|*.sav"), (wxFD_SAVE | wxFD_CHANGE_DIR));
     
     int value = dlg->ShowModal();
     

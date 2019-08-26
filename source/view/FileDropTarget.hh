@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2006 emuWorks
+ * Copyright (C) 2004-2008 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,10 +20,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: FileDropTarget.hh,v 1.7 2006/03/15 13:39:37 technoplaza Exp $
+// $Id: FileDropTarget.hh,v 1.8 2008/12/16 22:12:52 jdratlif Exp $
 
-#ifndef _FILEDROPTARGET_HH
-#define _FILEDROPTARGET_HH
+#ifndef HACK4U_FILEDROPTARGET_HH_
+#define HACK4U_FILEDROPTARGET_HH_
 
 #include <wx/dnd.h>
 

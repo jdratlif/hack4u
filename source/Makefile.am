@@ -1,5 +1,9 @@
+# $Id: Makefile.am,v 1.18 2008/12/17 00:39:31 jdratlif Exp $
+
 AUTOMAKE_OPTIONS = subdir-objects
-EXTRA_DIST = res/ankh.ico res/hack4u.xrc res/icon16x16.xpm
+CLEANFILES = res/hack4u.cc
+EXTRA_DIST = res/ankh32x32.ico res/ankh32x32.xpm res/hack4u.icns \
+	res/hack4u.xrc res/Info.plist res/windows.rc
 
 bin_PROGRAMS = hack4u
 
@@ -22,4 +26,14 @@ endif
 
 .xrc.cc:
 	wxrc -c -o $@ $<
+
+hack4u.app: hack4u res/hack4u.icns res/Info.plist
+	-mkdir hack4u.app
+	-mkdir hack4u.app/Contents
+	-mkdir hack4u.app/Contents/MacOS
+	-mkdir hack4u.app/Contents/Resources
+	cp hack4u hack4u.app/Contents/MacOS
+	cp res/Info.plist hack4u.app/Contents
+	cp res/hack4u.icns hack4u.app/Contents/Resources
+	echo -n 'APPL????' > hack4u.app/Contents/PkgInfo
 

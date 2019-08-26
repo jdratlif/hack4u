@@ -1,35 +1,30 @@
-<?xml version="1.0" encoding="windows-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwidgets.org/wxxrc">
     <object class="wxFrame" name="IDF_HACK4U" subclass="MainFrame">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxMAXIMIZE_BOX|wxCLOSE_BOX</style>
-        <size>400,300</size>
+        <size>800,600</size>
         <title>hack4u</title>
         <object class="wxMenuBar" name="ID_MENUBAR">
             <object class="wxMenu">
                 <label>&amp;File</label>
                 <object class="wxMenuItem" name="wxID_OPEN">
                     <label>Open\tCtrl-O</label>
-                    <help>Open SRAM file for editing</help>
                 </object>
                 <object class="wxMenuItem" name="wxID_CLOSE">
                     <label>Close\tCtrl-W</label>
-                    <help>Close currently open SRAM file</help>
                 </object>
                 <object class="separator">
                 </object>
                 <object class="wxMenuItem" name="wxID_SAVE">
                     <label>Save\tCtrl-S</label>
-                    <help>Save changes to open SRAM file</help>
                 </object>
                 <object class="wxMenuItem" name="wxID_SAVEAS">
                     <label>Save As</label>
-                    <help>Save changes to another file</help>
                 </object>
                 <object class="separator">
                 </object>
                 <object class="wxMenuItem" name="wxID_EXIT">
                     <label>Exit</label>
-                    <help>Quit hack4u</help>
                 </object>
             </object>
             <object class="wxMenu">
@@ -38,17 +33,14 @@
                     <label>Game 1\tF1</label>
                     <radio>1</radio>
                     <checked>1</checked>
-                    <help>Edit the first save game</help>
                 </object>
                 <object class="wxMenuItem" name="IDM_GAME_GAME2">
                     <label>Game 2\tF2</label>
                     <radio>1</radio>
-                    <help>Edit the second save game</help>
                 </object>
                 <object class="wxMenuItem" name="IDM_GAME_GAME3">
                     <label>Game 3\tF3</label>
                     <radio>1</radio>
-                    <help>Edit the third save game</help>
                 </object>
             </object>
             <object class="wxMenu">
@@ -59,109 +51,88 @@
                         <label>Moonglow</label>
                         <radio>1</radio>
                         <checked>1</checked>
-                        <help>Set location to Moonglow</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_BRITAIN">
                         <label>Britain</label>
                         <radio>1</radio>
-                        <help>Set location to Britain</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_JHELOM">
                         <label>Jhelom</label>
                         <radio>1</radio>
-                        <help>Set location to Jhelom</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_YEW">
                         <label>Yew</label>
                         <radio>1</radio>
-                        <help>Set location to Yew</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_MINOC">
                         <label>Minoc</label>
                         <radio>1</radio>
-                        <help>Set location to Minoc</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_TRINSIC">
                         <label>Trinsic</label>
                         <radio>1</radio>
-                        <help>Set location to Trinsic</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_SKARABRAE">
                         <label>Skara Brae</label>
                         <radio>1</radio>
-                        <help>Set location to Skara Brae</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_MAGINCIA">
                         <label>Magincia</label>
                         <radio>1</radio>
-                        <help>Set location to Magincia</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_LYCAEUM">
                         <label>Lycaeum</label>
                         <radio>1</radio>
-                        <help>Set location to Lycaeum</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_EMPATHABBEY">
                         <label>Empath Abbey</label>
                         <radio>1</radio>
-                        <help>Set location to Empath Abbey</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_SERPENTSHOLD">
                         <label>Serpent's Hold</label>
                         <radio>1</radio>
-                        <help>Set location to Serpent's Hold</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_PAWS">
                         <label>Paws</label>
                         <radio>1</radio>
-                        <help>Set location to Paws</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_VESPER">
                         <label>Vesper</label>
                         <radio>1</radio>
-                        <help>Set location to Vesper</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_BUCCANEERSDEN">
                         <label>Buccaneer's Den</label>
                         <radio>1</radio>
-                        <help>Set location to Buccaneer's Den</help>
                     </object>
                     <object class="wxMenuItem" name="IDM_LOCATION_PLACE_COVE">
                         <label>Cove</label>
                         <radio>1</radio>
-                        <help>Set location to Cove</help>
                     </object>
                 </object>
                 <object class="separator">
                 </object>
                 <object class="wxMenuItem" name="IDM_LOCATION_BALLOON">
                     <label>Balloon</label>
-                    <help>Move Balloon to location</help>
                 </object>
                 <object class="separator">
                 </object>
                 <object class="wxMenuItem" name="IDM_LOCATION_SHIP1">
                     <label>Ship 1</label>
-                    <help>Move pirate ship to location</help>
                 </object>
                 <object class="wxMenuItem" name="IDM_LOCATION_SHIP2">
                     <label>Ship 2</label>
-                    <help>Move pirate ship to location</help>
                 </object>
                 <object class="wxMenuItem" name="IDM_LOCATION_SHIP3">
                     <label>Ship 3</label>
-                    <help>Move pirate ship to location</help>
                 </object>
                 <object class="wxMenuItem" name="IDM_LOCATION_SHIP4">
                     <label>Ship 4</label>
-                    <help>Move pirate ship to location</help>
                 </object>
             </object>
             <object class="wxMenu">
                 <label>&amp;Help</label>
                 <object class="wxMenuItem" name="wxID_ABOUT">
                     <label>About hack4u...</label>
-                    <help>Version and copyright information</help>
                 </object>
             </object>
         </object>
@@ -172,7 +143,7 @@
                 <border>0</border>
                 <option>1</option>
                 <object class="wxNotebook" name="IDN_HACK4U">
-                    <style>wxNB_TOP</style>
+                    <style>wxBK_TOP</style>
                     <object class="notebookpage">
                         <label>Hero</label>
                         <object class="wxPanel" name="ID_PANEL">
@@ -209,7 +180,7 @@
                                                 <vgap>0</vgap>
                                                 <hgap>0</hgap>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Honesty</label>
@@ -227,7 +198,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Compassion</label>
@@ -245,7 +216,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Valor</label>
@@ -263,7 +234,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Justice</label>
@@ -281,7 +252,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Sacrifice</label>
@@ -299,7 +270,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Honor</label>
@@ -317,7 +288,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Spirituality</label>
@@ -335,7 +306,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Humility</label>
@@ -424,7 +395,7 @@
                                                         <vgap>0</vgap>
                                                         <hgap>0</hgap>
                                                         <object class="sizeritem">
-                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                             <border>5</border>
                                                             <object class="wxStaticText" name="wxID_STATIC">
                                                                 <label>Hero</label>
@@ -447,7 +418,7 @@
                                                             </object>
                                                         </object>
                                                         <object class="sizeritem">
-                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                             <border>5</border>
                                                             <object class="wxStaticText" name="wxID_STATIC">
                                                                 <label>Second</label>
@@ -471,7 +442,7 @@
                                                             </object>
                                                         </object>
                                                         <object class="sizeritem">
-                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                             <border>5</border>
                                                             <object class="wxStaticText" name="wxID_STATIC">
                                                                 <label>Third</label>
@@ -495,7 +466,7 @@
                                                             </object>
                                                         </object>
                                                         <object class="sizeritem">
-                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                             <border>5</border>
                                                             <object class="wxStaticText" name="wxID_STATIC">
                                                                 <label>Fourth</label>
@@ -881,7 +852,7 @@
                                                 <vgap>0</vgap>
                                                 <hgap>0</hgap>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Ash</label>
@@ -899,7 +870,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Ginseng</label>
@@ -917,7 +888,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Garlic</label>
@@ -935,7 +906,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Silkweb</label>
@@ -953,7 +924,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Moss</label>
@@ -971,7 +942,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Pearl</label>
@@ -989,7 +960,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Fungus</label>
@@ -1007,7 +978,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Manroot</label>
@@ -1227,7 +1198,7 @@
                                             <object class="wxBoxSizer">
                                                 <orient>wxHORIZONTAL</orient>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Torch</label>
@@ -1245,7 +1216,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Gem</label>
@@ -1263,7 +1234,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Oil</label>
@@ -1427,7 +1398,7 @@
                                         <orient>wxHORIZONTAL</orient>
                                         <label>Moongates</label>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                             <border>5</border>
                                             <object class="wxStaticText" name="wxID_STATIC">
                                                 <label>Trammel (Left)</label>
@@ -1450,7 +1421,7 @@
                                             </object>
                                         </object>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                             <border>5</border>
                                             <object class="wxStaticText" name="wxID_STATIC">
                                                 <label>Felucca (Right)</label>
@@ -1481,7 +1452,7 @@
                                         <orient>wxHORIZONTAL</orient>
                                         <label>Balloon</label>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                             <border>5</border>
                                             <object class="wxStaticText" name="wxID_STATIC">
                                                 <label>Latitude</label>
@@ -1495,7 +1466,7 @@
                                             </object>
                                         </object>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                             <border>5</border>
                                             <object class="wxStaticText" name="wxID_STATIC">
                                                 <label>Longitude</label>
@@ -1517,7 +1488,7 @@
                                         <orient>wxHORIZONTAL</orient>
                                         <label>Whirlpool</label>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                             <border>5</border>
                                             <object class="wxStaticText" name="wxID_STATIC">
                                                 <label>Latitude</label>
@@ -1531,7 +1502,7 @@
                                             </object>
                                         </object>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                             <border>5</border>
                                             <object class="wxStaticText" name="wxID_STATIC">
                                                 <label>Longitude</label>
@@ -1566,14 +1537,14 @@
                                                     <size>5,5</size>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Latitude</label>
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Longitude</label>
@@ -1691,6 +1662,7 @@
                                         <style>wxRA_SPECIFY_ROWS</style>
                                         <label>Character</label>
                                         <dimension>1</dimension>
+                                        <selection>0</selection>
                                         <content>
                                             <item>Mage</item>
                                             <item>Bard</item>
@@ -1718,7 +1690,7 @@
                                                 <vgap>0</vgap>
                                                 <hgap>0</hgap>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Level</label>
@@ -1732,7 +1704,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>HP</label>
@@ -1746,7 +1718,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>MP</label>
@@ -1760,7 +1732,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Experience</label>
@@ -1774,7 +1746,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Max HP</label>
@@ -1788,7 +1760,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Max MP</label>
@@ -1802,7 +1774,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Strength</label>
@@ -1816,7 +1788,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Intelligence</label>
@@ -1830,7 +1802,7 @@
                                                     </object>
                                                 </object>
                                                 <object class="sizeritem">
-                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
+                                                    <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
                                                     <border>5</border>
                                                     <object class="wxStaticText" name="wxID_STATIC">
                                                         <label>Dexterity</label>

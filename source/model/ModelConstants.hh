@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2006 emuWorks
+ * Copyright (C) 2004-2008 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,10 +20,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: ModelConstants.hh,v 1.8 2006/03/21 07:44:25 technoplaza Exp $
+// $Id: ModelConstants.hh,v 1.10 2008/12/16 22:12:52 jdratlif Exp $
 
-#ifndef _MODELCONSTANTS_HH_
-#define _MODELCONSTANTS_HH_
+#ifndef HACK4U_MODELCONSTANTS_HH_
+#define HACK4U_MODELCONSTANTS_HH_
 
 #include <utility>
 

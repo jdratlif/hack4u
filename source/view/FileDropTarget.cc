@@ -1,6 +1,6 @@
 /*
  * hack4u
- * Copyright (C) 2004-2006 emuWorks
+ * Copyright (C) 2004-2008 emuWorks
  * http://games.technoplaza.net/
  *
  * This file is part of hack4u.
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// $Id: FileDropTarget.cc,v 1.6 2006/03/15 14:11:45 technoplaza Exp $
+// $Id: FileDropTarget.cc,v 1.7 2008/12/16 22:12:52 jdratlif Exp $
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
