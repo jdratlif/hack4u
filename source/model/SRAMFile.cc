@@ -26,6 +26,7 @@
     #include <config.h>
 #endif
 
+#include <cstring>
 #include <fstream>
 
 #include "model/SaveSlot.hh"
