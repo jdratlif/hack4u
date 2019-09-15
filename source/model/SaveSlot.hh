@@ -36,7 +36,7 @@ namespace hack4u {
      * A class representing a single game save slot.
      */
     class SaveSlot {
-        friend void SRAMFile::save(const wxString &);
+        friend void SRAMFile::save(const wxString &) throw(FileIOException);
         
     private:
         unsigned char *nvram;
