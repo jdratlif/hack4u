@@ -1,5 +1,3 @@
-# $Id: Makefile.am,v 1.18 2008/12/17 00:39:31 jdratlif Exp $
-
 AUTOMAKE_OPTIONS = subdir-objects
 CLEANFILES = res/hack4u.cc
 EXTRA_DIST = res/ankh32x32.ico res/ankh32x32.xpm res/hack4u.icns \
@@ -13,7 +11,7 @@ hack4u_SOURCES = hack4u.cc hack4u.hh \
 	model/ModelConstants.hh \
 	model/SaveSlot.cc model/SaveSlot.hh \
 	model/SRAMFile.cc model/SRAMFile.hh \
-	res/hack4u.cc \
+	res/resource.cpp \
 	view/FileDropTarget.cc view/FileDropTarget.hh \
 	view/MainFrame.cc view/MainFrame.hh
 
@@ -36,4 +34,3 @@ hack4u.app: hack4u res/hack4u.icns res/Info.plist
 	cp res/Info.plist hack4u.app/Contents
 	cp res/hack4u.icns hack4u.app/Contents/Resources
 	echo -n 'APPL????' > hack4u.app/Contents/PkgInfo
-

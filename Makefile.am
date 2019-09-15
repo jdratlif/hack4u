@@ -1,12 +1,7 @@
-# $Id: Makefile.am,v 1.12 2008/12/17 00:39:31 jdratlif Exp $
-
 SUBDIRS = source
 EXTRA_DIST = apidocs docs/*.txt Doxyfile sav \
-	vstudio/hack4u/hack4u.sln vstudio/hack4u/hack4u.vcproj
-
-sav:
-	-mkdir sav
-	-cp source/res/Ultima\ -\ Quest\ of\ the\ Avatar\ \(U\).sav sav
+	vstudio/hack4u.sln vstudio/hack4u.vcxproj \
+	vstudio/hack4u.vcxproj.filters vstudio/hack4u.vcxproj.user
 
 .PHONY: allclean apidocs bundle touch
 
@@ -24,6 +19,6 @@ bundle:
 
 touch:
 	-find -iname "*.cc" -exec touch {} \;
+	-find -iname "*.cpp" -exec touch {} \;
 	-find -iname "*.hh" -exec touch {} \;
 	-find -iname "*.xrc" -exec touch {} \;
-
